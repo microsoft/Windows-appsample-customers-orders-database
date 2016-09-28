@@ -1,0 +1,504 @@
+<!--
+Copyright (c) Microsoft Corporation.  All rights reserved.
+The MIT License (MIT)
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<Page x:Class="ContosoApp.Views.OrderDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ContosoApp="using:ContosoApp"
+      xmlns:local="using:ContosoApp.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:ContosoModels"
+      xmlns:uc="using:ContosoApp.UserControls"
+      xmlns:valueConverters="using:ContosoApp.ValueConverters"
+      xmlns:viewModels="using:ContosoApp.ViewModels"
+      NavigationCacheMode="Required"
+      mc:Ignorable="d">
+
+    <Page.Resources>
+        <valueConverters:OrderStatusToStringConverter x:Key="orderStatusConverter"/>
+        <valueConverters:PaymentStatusToStringConverter x:Key="paymentStatusConverter"/>
+        <valueConverters:TermToStringConverter x:Key="termConverter"/>
+        <valueConverters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+        <valueConverters:StringFormatterConverter x:Key="stringFormatterConverter"/>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="MinWidth" Value="150"/>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--  Page title section  -->
+        <Grid Margin="24,0,12,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
+            <uc:PageHeader x:Name="PageTitle">
+                <uc:PageHeader.HeaderContent>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock 
+                                   Margin="0"
+                                   Style="{StaticResource PageTitleTextBlockStyle}"
+                                   Text="Order #"
+                                   Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <TextBlock Margin="0"
+                                   Style="{StaticResource PageTitleTextBlockStyle}"
+                                   Text="{x:Bind ViewModel.InvoiceNumber, Mode=OneWay}"
+                                   Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <TextBlock Margin="0"
+                                   Style="{StaticResource PageTitleTextBlockStyle}"
+                                   Text="New order"
+                                   Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        <TextBlock Margin="0"
+                                   Style="{StaticResource PageTitleTextBlockStyle}"
+                                   Text="*"
+                                   Visibility="{x:Bind ViewModel.HasChanges, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                    </StackPanel>
+                </uc:PageHeader.HeaderContent>
+            </uc:PageHeader>
+
+            <!--
+                On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
+                See CommandBar_Loaded event handler.
+            -->
+            <CommandBar Grid.Column="2"
+                        Margin="0,0,0,0"
+                        Background="Transparent"
+                        Loaded="CommandBar_Loaded">
+                <AppBarButton x:Name="SaveOrderButton"
+                              Click="SaveButton_Click"
+                              Icon="Save"
+                              IsEnabled="{x:Bind ViewModel.HasChanges, Mode=OneWay}"
+                              Label="Save"/>
+                <AppBarButton Click="RevertButton_Click"
+                              Icon="Undo"
+                              IsEnabled="{x:Bind ViewModel.CanRevert, Mode=OneWay}"
+                              Label="Revert"/>
+                <AppBarButton Click="RefreshButton_Click"
+                              Icon="Refresh"
+                              IsEnabled="{x:Bind ViewModel.CanRefresh, Mode=OneWay}"
+                              Label="Refresh"/>
+            </CommandBar>
+
+        </Grid>
+
+        <!--  Order body  -->
+        <Grid 
+              Grid.Row="1"
+              Margin="0,0,0,0"
+              HorizontalAlignment="Stretch"
+              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              Visibility="{x:Bind ViewModel.IsLoaded, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}">
+
+              <!--
+              Visibility="{x:Bind ViewModel.IsLoaded, Converter={StaticResource booleanToVisibilityConverter}}"
+              -->
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"
+                                  MinWidth="50"
+                                  MaxWidth="300"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!--  Customer info section  -->
+            <StackPanel Grid.Row="0"
+                        Grid.RowSpan="1"
+                        Grid.Column="0"
+                        Margin="24,20,0,0">
+                <TextBlock IsTextSelectionEnabled="True"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           Text="{x:Bind ViewModel.CustomerName, Mode=OneWay}"/>
+                <TextBlock Margin="0,0,0,0"
+                           IsTextSelectionEnabled="True"
+                           Text="{x:Bind ViewModel.Customer.Address, Mode=OneWay}"
+                           TextWrapping="Wrap"/>
+                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.Customer.Phone, Mode=OneWay}"/>
+                <HyperlinkButton Margin="0,0,0,0"
+                                 Click="emailButton_Click"
+                                 Content="{x:Bind ViewModel.Customer.Email, Mode=OneWay}"
+                                 Padding="0,0,0,0"/>
+                <TextBlock Margin="0,20,0,0" FontWeight="SemiBold">Shipping address</TextBlock>
+                <TextBlock Text="{x:Bind ViewModel.Address, Mode=OneWay}" Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                <TextBox x:Name="ShippingAddressTextBox"
+                         Width="300"
+                         AcceptsReturn="True"
+                         InputScope="Maps"
+                         Text="{x:Bind ViewModel.Address, Mode=TwoWay}"
+                         Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+            </StackPanel>
+
+            <!--  Order status and payment info section  -->
+            <StackPanel Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="1"
+                        Margin="20,20,0,0"
+                        HorizontalAlignment="Right">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               FontWeight="Normal">
+                        Placed:
+                    </TextBlock>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="{x:Bind ViewModel.DatePlaced, Mode=OneWay}"/>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               FontWeight="Normal">
+                        Filled:
+                    </TextBlock>
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="1"
+                               Text="{x:Bind ViewModel.DateFilled, Mode=OneWay}"/>
+                </Grid>
+
+                <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
+                    <TextBlock x:Name="OrderStatusLabel"
+                               Margin="0,20,0,0"
+                               FontWeight="Normal">
+                        Order status
+                    </TextBlock>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.OrderStatusValues, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.Status, Mode=TwoWay, Converter={StaticResource orderStatusConverter}}"/>
+                </StackPanel>
+                <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
+                    <TextBlock x:Name="PaymentTermLabel"
+                               Margin="0,20,0,0"
+                               FontWeight="Normal">
+                        Payment term
+                    </TextBlock>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.TermValues, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.Term, Mode=TwoWay, Converter={StaticResource termConverter}}"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
+                    <TextBlock x:Name="PaymentStatusLabel"
+                               Margin="0,20,0,0"
+                               FontWeight="Normal">
+                        Payment status
+                    </TextBlock>
+                    <ComboBox ItemsSource="{x:Bind ViewModel.PaymentStatusValues, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.PaymentStatus, Mode=TwoWay, Converter={StaticResource paymentStatusConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!--  Line items section  -->
+            <Border Grid.Row="2"
+                    Grid.ColumnSpan="3"
+                    Margin="24,40,0,0"
+                    HorizontalAlignment="Stretch">
+                <StackPanel>
+
+                    <!--  Line items header  -->
+                    <Grid Margin="0,20,0,0" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.ColumnSpan="4"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"/>
+                        <TextBlock Grid.Column="0"
+                                   FontWeight="SemiBold"
+                                   Text="Product"/>
+                        <TextBlock Grid.Column="2"
+                                   Margin="8,0,0,0"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   FontWeight="SemiBold"
+                                   Padding="0,0,0,0"
+                                   Text="Price"/>
+                        <TextBlock Grid.Column="3"
+                                   Margin="8,0,0,0"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Bottom"
+                                   FontWeight="SemiBold"
+                                   Padding="0,0,0,0"
+                                   Text="Quantity"/>
+                    </Grid>
+
+                    <!--  Line item list  -->
+                    <ListView ItemsSource="{x:Bind ViewModel.LineItems, Mode=OneWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:LineItem">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="250"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="80"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.ColumnSpan="4"
+                                            BorderBrush="LightGray"
+                                            BorderThickness="0,0,0,1"/>
+                                    <TextBlock Grid.Column="0"
+                                               Margin="0,0,0,0"
+                                               Padding="0,0,0,0"
+                                               Text="{x:Bind Product.Name, Mode=OneWay}"/>
+                                    <TextBlock Grid.Column="2"
+                                               Margin="0,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               Padding="0,0,0,0"
+                                               Text="{x:Bind Product.ListPrice, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                                    <TextBlock Grid.Column="3"
+                                               Margin="8,0,0,0"
+                                               HorizontalAlignment="Right"
+                                               Padding="0,0,0,0"
+                                               Text="{x:Bind Quantity, Mode=OneWay}"/>
+                                    <Button Grid.Row="0"
+                                            Grid.Column="5"
+                                            Margin="4,0,0,0"
+                                            HorizontalAlignment="Right"
+                                            AutomationProperties.Name="Cancel the addition"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            Click="RemoveProduct_Click"
+                                            Content="&#xE711;"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            Foreground="Red"
+                                            Padding="4"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="0,0,0,0"/>
+                                <Setter Property="Padding" Value="0,0,0,0"/>
+                                <Setter Property="MinHeight" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+
+                    <!--  New line item section  -->
+                    <Border BorderBrush="LightGray" BorderThickness="0,0,0,0">
+                        <Grid Margin="0,20,0,0" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="32"/>
+                                <ColumnDefinition Width="32"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <AutoSuggestBox x:Name="ProductSearchBox"
+                                            Grid.Column="0"
+                                            MinWidth="200"
+                                            ItemsSource="{x:Bind ViewModel.ProductSuggestions}"
+                                            PlaceholderText="Enter a product..."
+                                            SuggestionChosen="ProductSearchBox_SuggestionChosen"
+                                            TextChanged="ProductSearchBox_TextChanged">
+                                    <AutoSuggestBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Product">
+
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock 
+                                                   Grid.Column="0"
+                                                   Grid.ColumnSpan="3"
+                                                   Margin="0,0,8,0"
+                                                   HorizontalAlignment="Stretch"
+                                                   Padding="0"
+                                                   Text="{x:Bind Name, Mode=OneWay}"/>
+                                                <TextBlock
+                                                   Grid.Column="2"
+                                                   Grid.Row="1"
+                                                   Margin="8,0,8,8"
+                                                   HorizontalAlignment="Right"
+                                                   Text="{x:Bind ListPrice, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </AutoSuggestBox.ItemTemplate>
+                                    <AutoSuggestBox.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                </AutoSuggestBox.ItemContainerStyle>
+                            </AutoSuggestBox>
+                            <TextBlock Grid.Column="2"
+                                       Margin="8,0,0,0"
+                                       HorizontalAlignment="Right"
+                                       Padding="0,0,0,0"
+                                       Text="{x:Bind ViewModel.NewLineItem.Product.ListPrice, Mode=OneWay}"
+                                       Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                            <TextBox Grid.Column="3"
+                                     Margin="8,0,-4,0"
+                                     HorizontalAlignment="Right"
+                                     HorizontalContentAlignment="Right"
+                                     InputScope="Number"
+                                     Padding="0, 0, 4, 0"
+                                     Text="{x:Bind ViewModel.NewLineItem.Quantity, Mode=TwoWay}"
+                                     TextAlignment="Right"/>
+                            <Button Grid.Column="4"
+                                    Margin="4,0,0,0"
+                                    HorizontalAlignment="Right"
+                                    AutomationProperties.Name="Add product"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Click="AddProductButton_Click"
+                                    Content="&#xE73E;"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    Foreground="Green"
+                                    Padding="4"
+                                    Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                            <Button Grid.Row="0"
+                                    Grid.Column="5"
+                                    Margin="4,0,0,0"
+                                    HorizontalAlignment="Right"
+                                    AutomationProperties.Name="Cancel the addition"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Click="CancelProductButton_Click"
+                                    Content="&#xE711;"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    Foreground="Red"
+                                    Padding="4"
+                                    Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}"/>
+                        </Grid>
+                    </Border>
+
+                    <!--  Subtotal, tax, and grand total section  -->
+                    <Grid Margin="0,20,64,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Column="2"
+                                   Margin="0,0,20,0"
+                                   HorizontalAlignment="Right"
+                                   Padding="0,0,0,0"
+                                   Text="SubTotal"/>
+                        <TextBlock Grid.Column="3"
+                                   Margin="0,0,0,0"
+                                   HorizontalAlignment="Right"
+                                   Padding="0,0,0,0"
+                                   Text="{x:Bind ViewModel.Subtotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                        <Border Grid.Row="2"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"/>
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="2"
+                                   Margin="0,0,0,0"
+                                   Padding="0,0,0,0"
+                                   Text="Tax"/>
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="3"
+                                   Margin="0,0,0,0"
+                                   HorizontalAlignment="Right"
+                                   Padding="0,0,0,0"
+                                   Text="{x:Bind ViewModel.Tax, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                        <Border Grid.Row="4"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1"/>
+                        <TextBlock Grid.Row="5"
+                                   Grid.Column="2"
+                                   Margin="0,0,0,0"
+                                   FontWeight="Bold"
+                                   Padding="0,0,0,0"
+                                   Text="Total"/>
+                        <TextBlock Grid.Row="5"
+                                   Grid.Column="3"
+                                   Margin="0,0,0,0"
+                                   HorizontalAlignment="Right"
+                                   FontWeight="Bold"
+                                   Padding="0,0,0,0"
+                                   Text="{x:Bind ViewModel.GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                    </Grid>
+
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!--  This progress indicator should be hidden when the data is finished loading.  -->
+        <ProgressRing x:Name="OrderLoadingProgressRing"
+                      Grid.Row="2"
+                      Width="40"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      IsActive="{x:Bind ViewModel.IsNotLoaded, Mode=OneWay}"
+                      Visibility="{x:Bind ViewModel.IsNotLoaded, Mode=OneWay, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+    </Grid>
+</Page>

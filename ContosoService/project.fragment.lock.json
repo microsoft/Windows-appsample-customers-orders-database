@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "exports": {
+    "ContosoModels/1.0.0": {
+      "type": "project",
+      "framework": ".NETFramework,Version=v4.6",
+      "compile": {
+        "bin/Debug/ContosoModels.dll": {}
+      },
+      "runtime": {
+        "bin/Debug/ContosoModels.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/ContosoModels.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
+      }
+    }
+  }
+}
