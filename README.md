@@ -77,6 +77,11 @@ The two details screens show how to use headings, labels, and whitespace to orga
 - Data controls: [ListView](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.ListView), [AutoSuggestBox](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.AutoSuggestBox)
 - Other controls: [Button](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Button), [HyperlinkButton](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.HyperlinkButton), [context menu](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/menus)
 
+
+### Adaptive layouts
+
+This sample demonstrates how to use visual states to adapt the UI for screen sizes varying from a 5 inch phone to a large desktop display. It also supports [Continuum for Phones](https://www.microsoft.com/windows/continuum), so you can use the app running on your Windows 10 phone on your Windows 10 PC. The app supports all versions of Windows 10, but new features are available on the latest versions. For example, the labels on command bar buttons are shown to the right of the icon on Windows 10, version 1607, but they are below the icon on previous versions of Windows 10.
+
 ## See also
 
 - [Web account manager](https://msdn.microsoft.com/windows/uwp/security/web-account-manager)

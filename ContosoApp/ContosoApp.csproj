@@ -98,8 +98,12 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StateTriggers\MobileScreenTrigger.cs" />
     <Compile Include="UserControls\AuthenticationControl.xaml.cs">
       <DependentUpon>AuthenticationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CollapsibleSearchBox.xaml.cs">
+      <DependentUpon>CollapsibleSearchBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
@@ -183,6 +187,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
+    <Page Include="UserControls\CollapsibleSearchBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\DetailExpander.xaml">
       <SubType>Designer</SubType>

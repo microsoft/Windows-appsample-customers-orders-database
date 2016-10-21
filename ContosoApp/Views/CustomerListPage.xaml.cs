@@ -53,6 +53,22 @@ namespace ContosoApp.Views
         {
             InitializeComponent();
             DataContext = ViewModel;
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
+            {
+                Window.Current.SizeChanged += CurrentWindow_SizeChanged;
+            }
+        }
+
+        private void CurrentWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && e.Size.Width >= (double)App.Current.Resources["MediumWindowSnapPoint"])
+            {
+                mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+            }
+            else
+            {
+                mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+            }
         }
 
         /// <summary>
@@ -74,6 +90,17 @@ namespace ContosoApp.Views
         /// </summary>
         private void CreateCustomer_Click(object sender, RoutedEventArgs e) =>
             GoToDetailsPage(null);
+        private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
+
+            if (searchBox != null)
+            {
+                searchBox.AutoSuggestBox.QuerySubmitted += CustomerSearchBox_QuerySubmitted;
+                searchBox.AutoSuggestBox.TextChanged += CustomerSearchBox_TextChanged;
+                searchBox.AutoSuggestBox.PlaceholderText = "Search customers...";
+            }
+        }
 
         /// <summary>
         /// Provide suggestions in the search box as the user types.
@@ -228,10 +255,26 @@ namespace ContosoApp.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar",
-                "DefaultLabelPosition"))
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
             {
-                ((CommandBar)sender).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+                }
+                else
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                }
+            }
+            else
+            {
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    var lastCommand = mainCommandBar.PrimaryCommands.Last();
+
+                    mainCommandBar.PrimaryCommands.Remove(lastCommand);
+                    mainCommandBar.SecondaryCommands.Add(lastCommand);
+                }
             }
         }
 

@@ -1,21 +1,21 @@
 <!--
-Copyright (c) Microsoft Corporation.  All rights reserved.
-The MIT License (MIT)
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    The MIT License (MIT)
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
 -->
 
 <Page x:Class="ContosoApp.Views.CustomerListPage"
@@ -26,6 +26,7 @@ THE SOFTWARE.
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:ContosoApp.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:stateTriggers="using:ContosoApp.StateTriggers"
       xmlns:uc="using:ContosoApp.UserControls"
       xmlns:viewModels="using:ContosoApp.ViewModels"
       NavigationCacheMode="Required"
@@ -65,21 +66,49 @@ THE SOFTWARE.
         <x:Double x:Key="CompanyNameWidth">160</x:Double>
         <x:Double x:Key="OrdersWidth">60</x:Double>
 
+
+        <DataTemplate x:Key="WideListItemTemplate" x:DataType="viewModels:CustomerViewModel">
+            <StackPanel DoubleTapped="ListViewItem_DoubleTapped" Orientation="Horizontal">
+                <TextBlock Width="{StaticResource FirstNameWidth}" Text="{x:Bind FirstName}"/>
+                <TextBlock Width="{StaticResource LastNameWidth}" Text="{x:Bind LastName}"/>
+                <TextBlock Width="{StaticResource EmailAddressWidth}" Text="{x:Bind Email}"/>
+                <TextBlock Width="{StaticResource PhoneNumberWidth}" Text="{x:Bind Phone}"/>
+                <TextBlock Width="{StaticResource CompanyNameWidth}" Text="{x:Bind Company}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="NarrowListItemTemplate" x:DataType="viewModels:CustomerViewModel">
+            <Grid Margin="0,0,0,12" DoubleTapped="ListViewItem_DoubleTapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Width="{StaticResource FirstNameWidth}" Text="{x:Bind FirstName}"/>
+                    <TextBlock Width="{StaticResource LastNameWidth}" Text="{x:Bind LastName}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Width="{StaticResource CompanyNameWidth}"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Text="{x:Bind Company}"/>
+                    <TextBlock Width="{StaticResource EmailAddressWidth}"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Text="{x:Bind Email}"/>
+                    <TextBlock Width="{StaticResource PhoneNumberWidth}"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource CaptionTextBlockStyle}"
+                               Text="{x:Bind Phone}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
     </Page.Resources>
 
-    <Grid x:Name="LayoutRoot">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <!--
-                It's important to not put the list view in a row with Height="Auto". If you do that,
-                the list height won't be constrained and the scrollbars won't show up. Use star(*) sizing instead.
-                https://msdn.microsoft.com/windows/uwp/layout/layouts-with-xaml#layout-properties
-            -->
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <RelativePanel Margin="24,0,12,0">
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel Margin="12,0">
             <uc:PageHeader x:Name="PageTitle">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Customers"/>
@@ -90,7 +119,8 @@ THE SOFTWARE.
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar HorizontalAlignment="Stretch"
+            <CommandBar x:Name="mainCommandBar"
+                        HorizontalAlignment="Stretch"
                         Background="Transparent"
                         Loaded="CommandBar_Loaded"
                         RelativePanel.LeftOf="CustomerSearchBox"
@@ -98,187 +128,179 @@ THE SOFTWARE.
                 <AppBarButton Click="ViewDetails_Click"
                               Icon="Contact"
                               IsEnabled="{x:Bind ViewModel.SelectedCustomer, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
-                              Label="View details"/>
+                              Label="View details"
+                              ToolTipService.ToolTip="View details"/>
                 <AppBarButton Click="AddOrder_Click"
                               Icon="Shop"
                               IsEnabled="{x:Bind ViewModel.SelectedCustomer, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
-                              Label="Add order"/>
-                <AppBarSeparator/>
+                              Label="Add order"
+                              ToolTipService.ToolTip="Add order"/>
                 <AppBarButton Command="{x:Bind ViewModel.StartEditCommand}"
                               Icon="Edit"
                               IsEnabled="{x:Bind ViewModel.SelectedCustomer, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
-                              Label="Edit"/>
+                              Label="Edit"
+                              ToolTipService.ToolTip="Edit"/>
+                <AppBarSeparator/>
                 <AppBarButton Click="CreateCustomer_Click"
                               Icon="Add"
-                              Label="New"/>
+                              Label="New"
+                              ToolTipService.ToolTip="New customer"/>
                 <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
                               Icon="Refresh"
-                              Label="Refresh"/>
+                              Label="Refresh"
+                              ToolTipService.ToolTip="Refresh list"/>
 
             </CommandBar>
-            <AutoSuggestBox x:Name="CustomerSearchBox"
-                            Width="240"
-                            Margin="12,8,0,0"
-                            PlaceholderText="Search customers..."
-                            QueryIcon="Find"
-                            QuerySubmitted="CustomerSearchBox_QuerySubmitted"
-                            RelativePanel.AlignRightWithPanel="True"
-                            TextChanged="CustomerSearchBox_TextChanged"/>
+            <uc:CollapsibleSearchBox x:Name="CustomerSearchBox"
+                                     Width="240"
+                                     Margin="12,8,0,0"
+                                     CollapseWidth="360"
+                                     Loaded="CustomerSearchBox_Loaded"
+                                     RelativePanel.AlignRightWithPanel="True"/>
 
-        </RelativePanel>
+            <Grid x:Name="errorPane"
+                  Background="Firebrick"
+                  Padding="12,0,0,0"
+                  RelativePanel.AlignLeftWithPanel="True"
+                  RelativePanel.AlignRightWithPanel="True"
+                  RelativePanel.Below="PageTitle"
+                  Visibility="{x:Bind ViewModel.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}">
+                <TextBlock Foreground="White"
+                           Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}"
+                           TextWrapping="WrapWholeWords"/>
+            </Grid>
 
-        <Grid x:Name="errorPane"
-              Grid.Row="1"
-              Background="Firebrick"
-              Padding="12,0,0,0"
-              Visibility="{x:Bind ViewModel.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}">
-            <TextBlock Foreground="White" Text="{x:Bind ViewModel.ErrorText, Mode=OneWay}"/>
-        </Grid>
+            <SplitView x:Name="listSplitView"
+                       DisplayMode="Inline"
+                       IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
+                       OpenPaneLength="260"
+                       PanePlacement="Right"
+                       RelativePanel.AlignLeftWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"
+                       RelativePanel.Below="errorPane">
+                <SplitView.Pane>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource GridHeaderHeight}"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-        <SplitView x:Name="listSplitView"
-                   Grid.Row="2"
-                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                   DisplayMode="Inline"
-                   IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
-                   OpenPaneLength="260"
-                   PaneBackground="{ThemeResource CommandBarBackground}"
-                   PanePlacement="Right">
-            <SplitView.Pane>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="{StaticResource GridHeaderHeight}"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
+                        <ToggleButton x:Name="OpenSummaryButton"
+                                      HorizontalAlignment="Right"
+                                      AutomationProperties.Name="Show summary"
+                                      IsChecked="{Binding IsPaneOpen,
+                                                          ElementName=listSplitView,
+                                                          Mode=TwoWay}"
+                                      TabIndex="1"
+                                      ToolTipService.ToolTip="Show summary">
+                            <SymbolIcon Symbol="OpenPane"/>
+                        </ToggleButton>
 
-                    <ToggleButton x:Name="OpenSummaryButton"
-                                  HorizontalAlignment="Right"
-                                  AutomationProperties.Name="Show summary"
-                                  IsChecked="{Binding IsPaneOpen,
-                                                      ElementName=listSplitView,
-                                                      Mode=TwoWay}"
-                                  TabIndex="1"
-                                  ToolTipService.ToolTip="Show summary">
-                        <SymbolIcon Symbol="OpenPane"/>
-                    </ToggleButton>
+                        <StackPanel x:Name="CustomerInfoPanel"
+                                    Grid.Row="1"
+                                    Margin="16,8,8,8"
+                                    Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, ConverterParameter=true, Mode=OneWay}">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <TextBlock FontWeight="SemiBold" Text="Name"/>
+                            <TextBlock Margin="0,0,0,16" Text="{x:Bind ViewModel.SelectedCustomer.Name, Mode=OneWay}"/>
+                            <TextBlock FontWeight="SemiBold" Text="Phone"/>
+                            <TextBlock Margin="0,0,0,16" Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}"/>
+                            <TextBlock FontWeight="SemiBold" Text="Email"/>
+                            <!--  Set Height to 20 so space is calculated correctly even when the HyperlinkButton is empty.  -->
+                            <HyperlinkButton Height="20"
+                                             Margin="0,0,0,16"
+                                             Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}"
+                                             Padding="0,0,0,0"/>
+                            <TextBlock FontWeight="SemiBold" Text="Address"/>
+                            <HyperlinkButton Margin="0,0,0,16"
+                                             Content="{x:Bind ViewModel.SelectedCustomer.Address, Mode=OneWay}"
+                                             Padding="0,0,0,0"/>
+                        </StackPanel>
 
-                    <StackPanel x:Name="CustomerInfoPanel"
-                                Grid.Row="1"
-                                Margin="16,8,8,8"
-                                Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, ConverterParameter=true, Mode=OneWay}">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBox">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <TextBlock FontWeight="SemiBold" Text="Name"/>
-                        <TextBlock Margin="0,0,0,16" Text="{x:Bind ViewModel.SelectedCustomer.Name, Mode=OneWay}"/>
-                        <TextBlock FontWeight="SemiBold" Text="Phone"/>
-                        <TextBlock Margin="0,0,0,16" Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}"/>
-                        <TextBlock FontWeight="SemiBold" Text="Email"/>
-                        <HyperlinkButton Margin="0,0,0,16"
-                                         Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}"
-                                         Padding="0,0,0,0"/>
-                        <TextBlock FontWeight="SemiBold" Text="Address"/>
-                        <HyperlinkButton Margin="0,0,0,16"
-                                         Content="{x:Bind ViewModel.SelectedCustomer.Address, Mode=OneWay}"
-                                         Padding="0,0,0,0"/>
-                    </StackPanel>
+                        <ScrollViewer x:Name="CustomerEditPanel"
+                                      Grid.Row="1"
+                                      Margin="16,8,8,8"
+                                      DataContext="{x:Bind ViewModel.EditDataContext, Mode=OneWay}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      VerticalScrollMode="Auto"
+                                      Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+                            <StackPanel>
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                        <Setter Property="MinHeight" Value="60"/>
+                                        <Setter Property="Margin" Value="0,0,0,16"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock Foreground="Firebrick"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind ViewModel.SelectedCustomer.ErrorText, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords"
+                                           Visibility="{x:Bind ViewModel.SelectedCustomer.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}"/>
+                                <TextBox x:Name="CustomerFirstNameText"
+                                         Header="First name"
+                                         Text="{Binding FirstName,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="CustomerLastNameText"
+                                         Header="Last name"
+                                         Text="{Binding LastName,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="CustomerPhoneNumber"
+                                         Header="Phone"
+                                         InputScope="TelephoneNumber"
+                                         Text="{Binding Phone,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="CustomerEmailText"
+                                         Header="Email"
+                                         InputScope="EmailNameOrAddress"
+                                         Text="{Binding Email,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="CustomerAddress"
+                                         Height="120"
+                                         AcceptsReturn="True"
+                                         Header="Address"
+                                         InputScope="EmailNameOrAddress"
+                                         IsSpellCheckEnabled="False"
+                                         Text="{Binding Address,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         TextWrapping="Wrap"/>
 
-                    <StackPanel x:Name="CustomerEditPanel"
-                                Grid.Row="1"
-                                Margin="16,8,8,8"
-                                DataContext="{x:Bind ViewModel.EditDataContext, Mode=OneWay}"
-                                Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBox">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="MinHeight" Value="60"/>
-                                <Setter Property="Margin" Value="0,0,0,16"/>
-                            </Style>
-                        </StackPanel.Resources>
-                        <TextBlock Foreground="Firebrick"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   Text="{x:Bind ViewModel.SelectedCustomer.ErrorText, Mode=OneWay}"
-                                   TextWrapping="WrapWholeWords"
-                                   Visibility="{x:Bind ViewModel.SelectedCustomer.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}"/>
-                        <TextBox x:Name="CustomerFirstNameText"
-                                 Header="First name"
-                                 Text="{Binding FirstName,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox x:Name="CustomerLastNameText"
-                                 Header="Last name"
-                                 Text="{Binding LastName,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox x:Name="CustomerPhoneNumber"
-                                 Header="Phone"
-                                 InputScope="TelephoneNumber"
-                                 Text="{Binding Phone,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox x:Name="CustomerEmailText"
-                                 Header="Email"
-                                 InputScope="EmailNameOrAddress"
-                                 Text="{Binding Email,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox x:Name="CustomerAddress"
-                                 Height="120"
-                                 AcceptsReturn="True"
-                                 Header="Address"
-                                 InputScope="EmailNameOrAddress"
-                                 IsSpellCheckEnabled="False"
-                                 Text="{Binding Address,
-                                                Mode=TwoWay,
-                                                UpdateSourceTrigger=PropertyChanged}"
-                                 TextWrapping="Wrap"/>
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button x:Name="CancelButton"
+                                            Margin="0,0,4,0"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.CancelEditsCommand}"
+                                            Content="Cancel"/>
+                                    <Button x:Name="SaveButton"
+                                            Grid.Column="1"
+                                            Margin="4,0,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            Command="{x:Bind ViewModel.SaveCommand}"
+                                            CommandParameter="{Binding}"
+                                            Content="Save"
+                                            IsEnabled="{Binding CanSave}"/>
+                                </Grid>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
 
-                        <Grid Margin="0,12,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Button x:Name="CancelButton"
-                                    Margin="0,0,4,0"
-                                    HorizontalAlignment="Stretch"
-                                    Command="{x:Bind ViewModel.CancelEditsCommand}"
-                                    Content="Cancel"/>
-                            <Button x:Name="SaveButton"
-                                    Grid.Column="1"
-                                    Margin="4,0,0,0"
-                                    HorizontalAlignment="Stretch"
-                                    Command="{x:Bind ViewModel.SaveCommand}"
-                                    CommandParameter="{Binding}"
-                                    Content="Save"
-                                    IsEnabled="{Binding CanSave}"/>
-                        </Grid>
-                    </StackPanel>
-                </Grid>
+                </SplitView.Pane>
 
-            </SplitView.Pane>
-
-            <SplitView.Content>
-                <Grid>
-                    <ToggleButton x:Name="CloseSummaryButton"
-                                  Height="{StaticResource HeaderHeight}"
-                                  HorizontalAlignment="Right"
-                                  VerticalAlignment="Top"
-                                  AutomationProperties.Name="Hide summary"
-                                  Canvas.ZIndex="100"
-                                  IsChecked="{Binding IsPaneOpen,
-                                                      ElementName=listSplitView,
-                                                      Mode=TwoWay}"
-                                  TabIndex="1"
-                                  ToolTipService.ToolTip="Hide summary"
-                                  Visibility="{Binding IsChecked,
-                                                       Converter={StaticResource boolToVisConverter},
-                                                       ConverterParameter=True,
-                                                       RelativeSource={RelativeSource Mode=Self}}">
-                        <SymbolIcon Symbol="ClosePane"/>
-                    </ToggleButton>
-
-                    <Grid Grid.Row="2">
+                <SplitView.Content>
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{StaticResource GridHeaderHeight}"/>
                             <RowDefinition Height="*"/>
@@ -286,9 +308,28 @@ THE SOFTWARE.
                                 It's important to not put the list view in a row with Height="Auto". If you do that,
                                 the list height won't be constrained and the scrollbars won't show up.
                             -->
-
                         </Grid.RowDefinitions>
-                        <StackPanel Background="{StaticResource AccentBackgroundColor}" Orientation="Horizontal">
+                        <ToggleButton x:Name="CloseSummaryButton"
+                                      Height="{StaticResource HeaderHeight}"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Top"
+                                      AutomationProperties.Name="Hide summary"
+                                      Canvas.ZIndex="100"
+                                      IsChecked="{Binding IsPaneOpen,
+                                                          ElementName=listSplitView,
+                                                          Mode=TwoWay}"
+                                      TabIndex="1"
+                                      ToolTipService.ToolTip="Hide summary"
+                                      Visibility="{Binding IsChecked,
+                                                           Converter={StaticResource boolToVisConverter},
+                                                           ConverterParameter=True,
+                                                           RelativeSource={RelativeSource Mode=Self}}">
+                            <SymbolIcon Symbol="ClosePane"/>
+                        </ToggleButton>
+                        <Rectangle Height="{StaticResource HeaderHeight}"
+                                   HorizontalAlignment="Stretch"
+                                   Fill="{ThemeResource AccentBackgroundColor}"/>
+                        <StackPanel x:Name="HeaderPanel" Orientation="Horizontal">
                             <StackPanel.Resources>
                                 <Style BasedOn="{StaticResource HeaderTextBlockStyle}" TargetType="TextBlock">
                                     <Setter Property="FontSize" Value="16"/>
@@ -296,7 +337,7 @@ THE SOFTWARE.
                                 </Style>
                             </StackPanel.Resources>
                             <TextBlock Width="{StaticResource FirstNameWidth}"
-                                       Margin="12,0,0,0"
+                                       Margin="8,0,0,0"
                                        Text=" First Name"/>
                             <TextBlock Width="{StaticResource LastNameWidth}" Text="Last Name"/>
                             <TextBlock Width="{StaticResource EmailAddressWidth}" Text="Email"/>
@@ -315,6 +356,7 @@ THE SOFTWARE.
                                             Grid.Row="1"
                                             ContextMenu="{StaticResource ListViewContextMenu}"
                                             IsSynchronizedWithCurrentItem="False"
+                                            ItemTemplate="{StaticResource WideListItemTemplate}"
                                             ItemsSource="{Binding Source={StaticResource CustomersCVS}}"
                                             KeyUp="ListView_KeyUp"
                                             SelectedItem="{Binding SelectedCustomer,
@@ -323,28 +365,66 @@ THE SOFTWARE.
                                 <GroupStyle>
                                     <GroupStyle.HeaderTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="{Binding Key}"/>
+                                            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
+                                                       Text="{Binding Key}"
+                                                       TextWrapping="NoWrap"/>
                                         </DataTemplate>
                                     </GroupStyle.HeaderTemplate>
                                 </GroupStyle>
                             </ListView.GroupStyle>
-
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="viewModels:CustomerViewModel">
-                                    <StackPanel DoubleTapped="ListViewItem_DoubleTapped" Orientation="Horizontal">
-                                        <TextBlock Width="{StaticResource FirstNameWidth}" Text="{x:Bind FirstName}"/>
-                                        <TextBlock Width="{StaticResource LastNameWidth}" Text="{x:Bind LastName}"/>
-                                        <TextBlock Width="{StaticResource EmailAddressWidth}" Text="{x:Bind Email}"/>
-                                        <TextBlock Width="{StaticResource PhoneNumberWidth}" Text="{x:Bind Phone}"/>
-                                        <TextBlock Width="{StaticResource CompanyNameWidth}" Text="{x:Bind Company}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
                         </uc:ContosoListView>
                     </Grid>
-                </Grid>
-            </SplitView.Content>
-        </SplitView>
-    </Grid>
+                </SplitView.Content>
+            </SplitView>
+        </RelativePanel>
 
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
+                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CustomerList.ItemTemplate" Value="{StaticResource NarrowListItemTemplate}"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
+                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        <Setter Target="HeaderPanel.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CustomerList.ItemTemplate" Value="{StaticResource NarrowListItemTemplate}"/>
+                        <Setter Target="listSplitView.(RelativePanel.Above)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        <Setter Target="CustomerSearchBox.Width" Value="300"/>
+                        <Setter Target="HeaderPanel.Visibility" Value="Collapsed"/>
+                        <Setter Target="CustomerAddress.Height" Value="90"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
 </Page>

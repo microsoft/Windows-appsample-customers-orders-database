@@ -195,9 +195,15 @@ namespace ContosoApp.Views
             if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
                 "Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
             {
-                ((CommandBar)sender).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+                }
+                else
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                }
             }
-
         }
 
         /// <summary>

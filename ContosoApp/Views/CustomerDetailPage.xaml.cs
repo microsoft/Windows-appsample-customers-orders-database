@@ -1,18 +1,18 @@
 //  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
-// 
+//
 //  The MIT License (MIT)
-// 
+//
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-// 
+//
 //  The above copyright notice and this permission notice shall be included in
 //  all copies or substantial portions of the Software.
-// 
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -82,6 +82,17 @@ namespace ContosoApp.Views
             base.OnNavigatingFrom(e);
         }
 
+        private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
+
+            if (searchBox != null)
+            {
+                searchBox.AutoSuggestBox.QuerySubmitted += CustomerSearchBox_QuerySubmitted;
+                searchBox.AutoSuggestBox.TextChanged += CustomerSearchBox_TextChanged;
+                searchBox.AutoSuggestBox.PlaceholderText = "Search customers...";
+            }
+        }
         /// <summary>
         /// Queries the database for a customer result matching the search text entered.
         /// </summary>
@@ -115,9 +126,8 @@ namespace ContosoApp.Views
             Customer customer = args.ChosenSuggestion as Customer;
             if (customer != null)
             {
-                ViewModel.Customer = new CustomerViewModel(customer);
+                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel(customer));
             }
-            Bindings.Update();
         }
 
         /// <summary>
@@ -125,10 +135,20 @@ namespace ContosoApp.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar",
-                "DefaultLabelPosition"))
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
             {
-                ((CommandBar)sender).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+                }
+                else
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                }
+
+                // Disable dynamic overflow on this page. There are only a few commands, and it causes
+                // layout problems when save and cancel commands are shown and hidden.
+                (sender as CommandBar).IsDynamicOverflowEnabled = false;
             }
         }
 

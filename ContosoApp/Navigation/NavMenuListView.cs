@@ -23,6 +23,7 @@
 //  ---------------------------------------------------------------------------------
 
 using System;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,7 +54,12 @@ namespace ContosoApp.Navigation
         public NavMenuListView()
         {
             SelectionMode = ListViewSelectionMode.Single;
-            SingleSelectionFollowsFocus = false;
+            // This API doesn't exist on early versions of Windows 10, so check for it an only set it if it
+            // exists on the version that the app is being run on.
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ListViewBase", "SingleSelectionFollowsFocus"))
+            {
+                SingleSelectionFollowsFocus = false;
+            }
             IsItemClickEnabled = true;
             ItemClick += ItemClickedHandler;
 

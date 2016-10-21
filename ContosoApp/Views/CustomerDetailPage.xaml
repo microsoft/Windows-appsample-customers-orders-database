@@ -1,21 +1,21 @@
 <!--
-Copyright (c) Microsoft Corporation.  All rights reserved.
-The MIT License (MIT)
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    The MIT License (MIT)
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
 -->
 
 <Page x:Class="ContosoApp.Views.CustomerDetailPage"
@@ -27,6 +27,7 @@ THE SOFTWARE.
       xmlns:local="using:ContosoApp.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:models="using:ContosoModels"
+      xmlns:stateTriggers="using:ContosoApp.StateTriggers"
       xmlns:uc="using:ContosoApp.UserControls"
       NavigationCacheMode="Enabled"
       mc:Ignorable="d">
@@ -40,13 +41,7 @@ THE SOFTWARE.
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <RelativePanel Margin="24,0,12,0">
+        <RelativePanel Margin="12,0">
             <uc:PageHeader x:Name="PageTitle">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
@@ -59,17 +54,19 @@ THE SOFTWARE.
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar HorizontalAlignment="Stretch"
+            <CommandBar x:Name="mainCommandBar"
+                        HorizontalAlignment="Stretch"
                         Background="Transparent"
                         Loaded="CommandBar_Loaded"
                         RelativePanel.LeftOf="CustomerSearchBox"
                         RelativePanel.RightOf="PageTitle">
                 <AppBarButton Command="{x:Bind ViewModel.SaveCommand}"
                               Icon="Save"
+                              IsEnabled="{x:Bind ViewModel.Customer.CanSave, Mode=OneWay}"
                               Label="Save"
-                              Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"
-                              IsEnabled="{x:Bind ViewModel.Customer.CanSave, Mode=OneWay}"/>
-                <AppBarButton Command="{x:Bind ViewModel.CancelEditsCommand}" Click="CancelEditButton_Click"
+                              Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
+                <AppBarButton Click="CancelEditButton_Click"
+                              Command="{x:Bind ViewModel.CancelEditsCommand}"
                               Icon="Cancel"
                               Label="Cancel"
                               Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
@@ -88,201 +85,258 @@ THE SOFTWARE.
                               Label="Refresh"/>
             </CommandBar>
 
-            <AutoSuggestBox x:Name="CustomerSearchBox"
-                            Width="240"
-                            Margin="12,8,0,0"
-                            PlaceholderText="Search Customers..."
-                            QueryIcon="Find"
-                            QuerySubmitted="CustomerSearchBox_QuerySubmitted"
-                            RelativePanel.AlignRightWithPanel="True"
-                            TextChanged="CustomerSearchBox_TextChanged"/>
-        </RelativePanel>
+            <uc:CollapsibleSearchBox x:Name="CustomerSearchBox"
+                                     Width="240"
+                                     Margin="12,8,0,0"
+                                     CollapseWidth="360"
+                                     Loaded="CustomerSearchBox_Loaded"
+                                     RelativePanel.AlignRightWithPanel="True"/>
 
-        <Grid x:Name="errorPane"
-              Grid.Row="1"
-              Background="Firebrick"
-              Padding="12,0,0,0"
-              Visibility="{x:Bind ViewModel.Customer.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}">
-            <TextBlock Foreground="White" Text="{x:Bind ViewModel.Customer.ErrorText, Mode=OneWay}"/>
-        </Grid>
+            <Grid x:Name="errorPane"
+                  Background="Firebrick"
+                  Padding="12,0,0,0"
+                  RelativePanel.AlignLeftWithPanel="True"
+                  RelativePanel.AlignRightWithPanel="True"
+                  RelativePanel.Below="PageTitle"
+                  Visibility="{x:Bind ViewModel.Customer.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}">
+                <TextBlock Foreground="White"
+                           Text="{x:Bind ViewModel.Customer.ErrorText, Mode=OneWay}"
+                           TextWrapping="WrapWholeWords"/>
+            </Grid>
 
-        <ScrollViewer Grid.Row="2"
-                      VerticalScrollBarVisibility="Auto"
-                      VerticalScrollMode="Auto"
-                      Visibility="{x:Bind ViewModel.Customer, Converter={StaticResource nullToVisConverter}}">
-            <StackPanel x:Name="DetailPanel" DataContext="{x:Bind ViewModel.EditDataContext, Mode=OneWay}" Margin="24,8,24,0">
-                <uc:DetailExpander Label="General">
-                    <uc:DetailExpander.Pane>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MaxWidth="260"/>
-                                <ColumnDefinition MaxWidth="260"/>
-                                <ColumnDefinition MaxWidth="260"/>
-                            </Grid.ColumnDefinitions>
+            <ScrollViewer x:Name="DetailPanel"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          RelativePanel.Below="errorPane"
+                          VerticalScrollBarVisibility="Auto"
+                          VerticalScrollMode="Auto"
+                          Visibility="{x:Bind ViewModel.Customer, Converter={StaticResource nullToVisConverter}}">
+                <StackPanel Margin="0,8,4,0" DataContext="{x:Bind ViewModel.EditDataContext, Mode=OneWay}">
+                    <uc:DetailExpander Label="General">
+                        <uc:DetailExpander.Pane>
+                            <RelativePanel>
+                                <TextBox x:Name="FirstName"
+                                         MinWidth="120"
+                                         Margin="0,0,16,0"
+                                         Header="First name"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         RelativePanel.AlignLeftWithPanel="True"
+                                         Text="{Binding FirstName,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
+                                <TextBox x:Name="LastName"
+                                         MinWidth="120"
+                                         Margin="0,0,16,0"
+                                         Header="Last name"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         RelativePanel.RightOf="FirstName"
+                                         Text="{Binding LastName,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
 
-                            <TextBox Margin="0,0,16,0"
-                                     Header="First name"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding FirstName,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                                     Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
-                            <TextBox Grid.Column="1"
-                                     Margin="0,0,16,0"
-                                     Header="Last name"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding LastName,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"
-                                     Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
-
-                            <TextBox x:Name="CompanyText"
-                                     Grid.Row="1"
-                                     Margin="0,0,16,0"
-                                     Header="Company name"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding Company,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBox x:Name="PhoneNumber"
-                                     Grid.Row="1"
-                                     Grid.Column="1"
-                                     Margin="0,0,16,0"
-                                     Header="Primary phone"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding Phone,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBox x:Name="EmailText"
-                                     Grid.Row="1"
-                                     Grid.Column="2"
-                                     Header="Primary email"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding Email,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"/>
-
-                        </Grid>
-
-                    </uc:DetailExpander.Pane>
-                    <uc:DetailExpander.HeaderContent>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.Name, Mode=OneWay}"/>
-                            <AppBarSeparator Height="12"/>
-                        </StackPanel>
-                    </uc:DetailExpander.HeaderContent>
-                </uc:DetailExpander>
-
-                <uc:DetailExpander Label="Addresses">
-                    <uc:DetailExpander.Pane>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition MaxWidth="260"/>
-                                <ColumnDefinition MaxWidth="260"/>
-                                <ColumnDefinition MaxWidth="260"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox Grid.ColumnSpan="3"
-                                     Header="Primary address"
-                                     IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                     Text="{Binding Address,
-                                                    Mode=TwoWay,
-                                                    UpdateSourceTrigger=PropertyChanged}"/>
-                        </Grid>
-                    </uc:DetailExpander.Pane>
-                    <uc:DetailExpander.HeaderContent>
-                        <StackPanel Orientation="Horizontal"/>
-                    </uc:DetailExpander.HeaderContent>
-                </uc:DetailExpander>
-
-                <uc:DetailExpander Label="Orders">
-                    <uc:DetailExpander.Pane>
-                        <Grid>
-                            <Grid.Resources>
-                                <x:Double x:Key="InvoiceIdWidth">48</x:Double>
-                                <x:Double x:Key="DateWidth">64</x:Double>
-                                <x:Double x:Key="AmountWidth">72</x:Double>
-                                <x:Double x:Key="StatusWidth">64</x:Double>
-                                <x:Double x:Key="TermWidth">64</x:Double>
-                            </Grid.Resources>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="16"/>
-                                <RowDefinition Height="*"/>
-                                <!--
-                                    It's important to not put the list view in a row with Height="Auto". If you do that,
-                                    the list height won't be constrained and the scrollbars won't show up.
-                                -->
-                            </Grid.RowDefinitions>
-                            <StackPanel Background="{StaticResource AccentBackgroundColor}" Orientation="Horizontal">
-                                <StackPanel.Resources>
-                                    <Style BasedOn="{StaticResource HeaderTextBlockStyle}" TargetType="TextBlock">
-                                        <Setter Property="FontSize" Value="12"/>
-                                        <!--<Setter Property="VerticalAlignment" Value="Center"/>-->
-                                    </Style>
-                                </StackPanel.Resources>
-                                <TextBlock Width="{StaticResource InvoiceIdWidth}"
-                                           Margin="12,0,0,0"
-                                           Text="Invoice"/>
-                                <TextBlock Width="{StaticResource DateWidth}" Text="Placed"/>
-                                <TextBlock Width="{StaticResource DateWidth}" Text="Filled"/>
-                                <TextBlock Width="{StaticResource AmountWidth}" Text="Subtotal"/>
-                                <TextBlock Width="{StaticResource AmountWidth}" Text="Tax"/>
-                                <TextBlock Width="{StaticResource AmountWidth}" Text="Total"/>
-                                <TextBlock Width="{StaticResource StatusWidth}" Text="Status"/>
-                                <TextBlock Width="{StaticResource TermWidth}" Text="Term"/>
-                            </StackPanel>
-                            <ProgressBar x:Name="ProgressIndicator"
+                                <TextBox x:Name="CompanyText"
                                          Grid.Row="1"
-                                         Margin="0,4"
-                                         HorizontalAlignment="Stretch"
-                                         VerticalAlignment="Top"
-                                         IsIndeterminate="True"
-                                         Visibility="{x:Bind ViewModel.Customer.IsLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
-                            <ListView x:Name="OrdersListView"
-                                      Grid.Row="1"
-                                      ItemsSource="{x:Bind ViewModel.Customer.Orders}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Order">
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel.Resources>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="FontSize" Value="12"/>
-                                                </Style>
-                                            </StackPanel.Resources>
-                                            <HyperlinkButton Width="{StaticResource InvoiceIdWidth}"
-                                                             HorizontalContentAlignment="Left"
-                                                             Click="ViewOrderButton_Click"
-                                                             Content="{x:Bind InvoiceNumber}"
-                                                             FontSize="12"
-                                                             IsTabStop="False"
-                                                             Padding="0"/>
-                                            <TextBlock Width="{StaticResource DateWidth}" Text="{x:Bind DatePlaced, Converter={StaticResource dateStringFormatConverter}}"/>
-                                            <TextBlock Width="{StaticResource DateWidth}" Text="{x:Bind DateFilled, Converter={StaticResource dateStringFormatConverter}}"/>
-                                            <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind Subtotal}"/>
-                                            <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind Tax}"/>
-                                            <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind GrandTotal}"/>
-                                            <TextBlock Width="{StaticResource StatusWidth}" Text="{x:Bind PaymentStatus}"/>
-                                            <TextBlock Width="{StaticResource TermWidth}" Text="{x:Bind Term}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Grid>
-                    </uc:DetailExpander.Pane>
-                    <uc:DetailExpander.HeaderContent>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
-                                       Text="{x:Bind ViewModel.Customer.OrderCount}"
-                                       ToolTipService.ToolTip="Count of orders"/>
-                            <AppBarSeparator Height="12"/>
-                        </StackPanel>
-                    </uc:DetailExpander.HeaderContent>
-                </uc:DetailExpander>
+                                         MinWidth="120"
+                                         Margin="0,16,16,0"
+                                         Header="Company name"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         RelativePanel.AlignLeftWithPanel="True"
+                                         RelativePanel.Below="FirstName"
+                                         Text="{Binding Company,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="PhoneNumber"
+                                         Grid.Row="1"
+                                         Grid.Column="1"
+                                         MinWidth="132"
+                                         Margin="0,16,16,0"
+                                         Header="Primary phone"
+                                         InputScope="TelephoneNumber"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         RelativePanel.Below="FirstName"
+                                         RelativePanel.RightOf="CompanyText"
+                                         Text="{Binding Phone,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox x:Name="EmailText"
+                                         Grid.Column="2"
+                                         MinWidth="160"
+                                         Margin="0,16,16,0"
+                                         Header="Primary email"
+                                         InputScope="EmailNameOrAddress"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         RelativePanel.Below="FirstName"
+                                         RelativePanel.RightOf="PhoneNumber"
+                                         Text="{Binding Email,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                            </RelativePanel>
 
-            </StackPanel>
-        </ScrollViewer>
+                        </uc:DetailExpander.Pane>
+                        <uc:DetailExpander.HeaderContent>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.Name, Mode=OneWay}"/>
+                                <AppBarSeparator Height="12"/>
+                            </StackPanel>
+                        </uc:DetailExpander.HeaderContent>
+                    </uc:DetailExpander>
+
+                    <uc:DetailExpander Label="Addresses">
+                        <uc:DetailExpander.Pane>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="260"/>
+                                    <ColumnDefinition MaxWidth="260"/>
+                                    <ColumnDefinition MaxWidth="260"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.ColumnSpan="3"
+                                         Header="Primary address"
+                                         IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
+                                         Text="{Binding Address,
+                                                        Mode=TwoWay,
+                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+                        </uc:DetailExpander.Pane>
+                        <uc:DetailExpander.HeaderContent>
+                            <StackPanel Orientation="Horizontal"/>
+                        </uc:DetailExpander.HeaderContent>
+                    </uc:DetailExpander>
+
+                    <uc:DetailExpander Label="Orders">
+                        <uc:DetailExpander.Pane>
+                            <Grid>
+                                <Grid.Resources>
+                                    <x:Double x:Key="InvoiceIdWidth">48</x:Double>
+                                    <x:Double x:Key="DateWidth">64</x:Double>
+                                    <x:Double x:Key="AmountWidth">72</x:Double>
+                                    <x:Double x:Key="StatusWidth">64</x:Double>
+                                    <x:Double x:Key="TermWidth">64</x:Double>
+                                </Grid.Resources>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="16"/>
+                                    <RowDefinition Height="*"/>
+                                    <!--
+                                        It's important to not put the list view in a row with Height="Auto". If you do that,
+                                        the list height won't be constrained and the scrollbars won't show up.
+                                    -->
+                                </Grid.RowDefinitions>
+                                <StackPanel Background="{ThemeResource AccentBackgroundColor}" Orientation="Horizontal">
+                                    <StackPanel.Resources>
+                                        <Style BasedOn="{StaticResource HeaderTextBlockStyle}" TargetType="TextBlock">
+                                            <Setter Property="FontSize" Value="12"/>
+                                            <!--<Setter Property="VerticalAlignment" Value="Center"/>-->
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock Width="{StaticResource InvoiceIdWidth}"
+                                               Margin="12,0,0,0"
+                                               Text="Invoice"/>
+                                    <TextBlock Width="{StaticResource DateWidth}" Text="Placed"/>
+                                    <TextBlock Width="{StaticResource DateWidth}" Text="Filled"/>
+                                    <TextBlock Width="{StaticResource AmountWidth}" Text="Subtotal"/>
+                                    <TextBlock Width="{StaticResource AmountWidth}" Text="Tax"/>
+                                    <TextBlock Width="{StaticResource AmountWidth}" Text="Total"/>
+                                    <TextBlock Width="{StaticResource StatusWidth}" Text="Status"/>
+                                    <TextBlock Width="{StaticResource TermWidth}" Text="Term"/>
+                                </StackPanel>
+                                <ProgressBar x:Name="ProgressIndicator"
+                                             Grid.Row="1"
+                                             Margin="0,4"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Top"
+                                             IsIndeterminate="True"
+                                             Visibility="{x:Bind ViewModel.Customer.IsLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
+                                <ListView x:Name="OrdersListView"
+                                          Grid.Row="1"
+                                          ItemsSource="{x:Bind ViewModel.Customer.Orders}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <StackPanel Orientation="Horizontal">
+                                                <StackPanel.Resources>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                    </Style>
+                                                </StackPanel.Resources>
+                                                <HyperlinkButton Width="{StaticResource InvoiceIdWidth}"
+                                                                 HorizontalContentAlignment="Left"
+                                                                 Click="ViewOrderButton_Click"
+                                                                 Content="{x:Bind InvoiceNumber}"
+                                                                 FontSize="12"
+                                                                 IsTabStop="False"
+                                                                 Padding="0"/>
+                                                <TextBlock Width="{StaticResource DateWidth}" Text="{x:Bind DatePlaced, Converter={StaticResource dateStringFormatConverter}}"/>
+                                                <TextBlock Width="{StaticResource DateWidth}" Text="{x:Bind DateFilled, Converter={StaticResource dateStringFormatConverter}}"/>
+                                                <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind Subtotal}"/>
+                                                <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind Tax}"/>
+                                                <TextBlock Width="{StaticResource AmountWidth}" Text="{x:Bind GrandTotal}"/>
+                                                <TextBlock Width="{StaticResource StatusWidth}" Text="{x:Bind PaymentStatus}"/>
+                                                <TextBlock Width="{StaticResource TermWidth}" Text="{x:Bind Term}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
+                        </uc:DetailExpander.Pane>
+                        <uc:DetailExpander.HeaderContent>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind ViewModel.Customer.OrderCount}"
+                                           ToolTipService.ToolTip="Count of orders"/>
+                                <AppBarSeparator Height="12"/>
+                            </StackPanel>
+                        </uc:DetailExpander.HeaderContent>
+                    </uc:DetailExpander>
+
+                </StackPanel>
+            </ScrollViewer>
+        </RelativePanel>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
+                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
+                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="DetailPanel.(RelativePanel.Above)" Value="mainCommandBar"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
+                        <Setter Target="CustomerSearchBox.Width" Value="300"/>
+                        <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
+                        <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

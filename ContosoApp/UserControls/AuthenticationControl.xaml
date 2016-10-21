@@ -1,51 +1,61 @@
 <!--
-Copyright (c) Microsoft Corporation.  All rights reserved.
-The MIT License (MIT)
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+    Copyright (c) Microsoft Corporation.  All rights reserved.
+    The MIT License (MIT)
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
 -->
 
-<UserControl
-    x:Class="ContosoApp.UserControls.AuthenticationControl"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ContosoApp"
-    xmlns:viewModels="using:ContosoApp.ViewModels"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+<UserControl x:Class="ContosoApp.UserControls.AuthenticationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="using:ContosoApp.ValueConverters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="using:ContosoApp"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="using:ContosoApp.ViewModels"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
 
     <UserControl.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="boolToVisConverter"/>
+
         <Style x:Key="SplitViewPaneButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent"/>
             <!--<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>-->
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="MinHeight" Value="48" />
-            <Setter Property="MinWidth" Value="48" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="MinHeight" Value="48"/>
+            <Setter Property="MinWidth" Value="48"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="UseSystemFocusVisuals" Value="True"/>
-            <Setter Property="FocusVisualMargin" Value="0"/>
+            <!--<Setter Property="FocusVisualMargin" Value="0"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              AutomationProperties.AccessibilityView="Raw"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              Padding="{TemplateBinding Padding}"/>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -55,7 +65,7 @@ THE SOFTWARE.
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
@@ -63,7 +73,7 @@ THE SOFTWARE.
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                             <!--<PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>-->
@@ -71,27 +81,19 @@ THE SOFTWARE.
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <ContentPresenter x:Name="ContentPresenter"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          Padding="{TemplateBinding Padding}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Content="{TemplateBinding Content}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -101,9 +103,14 @@ THE SOFTWARE.
 
     <Grid Height="48">
 
-        <!-- Start -->
-        <Button Click="{x:Bind ViewModel.LoginClick}" Visibility="{Binding ShowWelcome}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0"
-                Style="{StaticResource SplitViewPaneButtonStyle}">
+        <!--  Start  -->
+        <Button HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Click="{x:Bind ViewModel.LoginClick}"
+                Padding="0"
+                Style="{StaticResource SplitViewPaneButtonStyle}"
+                Visibility="{Binding ShowWelcome, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48"/>
@@ -114,16 +121,25 @@ THE SOFTWARE.
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1E2;" Grid.RowSpan="2" />
-                <TextBlock Text="Sign in" VerticalAlignment="Center"
-                               Grid.Column="2" Grid.RowSpan="2"/>
+                <FontIcon Grid.RowSpan="2"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="&#xE1E2;"/>
+                <TextBlock Grid.RowSpan="2"
+                           Grid.Column="2"
+                           VerticalAlignment="Center"
+                           Text="Sign in"/>
             </Grid>
         </Button>
 
 
-        <!-- User info -->
-        <Button Click="{x:Bind ViewModel.LogoutClick}" Visibility="{Binding ShowData}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="0"
-                Style="{StaticResource SplitViewPaneButtonStyle}">
+        <!--  User info  -->
+        <Button HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                HorizontalContentAlignment="Left"
+                Click="{x:Bind ViewModel.LogoutClick}"
+                Padding="0"
+                Style="{StaticResource SplitViewPaneButtonStyle}"
+                Visibility="{Binding ShowData, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48"/>
@@ -135,22 +151,27 @@ THE SOFTWARE.
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Ellipse x:Name="Ellipse"
+                         Grid.RowSpan="2"
                          Width="24"
-                         Height="24"
-                         Grid.RowSpan="2">
+                         Height="24">
                     <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Photo, Mode=OneWay}" />
+                        <ImageBrush ImageSource="{Binding Photo, Mode=OneWay}"/>
                     </Ellipse.Fill>
                 </Ellipse>
-                <TextBlock Text="{Binding Email}" HorizontalAlignment="Center" Grid.Column="2" Style="{StaticResource CaptionTextBlockStyle}" />
-                <TextBlock Text="Sign out" VerticalAlignment="Center"
-                               Grid.Column="2" Grid.Row="1"/>
+                <TextBlock Grid.Column="2"
+                           HorizontalAlignment="Center"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Text="{Binding Email}"/>
+                <TextBlock Grid.Row="1"
+                           Grid.Column="2"
+                           VerticalAlignment="Center"
+                           Text="Sign out"/>
             </Grid>
         </Button>
 
 
-        <!-- Loading -->
-        <Grid Visibility="{Binding ShowLoading}">
+        <!--  Loading  -->
+        <Grid Visibility="{Binding ShowLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition Width="8"/>
@@ -160,22 +181,18 @@ THE SOFTWARE.
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <ProgressRing IsActive="True" Height="36" Width="36" Grid.RowSpan="2"/>
-            <TextBlock Text="Signing in..." VerticalAlignment="Center"
-                               Grid.Column="2" Grid.RowSpan="2"/>
+            <ProgressRing Grid.RowSpan="2"
+                          Width="36"
+                          Height="36"
+                          IsActive="True"/>
+            <TextBlock Grid.RowSpan="2"
+                       Grid.Column="2"
+                       VerticalAlignment="Center"
+                       Text="Signing in..."/>
         </Grid>
 
-        <!-- Error -->
-        <!--<StackPanel Visibility="{Binding ShowError}">
-            <TextBlock Text=":( Something went wrong" HorizontalAlignment="Center"
-                       FontSize="36" Margin="4, 4, 4, 4"/>
-            <TextBlock Text="Try restarting the app or contact your IT admin for help with this error:"
-                       HorizontalAlignment="Center"
-                       FontSize="12" />
-            <TextBlock Text="{Binding ErrorText}" />
-        </StackPanel>-->
-
-        <Grid Visibility="{Binding ShowError}">
+        <!--  Error  -->
+        <Grid Visibility="{Binding ShowError, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition Width="8"/>
@@ -185,9 +202,13 @@ THE SOFTWARE.
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE1E0;" Grid.RowSpan="2" />
-            <TextBlock Text=":( Something went wrong." VerticalAlignment="Center"
-                               Grid.Column="2" Grid.RowSpan="2"/>
+            <FontIcon Grid.RowSpan="2"
+                      FontFamily="Segoe MDL2 Assets"
+                      Glyph="&#xE1E0;"/>
+            <TextBlock Grid.RowSpan="2"
+                       Grid.Column="2"
+                       VerticalAlignment="Center"
+                       Text=":( Something went wrong."/>
         </Grid>
 
     </Grid>

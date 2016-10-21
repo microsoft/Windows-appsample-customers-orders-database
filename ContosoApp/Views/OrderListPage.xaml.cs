@@ -112,11 +112,30 @@ namespace ContosoApp.Views
             if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
                 "Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
             {
-                ((CommandBar)sender).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+                }
+                else
+                {
+                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+                }
             }
         }
 
+        private void OrderSearchBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
 
+            if (searchBox != null)
+            {
+                searchBox.AutoSuggestBox.QuerySubmitted += OrderSearch_QuerySubmitted;
+                searchBox.AutoSuggestBox.TextChanged += OrderSearch_TextChanged;
+                searchBox.AutoSuggestBox.PlaceholderText = "Search orders...";
+                searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)this.Resources["SearchSuggestionItemTemplate"];
+                searchBox.AutoSuggestBox.ItemContainerStyle = (Style)this.Resources["SearchSuggestionItemStyle"];
+            }
+        }
         /// <summary>
         /// Creates an email about the currently selected invoice. 
         /// </summary>
