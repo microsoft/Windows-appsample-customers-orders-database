@@ -2,9 +2,10 @@
   category: ControlsLayoutAndText Data IdentitySecurityAndEncryption Navigation NetworkingAndWebServices
 -->
 
-# UWP Customers Orders Database sample 
+# Customers Orders Database sample 
 
-Customers Orders Database is a Universal Windows Platform (UWP) app sample that demonstrates common enterprise scenarios such as creating and maintaining customer accounts, orders, and products.
+A mini-app sample that shows common enterprise scenarios such as creating and maintaining customer accounts, orders, and products. 
+This sample runs on the Universal Windows Platform (UWP). 
 
 The app showcases features useful to enterprise developers, like user authentication, UI controls, and cloud database integration.
 
