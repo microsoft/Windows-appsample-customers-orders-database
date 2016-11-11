@@ -19,6 +19,8 @@ This sample highlights:
 - Connecting to an external data source
 - The master/details UI pattern
 - Form layouts
+- Adaptive UI
+- [Continuum for Phones](https://www.microsoft.com/windows/continuum)
 
 ## Run the sample
 
