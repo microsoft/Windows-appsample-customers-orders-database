@@ -57,10 +57,10 @@ namespace ContosoApp.Views
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            CustomerViewModel2 customer = e.Parameter as CustomerViewModel2;
+            CustomerViewModel customer = e.Parameter as CustomerViewModel;
             if (customer == null)
             {
-                ViewModel.Customer = new CustomerViewModel2();
+                ViewModel.Customer = new CustomerViewModel();
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
             }
@@ -127,7 +127,7 @@ namespace ContosoApp.Views
             Customer customer = args.ChosenSuggestion as Customer;
             if (customer != null)
             {
-                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel2(customer));
+                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel(customer));
             }
         }
 

@@ -46,12 +46,12 @@ namespace ContosoApp.ViewModels
             RefreshCommand = new RelayCommand(OnRefresh);
         }
          
-        public ObservableCollection<CustomerViewModel2> Customers2 { get; set; } = 
-            new ObservableCollection<CustomerViewModel2>(); 
+        public ObservableCollection<CustomerViewModel> Customers2 { get; set; } = 
+            new ObservableCollection<CustomerViewModel>(); 
 
-        private CustomerViewModel2 _selectedCustomer2;
+        private CustomerViewModel _selectedCustomer2;
 
-        public CustomerViewModel2 SelectedCustomer2
+        public CustomerViewModel SelectedCustomer2
         {
             get { return _selectedCustomer2; }
             set
@@ -95,7 +95,7 @@ namespace ContosoApp.ViewModels
             {
                 foreach (var c in customers)
                 {
-                    Customers2.Add(new CustomerViewModel2(c)); 
+                    Customers2.Add(new CustomerViewModel(c)); 
                 }
                 IsLoading = false;
             });

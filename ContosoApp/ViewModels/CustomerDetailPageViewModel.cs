@@ -49,7 +49,7 @@ namespace ContosoApp.ViewModels
             Task.Run(LoadCustomerOrders);
         }
 
-        public CustomerDetailPageViewModel(CustomerViewModel2 customer) : this()
+        public CustomerDetailPageViewModel(CustomerViewModel customer) : this()
         {
             _customer = customer;
         }
@@ -59,7 +59,7 @@ namespace ContosoApp.ViewModels
 
         public bool IsLoading { get; set; }
 
-        private CustomerViewModel2 _customer;
+        private CustomerViewModel _customer;
 
         public async Task LoadCustomerOrders()
         {
@@ -79,7 +79,7 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Gets and sets the current customer values.
         /// </summary>
-        public CustomerViewModel2 Customer
+        public CustomerViewModel Customer
         {
             get { return _customer; }
 
@@ -128,7 +128,7 @@ namespace ContosoApp.ViewModels
             }
         }
 
-        public CustomerViewModel2 EditDataContext { get; set; }
+        public CustomerViewModel EditDataContext { get; set; }
 
         public RelayCommand SaveCommand { get; private set; }
 

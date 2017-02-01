@@ -135,7 +135,6 @@
     <Compile Include="ViewModels\CustomerDetailPageViewModel.cs" />
     <Compile Include="ViewModels\CustomerListPageViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
-    <Compile Include="ViewModels\CustomerViewModel2.cs" />
     <Compile Include="ViewModels\OrderDetailPageViewModel.cs" />
     <Compile Include="ViewModels\OrderListPageViewModel.cs" />
     <Compile Include="Views\CustomerDetailPage.xaml.cs">

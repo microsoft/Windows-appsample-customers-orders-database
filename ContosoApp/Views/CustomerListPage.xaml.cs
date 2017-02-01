@@ -155,7 +155,7 @@ namespace ContosoApp.Views
         {
             if (sender is MenuFlyoutItem)
             {
-                GoToOrderPage((sender as FrameworkElement).DataContext as CustomerViewModel2);
+                GoToOrderPage((sender as FrameworkElement).DataContext as CustomerViewModel);
             }
             else
             {
@@ -166,14 +166,14 @@ namespace ContosoApp.Views
         /// <summary>
         /// Navigates to the customer detail page for the provided customer.
         /// </summary>
-        private void GoToDetailsPage(CustomerViewModel2 customer) =>
+        private void GoToDetailsPage(CustomerViewModel customer) =>
             Frame.Navigate(typeof(CustomerDetailPage), customer,
                 new DrillInNavigationTransitionInfo());
 
         /// <summary>
         /// Navigates to the order detail page for the provided customer.
         /// </summary>
-        private void GoToOrderPage(CustomerViewModel2 customer) =>
+        private void GoToOrderPage(CustomerViewModel customer) =>
             Frame.Navigate(typeof(OrderDetailPage), customer._model);
     }
 }
