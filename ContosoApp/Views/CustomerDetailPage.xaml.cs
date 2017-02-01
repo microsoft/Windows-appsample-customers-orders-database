@@ -57,16 +57,17 @@ namespace ContosoApp.Views
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            CustomerViewModel customer = e.Parameter as CustomerViewModel;
+            CustomerViewModel2 customer = e.Parameter as CustomerViewModel2;
             if (customer == null)
             {
-                ViewModel.Customer = new CustomerViewModel();
+                ViewModel.Customer = new CustomerViewModel2();
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
             }
             else if (ViewModel.Customer != customer)
             {
-                ViewModel.Customer = customer;
+                ViewModel = new CustomerDetailPageViewModel();
+                ViewModel.Customer = customer;  
                 Bindings.Update();
             }
             base.OnNavigatedTo(e);
@@ -126,7 +127,7 @@ namespace ContosoApp.Views
             Customer customer = args.ChosenSuggestion as Customer;
             if (customer != null)
             {
-                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel(customer));
+                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel2(customer));
             }
         }
 
@@ -163,15 +164,15 @@ namespace ContosoApp.Views
         /// Adds a new order for the customer.
         /// </summary>
         private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer.Model);
+            Frame.Navigate(typeof(OrderDetailPage), null);  //ViewModel.Customer.);
 
         private void CancelEditButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Customer.IsNewCustomer == true
-                && Frame.CanGoBack == true)
-            {
-                Frame.GoBack();
-            }
+            //if (ViewModel.Customer.IsNewCustomer == true
+            //    && Frame.CanGoBack == true)
+            //{
+            //    Frame.GoBack();
+            //}
         }
     }
 }

@@ -46,7 +46,7 @@
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
                                Style="{StaticResource PageTitleTextBlockStyle}"
-                               Text="{x:Bind ViewModel.Customer.Name, Mode=OneWay}"/>
+                               Text="{x:Bind ViewModel.Name, Mode=OneWay}"/>
                 </uc:PageHeader.HeaderContent>
             </uc:PageHeader>
 
@@ -62,7 +62,6 @@
                         RelativePanel.RightOf="PageTitle">
                 <AppBarButton Command="{x:Bind ViewModel.SaveCommand}"
                               Icon="Save"
-                              IsEnabled="{x:Bind ViewModel.Customer.CanSave, Mode=OneWay}"
                               Label="Save"
                               Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
                 <AppBarButton Click="CancelEditButton_Click"
@@ -77,11 +76,9 @@
                               Label="Edit"/>
                 <AppBarButton Click="AddOrder_Click"
                               Icon="Shop"
-                              IsEnabled="{x:Bind ViewModel.Customer.IsNewCustomer, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                               Label="Add order"/>
                 <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
                               Icon="Refresh"
-                              IsEnabled="{x:Bind ViewModel.Customer.IsNewCustomer, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                               Label="Refresh"/>
             </CommandBar>
 
@@ -98,9 +95,9 @@
                   RelativePanel.AlignLeftWithPanel="True"
                   RelativePanel.AlignRightWithPanel="True"
                   RelativePanel.Below="PageTitle"
-                  Visibility="{x:Bind ViewModel.Customer.ErrorText, Converter={StaticResource stringVisConverter}, Mode=OneWay}">
+                  Visibility="Collapsed">
                 <TextBlock Foreground="White"
-                           Text="{x:Bind ViewModel.Customer.ErrorText, Mode=OneWay}"
+                           Text="TBD"
                            TextWrapping="WrapWholeWords"/>
             </Grid>
 
@@ -121,9 +118,7 @@
                                          Header="First name"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.AlignLeftWithPanel="True"
-                                         Text="{Binding FirstName,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         Text="{x:Bind ViewModel.Customer.FirstName, Mode=TwoWay}"
                                          Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
                                 <TextBox x:Name="LastName"
                                          MinWidth="120"
@@ -131,11 +126,8 @@
                                          Header="Last name"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.RightOf="FirstName"
-                                         Text="{Binding LastName,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                                         Text="{x:Bind ViewModel.Customer.LastName, Mode=TwoWay}"
                                          Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
-
                                 <TextBox x:Name="CompanyText"
                                          Grid.Row="1"
                                          MinWidth="120"
@@ -144,9 +136,7 @@
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.AlignLeftWithPanel="True"
                                          RelativePanel.Below="FirstName"
-                                         Text="{Binding Company,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{x:Bind ViewModel.Customer.Company, Mode=TwoWay}"/>
                                 <TextBox x:Name="PhoneNumber"
                                          Grid.Row="1"
                                          Grid.Column="1"
@@ -157,9 +147,7 @@
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.Below="FirstName"
                                          RelativePanel.RightOf="CompanyText"
-                                         Text="{Binding Phone,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{x:Bind ViewModel.Customer.Phone, Mode=TwoWay}" />
                                 <TextBox x:Name="EmailText"
                                          Grid.Column="2"
                                          MinWidth="160"
@@ -169,15 +157,13 @@
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.Below="FirstName"
                                          RelativePanel.RightOf="PhoneNumber"
-                                         Text="{Binding Email,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{x:Bind ViewModel.Customer.Email, Mode=TwoWay}"/>
                             </RelativePanel>
 
                         </uc:DetailExpander.Pane>
                         <uc:DetailExpander.HeaderContent>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.Name, Mode=OneWay}"/>
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.FirstName, Mode=OneWay}"/>
                                 <AppBarSeparator Height="12"/>
                             </StackPanel>
                         </uc:DetailExpander.HeaderContent>
@@ -194,9 +180,7 @@
                                 <TextBox Grid.ColumnSpan="3"
                                          Header="Primary address"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
-                                         Text="{Binding Address,
-                                                        Mode=TwoWay,
-                                                        UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{x:Bind ViewModel.Customer.Address, Mode=TwoWay}" />
                             </Grid>
                         </uc:DetailExpander.Pane>
                         <uc:DetailExpander.HeaderContent>
@@ -226,7 +210,6 @@
                                     <StackPanel.Resources>
                                         <Style BasedOn="{StaticResource HeaderTextBlockStyle}" TargetType="TextBlock">
                                             <Setter Property="FontSize" Value="12"/>
-                                            <!--<Setter Property="VerticalAlignment" Value="Center"/>-->
                                         </Style>
                                     </StackPanel.Resources>
                                     <TextBlock Width="{StaticResource InvoiceIdWidth}"
@@ -246,10 +229,11 @@
                                              HorizontalAlignment="Stretch"
                                              VerticalAlignment="Top"
                                              IsIndeterminate="True"
-                                             Visibility="{x:Bind ViewModel.Customer.IsLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
+                                             Visibility="{x:Bind ViewModel.IsLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+                                </ProgressBar>
                                 <ListView x:Name="OrdersListView"
                                           Grid.Row="1"
-                                          ItemsSource="{x:Bind ViewModel.Customer.Orders}">
+                                          ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate x:DataType="models:Order">
                                             <StackPanel Orientation="Horizontal">
@@ -278,16 +262,7 @@
                                 </ListView>
                             </Grid>
                         </uc:DetailExpander.Pane>
-                        <uc:DetailExpander.HeaderContent>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
-                                           Text="{x:Bind ViewModel.Customer.OrderCount}"
-                                           ToolTipService.ToolTip="Count of orders"/>
-                                <AppBarSeparator Height="12"/>
-                            </StackPanel>
-                        </uc:DetailExpander.HeaderContent>
                     </uc:DetailExpander>
-
                 </StackPanel>
             </ScrollViewer>
         </RelativePanel>

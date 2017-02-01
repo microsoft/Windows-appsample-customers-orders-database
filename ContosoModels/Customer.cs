@@ -24,13 +24,14 @@
 
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System;
 
 namespace ContosoModels
 {
     /// <summary>
     /// Represents a customer.
     /// </summary>
-    public class Customer : DbObject
+    public class Customer : DbObject, IEquatable<Customer>
     {
         /// <summary>
         /// Gets or sets the customer's first name.
@@ -41,11 +42,6 @@ namespace ContosoModels
         /// Gets or sets the customer's last name.
         /// </summary>
         public string LastName { get; set; }
-
-        /// <summary>
-        /// Gets the customer's first and last name.
-        /// </summary>
-        public string Name => $"{FirstName} {LastName}"; 
 
         /// <summary>
         /// Gets or sets the customer's company.
@@ -74,8 +70,21 @@ namespace ContosoModels
         public virtual List<Order> Orders { get; set; }
 
         /// <summary>
-        /// Returns the customer's name,.
+        /// Returns the customer's name.
         /// </summary>
-        public override string ToString() => Name;
+        public override string ToString() => $"{FirstName} {LastName}";
+
+        public bool Equals(Customer other)
+        {
+            return 
+                this.FirstName == other.FirstName &&
+                this.LastName == other.LastName &&
+                this.Company == other.Company &&
+                this.Email == other.Email &&
+                this.Phone == other.Phone &&
+                this.Address == other.Address;
+        }
+
+        public Customer Clone() => (Customer)MemberwiseClone(); 
     }
 }

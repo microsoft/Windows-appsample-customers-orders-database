@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------------
+﻿//  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 // 
 //  The MIT License (MIT)
@@ -22,51 +22,44 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ContosoModels;
+using System;
 using System.Data.Entity;
-using ContosoDatabase;
 
-namespace ContosoService.Controllers
+namespace ContosoDatabase
 {
     /// <summary>
-    /// Contains methods for interacting with product data.
+    /// Entity Framework DbContext for Contoso.
     /// </summary>
-    [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class ContosoContext : DbContext
     {
-        private ContosoContext _db = new ContosoContext();
+        public const string CsProd = @"<TODO: Insert connection string>";
+
+        public const string CsDev = @"<TODO: Insert connection string>";
 
         /// <summary>
-        /// Gets all products in the database.
+        /// Creates a new Contoso DbContext.
         /// </summary>
-        [HttpGet]
-        public async Task<IEnumerable<Product>> Get() => await _db.Products.ToArrayAsync();
+        public ContosoContext() : base(CsProd)
+        {
+            AppDomain.CurrentDomain.SetData("DataDirectory",
+                System.IO.Directory.GetCurrentDirectory());
+            Database.CommandTimeout = 90;
+        }
 
         /// <summary>
-        /// Gets the product with the given id.
+        /// Gets the customers DbSet.
         /// </summary>
-        [HttpGet("{id}")]
-        public async Task<Product> Get(Guid id) => await _db.Products.FirstOrDefaultAsync(x => x.Id == id);
-
+        public DbSet<Customer> Customers { get; set; }
 
         /// <summary>
-        /// Gets all products with a data field matching the start of the given string.
+        /// Gets the orders DbSet.
         /// </summary>
-        [HttpGet("search")]
-        public async Task<IEnumerable<Product>> Search(string value) =>
-            await _db.Products.Where(x =>
-                x.Name.StartsWith(value) ||
-                x.Color.StartsWith(value) ||
-                x.DaysToManufacture.ToString().StartsWith(value) ||
-                x.StandardCost.ToString().StartsWith(value) ||
-                x.ListPrice.ToString().StartsWith(value) ||
-                x.Weight.ToString().StartsWith(value) ||
-                x.Description.StartsWith(value))
-            .ToArrayAsync();
+        public DbSet<Order> Orders { get; set; }
+
+        /// <summary>
+        /// Gets the products DbSet.
+        /// </summary>
+        public DbSet<Product> Products { get; set; }
     }
 }
