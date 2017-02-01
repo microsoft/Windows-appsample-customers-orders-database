@@ -70,12 +70,12 @@
                         RelativePanel.RightOf="PageTitle">
                 <AppBarButton Click="ViewDetails_Click"
                               Icon="Contact"
-                              IsEnabled="{x:Bind ViewModel.SelectedCustomer2, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                              IsEnabled="{x:Bind ViewModel.SelectedCustomer, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
                               Label="View details"
                               ToolTipService.ToolTip="View details"/>
                 <AppBarButton Click="AddOrder_Click"
                               Icon="Shop"
-                              IsEnabled="{x:Bind ViewModel.SelectedCustomer2, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                              IsEnabled="{x:Bind ViewModel.SelectedCustomer, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
                               Label="Add order"
                               ToolTipService.ToolTip="Add order"/>
                 <AppBarSeparator/>
@@ -109,8 +109,8 @@
             </Grid>
 
             <telerikGrid:RadDataGrid x:Name="DataGrid" 
-                                     ItemsSource="{x:Bind ViewModel.Customers2}"
-                                     SelectedItem="{Binding SelectedCustomer2, Mode=TwoWay}"
+                                     ItemsSource="{x:Bind ViewModel.Customers}"
+                                     SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                                      UserEditMode="Inline"
                                      RelativePanel.AlignLeftWithPanel="True"
                                      RelativePanel.AlignRightWithPanel="True"

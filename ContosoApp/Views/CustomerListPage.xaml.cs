@@ -146,7 +146,7 @@ namespace ContosoApp.Views
         /// Menu flyout click control for selecting a customer and displaying details.
         /// </summary>
         private void ViewDetails_Click(object sender, RoutedEventArgs e) =>
-            GoToDetailsPage(ViewModel.SelectedCustomer2); 
+            GoToDetailsPage(ViewModel.SelectedCustomer); 
 
         /// <summary>
         /// Opens the order detail page for the user to create an order for the selected customer.
@@ -159,7 +159,7 @@ namespace ContosoApp.Views
             }
             else
             {
-                GoToOrderPage(ViewModel.SelectedCustomer2);
+                GoToOrderPage(ViewModel.SelectedCustomer);
             }
         }
 

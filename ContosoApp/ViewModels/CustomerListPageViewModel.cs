@@ -46,17 +46,17 @@ namespace ContosoApp.ViewModels
             RefreshCommand = new RelayCommand(OnRefresh);
         }
          
-        public ObservableCollection<CustomerViewModel> Customers2 { get; set; } = 
+        public ObservableCollection<CustomerViewModel> Customers { get; set; } = 
             new ObservableCollection<CustomerViewModel>(); 
 
-        private CustomerViewModel _selectedCustomer2;
+        private CustomerViewModel _selectedCustomer;
 
-        public CustomerViewModel SelectedCustomer2
+        public CustomerViewModel SelectedCustomer
         {
-            get { return _selectedCustomer2; }
+            get { return _selectedCustomer; }
             set
             {
-                SetProperty(ref _selectedCustomer2, value); 
+                SetProperty(ref _selectedCustomer, value); 
             }
         }
 
@@ -95,7 +95,7 @@ namespace ContosoApp.ViewModels
             {
                 foreach (var c in customers)
                 {
-                    Customers2.Add(new CustomerViewModel(c)); 
+                    Customers.Add(new CustomerViewModel(c)); 
                 }
                 IsLoading = false;
             });
@@ -112,7 +112,7 @@ namespace ContosoApp.ViewModels
             {
                 IsLoading = true; 
                 var db = new ContosoDataSource(); 
-                var modified = Customers2.Where(x => x._isModified).Select(x => x._model);
+                var modified = Customers.Where(x => x._isModified).Select(x => x._model);
                 foreach (var mc in modified)
                 {
                     await db.Customers.PostAsync(mc); 
