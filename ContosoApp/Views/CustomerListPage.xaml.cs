@@ -42,8 +42,6 @@ namespace ContosoApp.Views
     [ImplementPropertyChanged]
     public sealed partial class CustomerListPage : Page
     {
-        private enum SortOption { ByName, ByCompany };
-        private enum GroupOption { ByName, ByCompany };
         public CustomerListPageViewModel ViewModel { get; set; } = new CustomerListPageViewModel();
 
         /// <summary>
@@ -61,7 +59,8 @@ namespace ContosoApp.Views
 
         private void CurrentWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && e.Size.Width >= (double)App.Current.Resources["MediumWindowSnapPoint"])
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && e.Size.Width >= 
+                (double)App.Current.Resources["MediumWindowSnapPoint"])
             {
                 mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }
@@ -69,20 +68,6 @@ namespace ContosoApp.Views
             {
                 mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
             }
-        }
-
-        /// <summary>
-        /// Retrieves a list of customers when the user navigates to the page.
-        /// </summary>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            //if (e.NavigationMode == NavigationMode.Back
-            //    && ViewModel.SelectedCustomer != null
-            //    && ViewModel.SelectedCustomer.HasChanges == true)
-            //{
-            //    ViewModel.UpdateCustomerInList(ViewModel.SelectedCustomer);
-            //    ViewModel.SelectedCustomer.HasChanges = false;
-            //}
         }
 
         /// <summary>
