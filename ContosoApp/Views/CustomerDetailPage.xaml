@@ -38,7 +38,7 @@
         <converter:BooleanInverterConverter x:Key="boolInverterConverter"/>
         <converter:DateStringFormatConverter x:Key="dateStringFormatConverter"/>
         <converter:StringVisibilityConverter x:Key="stringVisConverter"/>
-        <x:Boolean x:Key="false">False</x:Boolean>
+        <x:Boolean x:Key="true">True</x:Boolean>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -69,7 +69,7 @@
                               Command="{x:Bind ViewModel.CancelEditsCommand}"
                               Icon="Cancel"
                               Label="Cancel"
-                              Visibility="{x:Bind ViewModel.IsNewCustomer, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
+                              Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
                 <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
                 <AppBarButton Command="{x:Bind ViewModel.StartEditCommand}"
                               Icon="Edit"
@@ -77,7 +77,8 @@
                               Label="Edit"/>
                 <AppBarButton Click="AddOrder_Click"
                               Icon="Shop"
-                              Label="Add order" />
+                              Label="Add order"
+                              Visibility="{x:Bind ViewModel.IsNewCustomer, Converter={StaticResource boolToVisConverter}, Mode=OneWay, ConverterParameter={StaticResource true}}"/>
                 <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
                               Icon="Refresh"
                               Label="Refresh"/>
