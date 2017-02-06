@@ -60,7 +60,8 @@ namespace ContosoApp.Views
             CustomerViewModel customer = e.Parameter as CustomerViewModel;
             if (customer == null)
             {
-                ViewModel.Customer = new CustomerViewModel();
+                ViewModel = new CustomerDetailPageViewModel();
+                ViewModel.Customer = new CustomerViewModel(new Customer()); 
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
             }

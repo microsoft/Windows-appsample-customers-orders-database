@@ -77,16 +77,7 @@ namespace ContosoApp.Views
             GoToDetailsPage(null);
 
         private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            //UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
-
-            //if (searchBox != null)
-            //{
-            //    searchBox.AutoSuggestBox.QuerySubmitted += CustomerSearchBox_QuerySubmitted;
-            //    searchBox.AutoSuggestBox.TextChanged += CustomerSearchBox_TextChanged;
-            //    searchBox.AutoSuggestBox.PlaceholderText = "Search customers...";
-            //}
-        }
+        { }
 
         /// <summary>
         /// Workaround to support earlier versions of Windows.
@@ -160,5 +151,10 @@ namespace ContosoApp.Views
         /// </summary>
         private void GoToOrderPage(CustomerViewModel customer) =>
             Frame.Navigate(typeof(OrderDetailPage), customer._model);
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -18,12 +18,9 @@ namespace ContosoApp.ViewModels
         internal Customer _model; 
         internal bool _isModified; 
 
-        public CustomerViewModel()
-        { }
-
         public CustomerViewModel(Customer model)
         {
-            _model = model; 
+            _model = model ?? new Customer();
         }
 
         public string FirstName
@@ -94,7 +91,7 @@ namespace ContosoApp.ViewModels
                     }
                     else
                     {
-                        AddError(nameof(Phone), "Phone number is not valud.");
+                        AddError(nameof(Phone), "Phone number is not valid.");
                     }
                     _isModified = true; 
                 }
@@ -108,7 +105,6 @@ namespace ContosoApp.ViewModels
             {
                 if (value != _model.Email)
                 {
-
                     _model.Email = value;
                     var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                         @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +

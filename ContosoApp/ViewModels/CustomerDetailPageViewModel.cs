@@ -37,6 +37,8 @@ namespace ContosoApp.ViewModels
     /// </summary>
     public class CustomerDetailPageViewModel : BindableBase
     {
+        private CustomerViewModel _customer;
+
         /// <summary>
         /// Creates a CustomerDetailPageViewModel that wraps the specified EnterpriseModels.Customer
         /// </summary>
@@ -49,17 +51,10 @@ namespace ContosoApp.ViewModels
             Task.Run(LoadCustomerOrders);
         }
 
-        public CustomerDetailPageViewModel(CustomerViewModel customer) : this()
-        {
-            _customer = customer;
-        }
-
         public ObservableCollection<Order> Orders { get; set; } =
             new ObservableCollection<Order>();
 
         public bool IsLoading { get; set; }
-
-        private CustomerViewModel _customer;
 
         public async Task LoadCustomerOrders()
         {
@@ -68,6 +63,7 @@ namespace ContosoApp.ViewModels
                 .Orders.GetAsync(_customer._model);
             await Utilities.CallOnUiThreadAsync(() =>
             {
+                Orders.Clear(); 
                 foreach (var o in orders)
                 {
                     Orders.Add(o);
