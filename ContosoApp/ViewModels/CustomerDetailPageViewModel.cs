@@ -56,11 +56,13 @@ namespace ContosoApp.ViewModels
 
         public bool IsLoading { get; set; }
 
+        public bool IsNewCustomer { get; set; }
+
         public async Task LoadCustomerOrders()
         {
             await Utilities.CallOnUiThreadAsync(() => IsLoading = true);
             var orders = await new ContosoDataSource()
-                .Orders.GetAsync(_customer._model);
+                .Orders.GetAsync(_customer.Model);
             await Utilities.CallOnUiThreadAsync(() =>
             {
                 Orders.Clear(); 
@@ -133,7 +135,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         private async Task Save()
         {
-            await new ContosoDataSource().Customers.PostAsync(_customer._model); 
+            await new ContosoDataSource().Customers.PostAsync(_customer.Model); 
         }
 
         public RelayCommand CancelEditsCommand { get; private set; }

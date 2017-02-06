@@ -112,10 +112,10 @@ namespace ContosoApp.ViewModels
             {
                 IsLoading = true; 
                 var db = new ContosoDataSource(); 
-                var modified = Customers.Where(x => x._isModified).Select(x => x._model);
-                foreach (var mc in modified)
+                foreach (var modifiedCustomer in Customers
+                    .Where(x => x.IsModified).Select(x => x.Model))
                 {
-                    await db.Customers.PostAsync(mc); 
+                    await db.Customers.PostAsync(modifiedCustomer); 
                 }
                 await GetCustomerList();
                 IsLoading = false; 

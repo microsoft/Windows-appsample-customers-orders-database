@@ -150,7 +150,7 @@ namespace ContosoApp.Views
         /// Navigates to the order detail page for the provided customer.
         /// </summary>
         private void GoToOrderPage(CustomerViewModel customer) =>
-            Frame.Navigate(typeof(OrderDetailPage), customer._model);
+            Frame.Navigate(typeof(OrderDetailPage), customer.Model);
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {

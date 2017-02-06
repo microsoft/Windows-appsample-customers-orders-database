@@ -61,6 +61,7 @@ namespace ContosoApp.Views
             if (customer == null)
             {
                 ViewModel = new CustomerDetailPageViewModel();
+                ViewModel.IsNewCustomer = true; 
                 ViewModel.Customer = new CustomerViewModel(new Customer()); 
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
@@ -165,15 +166,15 @@ namespace ContosoApp.Views
         /// Adds a new order for the customer.
         /// </summary>
         private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), null);  //ViewModel.Customer.);
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer);  
 
         private void CancelEditButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (ViewModel.Customer.IsNewCustomer == true
-            //    && Frame.CanGoBack == true)
-            //{
-            //    Frame.GoBack();
-            //}
+            if (ViewModel.IsNewCustomer == true
+                && Frame.CanGoBack == true)
+            {
+                Frame.GoBack();
+            }
         }
     }
 }

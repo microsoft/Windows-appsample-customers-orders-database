@@ -12,100 +12,98 @@ namespace ContosoApp.ViewModels
 {
     public class CustomerViewModel : ValidateViewModelBase
     {
-        // Set as internal so our code can see/modify, but Telerik RadDataGrid
-        // won't auto-generate a column for it. 
-
-        internal Customer _model; 
-        internal bool _isModified; 
-
         public CustomerViewModel(Customer model)
         {
-            _model = model ?? new Customer();
+            Model = model ?? new Customer();
         }
+
+        internal Customer Model { get; set; }
+
+        internal bool IsModified { get; set; }
 
         public string FirstName
         {
-            get { return _model.FirstName; }
+            get { return Model.FirstName; }
             set
             {
-                if (value != _model.FirstName)
+                if (value != Model.FirstName)
                 {
-                    _model.FirstName = value;
-                    _isModified = true; 
+                    Model.FirstName = value;
+                    IsModified = true; 
                 }
             }
         }
 
         public string LastName
         {
-            get { return _model.LastName; }
+            get { return Model.LastName; }
             set
             {
-                if (value != _model.LastName)
+                if (value != Model.LastName)
                 {
-                    _model.LastName = value;
-                    _isModified = true;
+                    Model.LastName = value;
+                    IsModified = true;
                 }
             }
         }
 
         public string Address
         {
-            get { return _model.Address; }
+            get { return Model.Address; }
             set
             {
-                if (value != _model.Address)
+                if (value != Model.Address)
                 {
-                    _model.Address = value;
-                    _isModified = true;
+                    Model.Address = value;
+                    IsModified = true;
                 }
             }
         }
 
         public string Company
         {
-            get { return _model.Company; }
+            get { return Model.Company; }
             set
             {
-                if (value != _model.Company)
+                if (value != Model.Company)
                 {
-                    _model.Company = value;
-                    _isModified = true;
+                    Model.Company = value;
+                    IsModified = true;
                 }
             }
         }
 
         public string Phone
         {
-            get { return _model.Phone; }
+            get { return Model.Phone; }
             set
             {
-                if (value != _model.Phone)
+                if (value != Model.Phone)
                 {
                     var validPhone = new Regex(@"^\(?([0-9]{3})\)?[-. ]?" +
                         @"([0-9]{3})[-. ]?([0-9]{4})$");
                     if (validPhone.IsMatch(value))
                     {
                         RemoveErrors(nameof(Phone));
-                        _model.Phone = value;
+                        Model.Phone = value;
                     }
                     else
                     {
                         AddError(nameof(Phone), "Phone number is not valid.");
                     }
-                    _isModified = true; 
+                    IsModified = true; 
                 }
             }
         }
 
         public string Email
         {
-            get { return _model.Email; }
+            get { return Model.Email; }
             set
             {
-                if (value != _model.Email)
+                if (value != Model.Email)
                 {
-                    _model.Email = value;
+                    Model.Email = value;
                     var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                         @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                         @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
@@ -113,13 +111,13 @@ namespace ContosoApp.ViewModels
                     if (validEmail.IsMatch(value))
                     {
                         RemoveErrors(nameof(Email));
-                        _model.Email = value;
+                        Model.Email = value;
                     }
                     else
                     {
                         AddError(nameof(Email), "Email is not valid.");
                     }
-                    _isModified = true; 
+                    IsModified = true; 
                 }
             }
         }
