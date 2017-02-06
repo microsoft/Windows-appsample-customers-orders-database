@@ -78,7 +78,7 @@
                 <AppBarButton Click="AddOrder_Click"
                               Icon="Shop"
                               Label="Add order"
-                              Visibility="{x:Bind ViewModel.IsNewCustomer, Converter={StaticResource boolToVisConverter}, Mode=OneWay, ConverterParameter={StaticResource true}}"/>
+                              Visibility="{x:Bind ViewModel.IsNewCustomer, Converter={StaticResource boolToVisConverter}, Mode=OneWay, ConverterParameter=true}"/>
                 <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
                               Icon="Refresh"
                               Label="Refresh"/>
