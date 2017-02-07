@@ -24,15 +24,11 @@
 
 using ContosoApp.ViewModels;
 using PropertyChanged;
-using System;
 using System.Linq;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 
 namespace ContosoApp.Views
 {
@@ -108,17 +104,6 @@ namespace ContosoApp.Views
         }
 
         /// <summary>
-        /// Keyboard control for selecting a customer and displaying details
-        /// </summary>
-        private void ListView_KeyUp(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
-            {
-                //GoToDetailsPage(ViewModel.SelectedCustomer);
-            }
-        }
-
-        /// <summary>
         /// Menu flyout click control for selecting a customer and displaying details.
         /// </summary>
         private void ViewDetails_Click(object sender, RoutedEventArgs e) =>
@@ -152,9 +137,5 @@ namespace ContosoApp.Views
         private void GoToOrderPage(CustomerViewModel customer) =>
             Frame.Navigate(typeof(OrderDetailPage), customer.Model);
 
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

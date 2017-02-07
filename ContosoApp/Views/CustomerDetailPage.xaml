@@ -38,7 +38,6 @@
         <converter:BooleanInverterConverter x:Key="boolInverterConverter"/>
         <converter:DateStringFormatConverter x:Key="dateStringFormatConverter"/>
         <converter:StringVisibilityConverter x:Key="stringVisConverter"/>
-        <x:Boolean x:Key="true">True</x:Boolean>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -110,7 +109,7 @@
                           VerticalScrollBarVisibility="Auto"
                           VerticalScrollMode="Auto"
                           Visibility="{x:Bind ViewModel.Customer, Converter={StaticResource nullToVisConverter}}">
-                <StackPanel Margin="0,8,4,0" DataContext="{x:Bind ViewModel.EditDataContext, Mode=OneWay}">
+                <StackPanel Margin="0,8,4,0" DataContext="{x:Bind ViewModel.Customer, Mode=OneWay}">
                     <uc:DetailExpander Label="General">
                         <uc:DetailExpander.Pane>
                             <RelativePanel>

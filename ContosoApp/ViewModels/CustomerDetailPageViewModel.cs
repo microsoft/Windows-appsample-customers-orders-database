@@ -25,7 +25,6 @@
 using ContosoApp.Commands;
 using ContosoModels;
 using PropertyChanged;
-using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -51,11 +50,20 @@ namespace ContosoApp.ViewModels
             Task.Run(LoadCustomerOrders);
         }
 
+        /// <summary>
+        /// The collection of the customer's orders.
+        /// </summary>
         public ObservableCollection<Order> Orders { get; set; } =
             new ObservableCollection<Order>();
 
+        /// <summary>
+        /// Indicates whether to show the loading icon. 
+        /// </summary>
         public bool IsLoading { get; set; }
 
+        /// <summary>
+        /// Indicates whether this is a new customer.
+        /// </summary>
         public bool IsNewCustomer { get; set; }
 
         public async Task LoadCustomerOrders()
@@ -93,6 +101,9 @@ namespace ContosoApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Get's the customers full (first + last) name.
+        /// </summary>
         public string Name => $"{Customer?.FirstName} {Customer?.LastName}";
 
         private bool _isInEdit = false;
@@ -105,10 +116,7 @@ namespace ContosoApp.ViewModels
 
             set
             {
-                if (SetProperty(ref _isInEdit, value) == true)
-                {
-                    OnPropertyChanged(nameof(EditDataContext));
-                }
+                SetProperty(ref _isInEdit, value);                           
             }
         }
 
@@ -125,8 +133,6 @@ namespace ContosoApp.ViewModels
                 SetProperty(ref _errorText, value);
             }
         }
-
-        public CustomerViewModel EditDataContext { get; set; }
 
         public RelayCommand SaveCommand { get; private set; }
 
