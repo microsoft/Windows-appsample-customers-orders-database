@@ -296,8 +296,6 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Notifies anyone listening to this object that a line item changed. 
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void lineItems_Changed(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (LineItems != null)

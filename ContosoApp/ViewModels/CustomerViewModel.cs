@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------------
+﻿//  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 // 
 //  The MIT License (MIT)
@@ -23,304 +23,164 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoModels;
-using ContosoApp.Commands;
-using PropertyChanged;
-using System;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
+using Telerik.Core;
 
 namespace ContosoApp.ViewModels
 {
-    [ImplementPropertyChanged]
-    public class CustomerViewModel : BindableBase
+    /// <summary>
+    /// Wrapper for the Customer model in the master/details Customers page.
+    /// </summary>
+    public class CustomerViewModel : ValidateViewModelBase
     {
-        public CustomerViewModel() : this(new Customer())
-        { }
-
+        /// <summary>
+        /// Creates a new customer model.
+        /// </summary>
         public CustomerViewModel(Customer model)
         {
-            SaveCommand = new RelayCommand(OnSave);
-
-            Model = model;
-
-            FirstName = _firstNameOriginal = model.FirstName;
-            LastName = _lastNameOriginal = model.LastName;
-            Company = _companyOriginal = model.Company;
-            Email = _emailOriginal = model.Email;
-            Phone = _phoneOriginal = model.Phone;
-            Address = _addressOriginal = model.Address;
-            Id = model.Id;
-
-            if (string.IsNullOrWhiteSpace(model.Name))
-            {
-                IsNewCustomer = true;
-            }
-            else
-            {
-                GetOrdersList();
-            }
+            Model = model ?? new Customer();
         }
 
-        private string _errorText = null;
-        public string ErrorText
-        {
-            get { return _errorText; }
+        /// <summary>
+        /// The underlying customer model. Internal so it is 
+        /// not visible to the RadDataGrid. 
+        /// </summary>
+        internal Customer Model { get; set; }
 
-            set
-            {
-                SetProperty(ref _errorText, value);
-                CanSave = string.IsNullOrWhiteSpace(value);
-            }
-        }
+        /// <summary>
+        /// Gets or sets whether the underlying model has been modified. 
+        /// This is used when sync'ing with the server to reduce load
+        /// and only upload the models that changed.
+        /// </summary>
+        internal bool IsModified { get; set; }
 
-        public bool HasChanges { get; set;} = false;
+        /// <summary>
+        /// Gets or sets whether to validate model data. 
+        /// </summary>
+        internal bool Validate { get; set; }
 
-        public bool IsNewCustomer { get; private set; } = false;
-
-        public bool CanSave { get; private set; } = true;
-
-        public bool IsLoading { get; private set; } = false;
-
-        public ObservableCollection<Order> Orders { get; private set; } = 
-            new ObservableCollection<Order>();
-
-        public Customer Model { get; private set; }
-
-        private string _firstNameOriginal;
-        private string _firstName;
+        /// <summary>
+        /// Gets or sets the customer's first name.
+        /// </summary>
         public string FirstName
         {
-            get { return _firstName; }
-
+            get { return Model.FirstName; }
             set
             {
-                // Don't check on initial load.
-                if (FirstName == null)
+                if (value != Model.FirstName)
                 {
-                    SetProperty(ref _firstName, value);
-                }
-                // Make sure text is entered for name.
-                else if (string.IsNullOrWhiteSpace(value))
-                {
-                    ErrorText = "First name is required. ";
-                }
-                else if (SetProperty(ref _firstName, value) == true)
-                {
-                    OnPropertyChanged(nameof(Name));
-                    ErrorText = null;
+                    Model.FirstName = value;
+                    IsModified = true;
                 }
             }
         }
 
-        private string _lastNameOriginal;
-        private string _lastName;
+        /// <summary>
+        /// Gets or sets the customer's last name.
+        /// </summary>
         public string LastName
         {
-            get { return _lastName; }
-
+            get { return Model.LastName; }
             set
             {
-                // Don't check on initial load.
-                if (LastName == null)
+                if (value != Model.LastName)
                 {
-                    SetProperty(ref _lastName, value);
-                }
-                // Make sure text is entered for name.
-                else if (string.IsNullOrWhiteSpace(value))
-                {
-                    ErrorText = "Last name is required. ";
-                }
-                else if (SetProperty(ref _lastName, value) == true)
-                {
-                    OnPropertyChanged(nameof(Name));
-                    ErrorText = null;
+                    Model.LastName = value;
+                    IsModified = true;
                 }
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return $"{FirstName} {LastName}";
-            }
-        }
-
-        private string _companyOriginal;
-        private string _company;
-        public string Company
-        {
-            get { return _company; }
-
-            set
-            {
-                SetProperty(ref _company, value);
-            }
-        }
-
-        private string _emailOriginal;
-        private string _email;
-        public string Email
-        {
-            get { return _email; }
-
-            set
-            {
-                // Don't check on initial load.
-                if (Email == null)
-                {
-                    SetProperty(ref _email, value);
-                }
-                // Check if email address string is valid, convert to lowercase 
-                // for easier duplicate checking.
-                else if (IsValidEmail(value))
-                {
-                    value = value.ToLower();
-                    if (SetProperty(ref _email, value) == true)
-                    {
-                        ErrorText = null;
-                    }
-                }
-                else
-                {
-                    ErrorText = ("Email format is invalid. ");
-                }
-            }
-        }
-
-        private string _phoneOriginal;
-        private string _phone;
-        public string Phone
-        {
-            get { return _phone; }
-
-            set
-            {
-                // Don't check on initial load.
-                if (Phone == null)
-                {
-                    SetProperty(ref _phone, value);
-                }
-                else if (IsValidPhoneNumber(value))
-                {
-                    if (SetProperty(ref _phone, value) == true)
-                    {
-                        ErrorText = null;
-                    }
-                }
-                else
-                {
-                    ErrorText = ("Phone number format is invalid. ");
-                }
-            }
-        }
-
-        private string _addressOriginal;
-        private string _address;
+        /// <summary>
+        /// Gets or sets the customer's address.
+        /// </summary>
         public string Address
         {
-            get { return _address; }
-
+            get { return Model.Address; }
             set
             {
-                SetProperty(ref _address, value);
-            }
-        }
-
-        private Guid _id;
-        public Guid Id
-        {
-            get { return _id; }
-
-            set
-            {
-                SetProperty(ref _id, value);
-            }
-        }
-        public int OrderCount
-        {
-            get
-            {
-                if (Orders != null)
+                if (value != Model.Address)
                 {
-                    return Orders.Count;
-                }
-                else
-                {
-                    return 0;
+                    Model.Address = value;
+                    IsModified = true;
                 }
             }
         }
 
-        public override string ToString() => $"{Name} ({Email})";
-
-        private async void GetOrdersList()
+        /// <summary>
+        /// Gets or sets the customer's company.
+        /// </summary>
+        public string Company
         {
-            IsLoading = true;
-
-            var db = new ContosoDataSource();
-            var orders = await db.Orders.GetAsync(Model);
-
-            await Utilities.CallOnUiThreadAsync(() =>
+            get { return Model.Company; }
+            set
             {
-                if (orders != null)
+                if (value != Model.Company)
                 {
-                    foreach(Order o in orders)
+                    Model.Company = value;
+                    IsModified = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the customer's phone number. If data validation is enabled, 
+        /// displays an error if an invalid number is entered. 
+        /// </summary>
+        public string Phone
+        {
+            get { return Model.Phone; }
+            set
+            {
+                if (value == Model.Phone)
+                {
+                    return;
+                }
+                if (Validate)
+                {
+                    var validPhoneRegex = new Regex(@"^\(?([0-9]{3})\)?[-. ]?" +
+                        @"([0-9]{3})[-. ]?([0-9]{4})$");
+                    if (validPhoneRegex.IsMatch(value))
                     {
-                        Orders.Add(o);
+                        RemoveErrors(nameof(Phone));
+                    }
+                    else
+                    {
+                        AddError(nameof(Phone), "Phone number is not valid.");
                     }
                 }
-                else
-                {
-                    // There was a problem retreiving customers. Let the user know.
-                    ErrorText = "Couldn't retrieve orders.";
-                }
-
-                IsLoading = false;
-            });
-        }
-
-        public RelayCommand SaveCommand { get; private set; }
-        private async void OnSave()
-        {
-            if (CanSave == true)
-            {
-                Model.FirstName = _firstNameOriginal = FirstName;
-                Model.LastName = _lastNameOriginal = LastName;
-                Model.Company = _companyOriginal = Company;
-                Model.Email = _emailOriginal = Email;
-                Model.Phone = _phoneOriginal = Phone;
-                Model.Address = _addressOriginal = Address;
-
-                var db = new ContosoDataSource();
-                await db.Customers.PostAsync(Model);
-
-                HasChanges = true;
-                if (IsNewCustomer == true)
-                {
-                    IsNewCustomer = false;
-                }
+                Model.Phone = value;
+                IsModified = true;
             }
         }
 
-        public void Restore()
+        /// <summary>
+        /// Gets or sets the customer's email. If data validation is enabled, 
+        /// displays an error if an invalid email is entered. 
+        /// </summary>
+        public string Email
         {
-            FirstName = _firstNameOriginal;
-            LastName = _lastNameOriginal;
-            Company = _companyOriginal;
-            Email = _emailOriginal;
-            Phone = _phoneOriginal;
-            Address = _addressOriginal;
-            ErrorText = null;
+            get { return Model.Email; }
+            set
+            {
+                if (value == Model.Email)
+                {
+                    return;
+                }
+                var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                    @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+                if (validEmail.IsMatch(value))
+                {
+                    RemoveErrors(nameof(Email));
+                }
+                else
+                {
+                    AddError(nameof(Email), "Email is not valid.");
+                }
+                Model.Email = value;
+                IsModified = true;
+            }
         }
-
-
-        public bool IsValidEmail(string email) =>
-            new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$").IsMatch(email);
-
-        public bool IsValidPhoneNumber(string phone) =>
-            new Regex(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$").IsMatch(phone);
     }
 }

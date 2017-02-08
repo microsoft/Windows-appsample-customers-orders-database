@@ -25,7 +25,6 @@
 using ContosoModels;
 using ContosoApp.ViewModels;
 using Windows.Foundation.Metadata;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -60,13 +59,17 @@ namespace ContosoApp.Views
             CustomerViewModel customer = e.Parameter as CustomerViewModel;
             if (customer == null)
             {
-                ViewModel.Customer = new CustomerViewModel();
+                ViewModel = new CustomerDetailPageViewModel();
+                ViewModel.IsNewCustomer = true; 
+                ViewModel.Customer = new CustomerViewModel(new Customer()) { Validate = false }; 
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
             }
             else if (ViewModel.Customer != customer)
             {
+                ViewModel = new CustomerDetailPageViewModel();
                 ViewModel.Customer = customer;
+                ViewModel.Customer.Validate = false; 
                 Bindings.Update();
             }
             base.OnNavigatedTo(e);
@@ -163,11 +166,11 @@ namespace ContosoApp.Views
         /// Adds a new order for the customer.
         /// </summary>
         private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer.Model);
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer);  
 
         private void CancelEditButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.Customer.IsNewCustomer == true
+            if (ViewModel.IsNewCustomer == true
                 && Frame.CanGoBack == true)
             {
                 Frame.GoBack();

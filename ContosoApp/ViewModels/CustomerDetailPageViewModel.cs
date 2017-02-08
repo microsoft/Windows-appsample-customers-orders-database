@@ -23,7 +23,10 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoApp.Commands;
+using ContosoModels;
 using PropertyChanged;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace ContosoApp.ViewModels
 {
@@ -33,18 +36,51 @@ namespace ContosoApp.ViewModels
     /// </summary>
     public class CustomerDetailPageViewModel : BindableBase
     {
+        private CustomerViewModel _customer;
+
         /// <summary>
         /// Creates a CustomerDetailPageViewModel that wraps the specified EnterpriseModels.Customer
         /// </summary>
         public CustomerDetailPageViewModel()
         {
-            SaveCommand = new RelayCommand(OnSave);
+            SaveCommand = new RelayCommand(async () => await Save());
             CancelEditsCommand = new RelayCommand(OnCancelEdits);
             StartEditCommand = new RelayCommand(OnStartEdit);
-            RefreshCommand = new RelayCommand(OnRefresh);
+            RefreshCommand = new RelayCommand(async () => await Refresh());
+            Task.Run(LoadCustomerOrders);
         }
 
-        private CustomerViewModel _customer;
+        /// <summary>
+        /// The collection of the customer's orders.
+        /// </summary>
+        public ObservableCollection<Order> Orders { get; set; } =
+            new ObservableCollection<Order>();
+
+        /// <summary>
+        /// Indicates whether to show the loading icon. 
+        /// </summary>
+        public bool IsLoading { get; set; }
+
+        /// <summary>
+        /// Indicates whether this is a new customer.
+        /// </summary>
+        public bool IsNewCustomer { get; set; }
+
+        public async Task LoadCustomerOrders()
+        {
+            await Utilities.CallOnUiThreadAsync(() => IsLoading = true);
+            var orders = await new ContosoDataSource()
+                .Orders.GetAsync(_customer.Model);
+            await Utilities.CallOnUiThreadAsync(() =>
+            {
+                Orders.Clear(); 
+                foreach (var o in orders)
+                {
+                    Orders.Add(o);
+                }
+                IsLoading = false;
+            });
+        }
 
         /// <summary>
         /// Gets and sets the current customer values.
@@ -57,14 +93,18 @@ namespace ContosoApp.ViewModels
             {
                 if (SetProperty(ref _customer, value) == true)
                 {
-                    EditDataContext = value;
-                    if (string.IsNullOrWhiteSpace(Customer.Name))
+                    if (string.IsNullOrWhiteSpace(Customer.FirstName))
                     {
                         IsInEdit = true;
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Get's the customers full (first + last) name.
+        /// </summary>
+        public string Name => $"{Customer?.FirstName} {Customer?.LastName}";
 
         private bool _isInEdit = false;
         /// <summary>
@@ -76,10 +116,7 @@ namespace ContosoApp.ViewModels
 
             set
             {
-                if (SetProperty(ref _isInEdit, value) == true)
-                {
-                    OnPropertyChanged(nameof(EditDataContext));
-                }
+                SetProperty(ref _isInEdit, value);                           
             }
         }
 
@@ -97,20 +134,14 @@ namespace ContosoApp.ViewModels
             }
         }
 
-        public CustomerViewModel EditDataContext { get; set; }
-
         public RelayCommand SaveCommand { get; private set; }
 
         /// <summary>
         /// Saves customer data that has been edited.
         /// </summary>
-        private void OnSave()
+        private async Task Save()
         {
-            if (Customer.CanSave == true)
-            {
-                Customer.SaveCommand.Execute(Customer);
-                IsInEdit = false;
-            }
+            await new ContosoDataSource().Customers.PostAsync(_customer.Model); 
         }
 
         public RelayCommand CancelEditsCommand { get; private set; }
@@ -138,14 +169,6 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Resets the customer detail fields to the current values.
         /// </summary>
-        private void OnRefresh()
-        {
-            if (Customer.IsNewCustomer == false)
-            {
-                EditDataContext = null;
-                Customer.Restore();
-                EditDataContext = Customer;
-            }
-        }
+        private async Task Refresh() => await LoadCustomerOrders(); 
     }
 }

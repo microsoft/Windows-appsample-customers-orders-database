@@ -15,10 +15,11 @@ The app showcases features useful to enterprise developers, like user authentica
 
 This sample highlights: 
 
+- The master/details UI pattern
+- An editable DataGrid with input validation
+- Form layouts
 - Authenticating and obtaining user info using Azure Active Directory (AAD)
 - Connecting to an external data source
-- The master/details UI pattern
-- Form layouts
 
 ## Run the sample
 
@@ -75,13 +76,20 @@ The Orders list screen displays a list of orders. It uses visual state triggers 
 The two details screens show how to use headings, labels, and whitespace to organize controls into a form layout. Some controls used include:
 
 - Layout controls: [Grid](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Grid), [RelativePanel](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.RelativePanel), [StackPanel](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.StackPanel)
-- Data controls: [ListView](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.ListView), [AutoSuggestBox](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.AutoSuggestBox)
+- Data controls: [Telerik RadDataGrid](http://docs.telerik.com/devtools/universal-windows-platform/controls/raddatagrid/columns/datagrid-overview), [ListView](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.ListView), [AutoSuggestBox](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.AutoSuggestBox)
 - Other controls: [Button](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Button), [HyperlinkButton](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.HyperlinkButton), [context menu](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/menus)
 
+### Telerik RadDataGrid with data validation
+
+This sample includes a Data Grid from Telerik's newly open-sourced UI for UWP controls library. You can find the source for these controls on [GitHub](https://github.com/telerik/UI-For-UWP), as well as a package on [NuGet](https://www.nuget.org/packages/Telerik.UI.for.UniversalWindowsPlatform). For help getting started, consult the [Telerik documentation](http://docs.telerik.com/devtools/universal-windows-platform/). 
 
 ### Adaptive layouts
 
 This sample demonstrates how to use visual states to adapt the UI for screen sizes varying from a 5 inch phone to a large desktop display. It also supports [Continuum for Phones](https://www.microsoft.com/windows/continuum), so you can use the app running on your Windows 10 phone on your Windows 10 PC. The app supports all versions of Windows 10, but new features are available on the latest versions. For example, the labels on command bar buttons are shown to the right of the icon on Windows 10, version 1607, but they are below the icon on previous versions of Windows 10.
+
+## Known issues
+
+* Data validation for non-US international phone numbers is not working correctly; the numbers will always show as invalid. This issue will be fixed in a future release.
 
 ## See also
 

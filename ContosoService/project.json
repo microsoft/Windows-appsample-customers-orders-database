@@ -24,6 +24,9 @@
   "frameworks": {
     "net461": {
       "dependencies": {
+        "ContosoDatabase": {
+          "target": "project"
+        },
         "ContosoModels": {
           "target": "project"
         }

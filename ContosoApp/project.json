@@ -5,7 +5,8 @@
     "Microsoft.Toolkit.Uwp": "1.0.0",
     "Microsoft.Toolkit.Uwp.UI.Controls": "1.0.0",
     "Newtonsoft.Json": "9.0.1",
-    "PropertyChanged.Fody": "1.51.3"
+    "PropertyChanged.Fody": "1.51.3",
+    "Telerik.UI.for.UniversalWindowsPlatform": "1.0.0"
   },
   "frameworks": {
     "uap10.0": {}
