@@ -89,7 +89,7 @@ namespace ContosoApp.Views
         {
             // We only want to get results when it was a user typing,
             // otherwise we assume the value got filled in by TextMemberPath
-            // or the handler for SuggestionChosen
+            // or the handler for SuggestionChosen.
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 // If no search query is entered, refresh the complete list.
@@ -102,19 +102,19 @@ namespace ContosoApp.Views
                 else
                 {
                     string[] parameters = sender.Text.Split(new char[] { ' ' },
-                        StringSplitOptions.RemoveEmptyEntries);       
-                    sender.ItemsSource = ViewModel.Customers.Where(x => parameters
-                            .Any(y =>
-                                x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
-                        .OrderByDescending(x => parameters
-                            .Count(y =>
-                                x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)));
+                        StringSplitOptions.RemoveEmptyEntries);
+                    sender.ItemsSource = ViewModel.Customers
+                        .Where(x => parameters.Any(y =>
+                            x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
+                        .OrderByDescending(x => parameters.Count(y =>
+                            x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                            x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
+                        .Select(x => $"{x.FirstName} {x.LastName}"); 
                 }
             }
         }
@@ -132,20 +132,21 @@ namespace ContosoApp.Views
                 string[] parameters = sender.Text.Split(new char[] { ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
+                var matches = ViewModel.Customers.Where(x => parameters
+                    .Any(y =>
+                        x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
+                    .OrderByDescending(x => parameters.Count(y =>
+                        x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
+                        x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
+                    .ToList(); 
+
                 await Utilities.CallOnUiThreadAsync(() =>
                 {
-                    var matches = ViewModel.Customers.Where(x => parameters
-                        .Any(y =>
-                            x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
-                        .OrderByDescending(x => parameters
-                            .Count(y =>
-                                x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                                x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)));
                     ViewModel.Customers.Clear(); 
                     foreach (var match in matches)
                     {
