@@ -83,7 +83,7 @@
                               Icon="Add"
                               Label="New"
                               ToolTipService.ToolTip="New customer"/>
-                <AppBarButton Command="{x:Bind ViewModel.RefreshCommand}"
+                <AppBarButton Command="{x:Bind ViewModel.SyncCommand}"
                               Icon="Refresh"
                               Label="Sync"
                               ToolTipService.ToolTip="Sync with server"/>

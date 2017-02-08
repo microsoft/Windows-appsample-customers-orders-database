@@ -43,8 +43,8 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public CustomerListPageViewModel()
         {
-            Task.Run(GetCustomerList);
-            RefreshCommand = new RelayCommand(OnRefresh);
+            Task.Run(GetCustomerListAsync);
+            SyncCommand = new RelayCommand(OnSync);
         }
         
         /// <summary>
@@ -97,15 +97,19 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Gets the complete list of customers from the database.
         /// </summary>
-        private async Task GetCustomerList()
+        public async Task GetCustomerListAsync()
         {
             await Utilities.CallOnUiThreadAsync(() => IsLoading = true); 
 
             var db = new ContosoDataSource();
             var customers = await db.Customers.GetAsync();
-
+            if (customers == null)
+            {
+                return; 
+            }
             await Utilities.CallOnUiThreadAsync(() =>
             {
+                Customers.Clear(); 
                 foreach (var c in customers)
                 {
                     Customers.Add(new CustomerViewModel(c) { Validate = true }); 
@@ -114,12 +118,12 @@ namespace ContosoApp.ViewModels
             });
         }
 
-        public RelayCommand RefreshCommand { get; private set; }
+        public RelayCommand SyncCommand { get; private set; }
 
         /// <summary>
         /// Queries the database for a current list of customers.
         /// </summary>
-        private void OnRefresh()
+        private void OnSync()
         {
             Task.Run(async () =>
             {
@@ -130,7 +134,7 @@ namespace ContosoApp.ViewModels
                 {
                     await db.Customers.PostAsync(modifiedCustomer); 
                 }
-                await GetCustomerList();
+                await GetCustomerListAsync();
                 IsLoading = false; 
             }); 
         }
