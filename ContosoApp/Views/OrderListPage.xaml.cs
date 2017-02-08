@@ -58,7 +58,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Retrieve the list of orders when the user navigates to the page. 
         /// </summary>
-        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (ViewModel.Orders.Count < 1)
@@ -70,16 +69,12 @@ namespace ContosoApp.Views
         /// <summary>
         /// Opens the order in the order details page for editing. 
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void EditButton_Click(object sender, RoutedEventArgs e) => 
             Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder);
 
         /// <summary>
         /// Deletes the currently selected order.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void DeleteOrder_Click(object sender, RoutedEventArgs e)
         {
 
@@ -105,8 +100,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Workaround to support earlier versions of Windows. 
         /// </summary>
-        /// <param name="sender">The command bar that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
             if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
@@ -136,11 +129,10 @@ namespace ContosoApp.Views
                 searchBox.AutoSuggestBox.ItemContainerStyle = (Style)this.Resources["SearchSuggestionItemStyle"];
             }
         }
+
         /// <summary>
         /// Creates an email about the currently selected invoice. 
         /// </summary>
-        /// <param name="sender">The hyperlink button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void EmailButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -162,15 +154,12 @@ namespace ContosoApp.Views
         /// <summary>
         ///  Loads the specified order in the order details page. 
         /// </summary>
-        /// <param name="order"></param>
         private void GoToDetailsPage(ContosoModels.Order order) => 
             Frame.Navigate(typeof(OrderDetailPage), order);
 
         /// <summary>
         /// Searchs the list of orders.
         /// </summary>
-        /// <param name="sender">The AutoSuggestBox that fired the event.</param>
-        /// <param name="args">Info about the event. </param>
         private void OrderSearch_QuerySubmitted(AutoSuggestBox sender, 
             AutoSuggestBoxQuerySubmittedEventArgs args) => 
                 ViewModel.QueryOrders(args.QueryText);
@@ -178,8 +167,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Updates the suggestions for the AutoSuggestBox as the user types. 
         /// </summary>
-        /// <param name="sender">The AutoSuggestBox that fired the event.</param>
-        /// <param name="args">Info about the event.</param>
         private void OrderSearch_TextChanged(AutoSuggestBox sender, 
             AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -196,8 +183,6 @@ namespace ContosoApp.Views
         /// Navigates to the order detail page when the user
         /// double-clicks an order. 
         /// </summary>
-        /// <param name="sender">The element that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => 
             Frame.Navigate(typeof(OrderDetailPage), ((FrameworkElement)sender).DataContext as Order);
 
@@ -212,8 +197,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Navigates to the order details page.
         /// </summary>
-        /// <param name="sender">The element that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void MenuFlyoutViewDetails_Click(object sender, RoutedEventArgs e) => 
             Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder, 
                 new DrillInNavigationTransitionInfo());
@@ -221,8 +204,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Refreshes the order list.
         /// </summary>
-        /// <param name="sender">The button that fired this event.</param>
-        /// <param name="e">Info about the event.</param>
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => 
             ViewModel.LoadOrders();
     }

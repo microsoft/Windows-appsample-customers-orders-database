@@ -123,7 +123,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Check whether there are unsaved changes and warn the user.
         /// </summary>
-        /// <param name="e">Info about the navigation operation.</param>
         protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
 
@@ -166,8 +165,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Creates an email to the current customer.
         /// </summary>
-        /// <param name="sender">The button that triggered the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void emailButton_Click(object sender, RoutedEventArgs e)
         {
             var emailMessage = new EmailMessage();
@@ -188,8 +185,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// A workaround for earlier versions of Windows 10.
         /// </summary>
-        /// <param name="sender">The command bar that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
             if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
@@ -209,16 +204,12 @@ namespace ContosoApp.Views
         /// <summary>
         /// Reloads the order.
         /// </summary>
-        /// <param name="sender">The button the fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 
             ViewModel = await OrderDetailPageViewModel.CreateFromGuid(ViewModel.Id);
 
         /// <summary>
-        /// Reverts the page
+        /// Reverts the page.
         /// </summary>
-        /// <param name="sender">The button the fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void RevertButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -249,8 +240,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Saves the current order.
         /// </summary>
-        /// <param name="sender">The button the fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -273,8 +262,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Queries for products.
         /// </summary>
-        /// <param name="sender">The AutoSuggestBox that fired the event.</param>
-        /// <param name="args">Info about the event.</param>
         private void ProductSearchBox_TextChanged(AutoSuggestBox sender, 
             AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -287,8 +274,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Notifies the page that a new item was chosen.
         /// </summary>
-        /// <param name="sender">The AutoSuggestBox that fired the event.</param>
-        /// <param name="args">Info about the event.</param>
         private void ProductSearchBox_SuggestionChosen(AutoSuggestBox sender, 
             AutoSuggestBoxSuggestionChosenEventArgs args)
         {
@@ -302,8 +287,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Adds the new line item to the list of line items.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.LineItems.Add(ViewModel.NewLineItem);
@@ -313,8 +296,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Clears the new line item without adding it to the list of line items.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void CancelProductButton_Click(object sender, RoutedEventArgs e)
         {
             ClearCandidateProduct();
@@ -332,8 +313,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Removes a line item from the order.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void RemoveProduct_Click(object sender, RoutedEventArgs e)
         {
             var lineItem = ((Button)sender).DataContext as LineItem;
@@ -348,7 +327,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Notifies listeners that a property value changed. 
         /// </summary>
-        /// <param name="propertyName">The name of the property that changed. </param>
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

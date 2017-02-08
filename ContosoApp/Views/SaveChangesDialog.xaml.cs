@@ -52,8 +52,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Fired when the user chooses to save. 
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void yesButton_Click(object sender, RoutedEventArgs e)
         {
             Result = SaveChangesDialogResult.Save;
@@ -63,8 +61,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Fired when the user chooses to discard changes.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void noButton_Click(object sender, RoutedEventArgs e)
         {
             Result = SaveChangesDialogResult.DontSave;
@@ -74,8 +70,6 @@ namespace ContosoApp.Views
         /// <summary>
         /// Fired when the user chooses to cancel the operation that triggered the event.
         /// </summary>
-        /// <param name="sender">The button that fired the event.</param>
-        /// <param name="e">Info about the event.</param>
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
             Result = SaveChangesDialogResult.Cancel;
