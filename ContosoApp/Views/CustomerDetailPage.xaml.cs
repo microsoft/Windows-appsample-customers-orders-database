@@ -61,14 +61,15 @@ namespace ContosoApp.Views
             {
                 ViewModel = new CustomerDetailPageViewModel();
                 ViewModel.IsNewCustomer = true; 
-                ViewModel.Customer = new CustomerViewModel(new Customer()); 
+                ViewModel.Customer = new CustomerViewModel(new Customer()) { Validate = false }; 
                 Bindings.Update();
                 PageHeaderText.Text = "New customer";
             }
             else if (ViewModel.Customer != customer)
             {
                 ViewModel = new CustomerDetailPageViewModel();
-                ViewModel.Customer = customer;  
+                ViewModel.Customer = customer;
+                ViewModel.Customer.Validate = false; 
                 Bindings.Update();
             }
             base.OnNavigatedTo(e);

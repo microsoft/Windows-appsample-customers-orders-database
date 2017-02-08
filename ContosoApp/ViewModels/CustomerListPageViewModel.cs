@@ -38,18 +38,25 @@ namespace ContosoApp.ViewModels
     /// </summary>
     public class CustomerListPageViewModel : BindableBase
     {
+        /// <summary>
+        /// Creates a new CustomerListPageViewModel.
+        /// </summary>
         public CustomerListPageViewModel()
         {
             Task.Run(GetCustomerList);
-
             RefreshCommand = new RelayCommand(OnRefresh);
         }
-         
+        
+        /// <summary>
+        /// The collection of customers in the list. 
+        /// </summary>
         public ObservableCollection<CustomerViewModel> Customers { get; set; } = 
             new ObservableCollection<CustomerViewModel>(); 
 
         private CustomerViewModel _selectedCustomer;
-
+        /// <summary>
+        /// Gets or sets the selected customer, or null if no customer is selected. 
+        /// </summary>
         public CustomerViewModel SelectedCustomer
         {
             get { return _selectedCustomer; }
@@ -60,7 +67,6 @@ namespace ContosoApp.ViewModels
         }
 
         private string _errorText = null;
-
         /// <summary>
         /// Gets or sets the error text.
         /// </summary>
@@ -74,11 +80,19 @@ namespace ContosoApp.ViewModels
             }
         }
 
-
+        private bool _isLoading = false;
         /// <summary>
         /// Gets or sets whether to show the data loading progress wheel. 
         /// </summary>
-        public bool IsLoading { get; private set; } = false;
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+
+            set
+            {
+                SetProperty(ref _isLoading, value);
+            }
+        }
 
         /// <summary>
         /// Gets the complete list of customers from the database.
@@ -94,7 +108,7 @@ namespace ContosoApp.ViewModels
             {
                 foreach (var c in customers)
                 {
-                    Customers.Add(new CustomerViewModel(c)); 
+                    Customers.Add(new CustomerViewModel(c) { Validate = true }); 
                 }
                 IsLoading = false;
             });

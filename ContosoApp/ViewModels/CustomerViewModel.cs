@@ -28,17 +28,40 @@ using Telerik.Core;
 
 namespace ContosoApp.ViewModels
 {
+    /// <summary>
+    /// Wrapper for the Customer model in the master/details Customers page.
+    /// </summary>
     public class CustomerViewModel : ValidateViewModelBase
     {
+        /// <summary>
+        /// Creates a new customer model.
+        /// </summary>
         public CustomerViewModel(Customer model)
         {
             Model = model ?? new Customer();
         }
 
+        /// <summary>
+        /// The underlying customer model. Internal so it is 
+        /// not visible to the RadDataGrid. 
+        /// </summary>
         internal Customer Model { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the underlying model has been modified. 
+        /// This is used when sync'ing with the server to reduce load
+        /// and only upload the models that changed.
+        /// </summary>
         internal bool IsModified { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether to validate model data. 
+        /// </summary>
+        internal bool Validate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer's first name.
+        /// </summary>
         public string FirstName
         {
             get { return Model.FirstName; }
@@ -47,11 +70,14 @@ namespace ContosoApp.ViewModels
                 if (value != Model.FirstName)
                 {
                     Model.FirstName = value;
-                    IsModified = true; 
+                    IsModified = true;
                 }
             }
         }
 
+        /// <summary>
+        /// Gets or sets the customer's last name.
+        /// </summary>
         public string LastName
         {
             get { return Model.LastName; }
@@ -65,6 +91,9 @@ namespace ContosoApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the customer's address.
+        /// </summary>
         public string Address
         {
             get { return Model.Address; }
@@ -78,6 +107,9 @@ namespace ContosoApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the customer's company.
+        /// </summary>
         public string Company
         {
             get { return Model.Company; }
@@ -91,52 +123,63 @@ namespace ContosoApp.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the customer's phone number. If data validation is enabled, 
+        /// displays an error if an invalid number is entered. 
+        /// </summary>
         public string Phone
         {
             get { return Model.Phone; }
             set
             {
-                if (value != Model.Phone)
+                if (value == Model.Phone)
                 {
-                    var validPhone = new Regex(@"^\(?([0-9]{3})\)?[-. ]?" +
+                    return;
+                }
+                if (Validate)
+                {
+                    var validPhoneRegex = new Regex(@"^\(?([0-9]{3})\)?[-. ]?" +
                         @"([0-9]{3})[-. ]?([0-9]{4})$");
-                    if (validPhone.IsMatch(value))
+                    if (validPhoneRegex.IsMatch(value))
                     {
                         RemoveErrors(nameof(Phone));
-                        Model.Phone = value;
                     }
                     else
                     {
                         AddError(nameof(Phone), "Phone number is not valid.");
                     }
-                    IsModified = true; 
                 }
+                Model.Phone = value;
+                IsModified = true;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the customer's email. If data validation is enabled, 
+        /// displays an error if an invalid email is entered. 
+        /// </summary>
         public string Email
         {
             get { return Model.Email; }
             set
             {
-                if (value != Model.Email)
+                if (value == Model.Email)
                 {
-                    Model.Email = value;
-                    var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                        @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                        @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
-
-                    if (validEmail.IsMatch(value))
-                    {
-                        RemoveErrors(nameof(Email));
-                        Model.Email = value;
-                    }
-                    else
-                    {
-                        AddError(nameof(Email), "Email is not valid.");
-                    }
-                    IsModified = true; 
+                    return;
                 }
+                var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                    @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
+                if (validEmail.IsMatch(value))
+                {
+                    RemoveErrors(nameof(Email));
+                }
+                else
+                {
+                    AddError(nameof(Email), "Email is not valid.");
+                }
+                Model.Email = value;
+                IsModified = true;
             }
         }
     }
