@@ -267,25 +267,22 @@
                                        Text="{x:Bind ViewModel.DateFilled, Mode=OneWay}"/>
                         </Grid>
 
-                        <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
-                            <TextBlock x:Name="OrderStatusLabel"
-                                       Margin="0,20,0,0"
+                        <StackPanel x:Name="OrderStatus" Margin="0,0,0,0" HorizontalAlignment="Right">
+                            <TextBlock Margin="0,20,0,0"
                                        FontWeight="Normal">
                                 Order status
                             </TextBlock>
                             <ComboBox ItemsSource="{x:Bind ViewModel.OrderStatusValues, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.Status, Mode=TwoWay, Converter={StaticResource orderStatusConverter}}"/>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
-                            <TextBlock x:Name="PaymentTermLabel"
-                                       Margin="0,20,0,0"
+                        <StackPanel x:Name="PaymentTerm" Margin="0,0,0,0" HorizontalAlignment="Right">
+                            <TextBlock Margin="0,20,0,0"
                                        FontWeight="Normal">
                                 Payment term
                             </TextBlock>
                             <ComboBox ItemsSource="{x:Bind ViewModel.TermValues, Mode=OneTime}" SelectedItem="{x:Bind ViewModel.Term, Mode=TwoWay, Converter={StaticResource termConverter}}"/>
                         </StackPanel>
-                        <StackPanel Margin="0,0,0,0" HorizontalAlignment="Right">
-                            <TextBlock x:Name="PaymentStatusLabel"
-                                       Margin="0,20,0,0"
+                        <StackPanel x:Name="PaymentStatus" Margin="0,0,0,0" HorizontalAlignment="Right">
+                            <TextBlock Margin="0,20,0,0"
                                        FontWeight="Normal">
                                 Payment status
                             </TextBlock>
@@ -483,8 +480,7 @@
                         <!--  Subtotal, tax, and grand total section  -->
                         <Grid x:Name="totalsPanel" Margin="0,20,64,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition x:Name="ColumnX" Width="*"/>
+                                <ColumnDefinition x:Name="SpacerColumn" Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
@@ -495,49 +491,47 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Column="2"
+                            <TextBlock Grid.Column="1"
                                        Margin="0,0,20,0"
                                        HorizontalAlignment="Right"
                                        Padding="0,0,0,0"
                                        Text="SubTotal"/>
-                            <TextBlock Grid.Column="3"
+                            <TextBlock Grid.Column="2"
                                        Margin="0,0,0,0"
                                        HorizontalAlignment="Right"
                                        Padding="0,0,0,0"
                                        Text="{x:Bind ViewModel.Subtotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
-                            <Border Grid.Row="2"
-                                    Grid.Column="2"
+                            <Border Grid.Row="1"
+                                    Grid.Column="1"
                                     Grid.ColumnSpan="2"
                                     BorderBrush="LightGray"
                                     BorderThickness="0,0,0,1"/>
-                            <TextBlock Grid.Row="3"
-                                       Grid.Column="2"
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="1"
                                        Margin="0,0,0,0"
                                        Padding="0,0,0,0"
                                        Text="Tax"/>
-                            <TextBlock Grid.Row="3"
-                                       Grid.Column="3"
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="2"
                                        Margin="0,0,0,0"
                                        HorizontalAlignment="Right"
                                        Padding="0,0,0,0"
                                        Text="{x:Bind ViewModel.Tax, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
-                            <Border Grid.Row="4"
-                                    Grid.Column="2"
+                            <Border Grid.Row="3"
+                                    Grid.Column="1"
                                     Grid.ColumnSpan="2"
                                     BorderBrush="LightGray"
                                     BorderThickness="0,0,0,1"/>
-                            <TextBlock Grid.Row="5"
-                                       Grid.Column="2"
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="1"
                                        Margin="0,0,0,0"
                                        FontWeight="Bold"
                                        Padding="0,0,0,0"
                                        Text="Total"/>
-                            <TextBlock Grid.Row="5"
-                                       Grid.Column="3"
+                            <TextBlock Grid.Row="4"
+                                       Grid.Column="2"
                                        Margin="0,0,0,0"
                                        HorizontalAlignment="Right"
                                        FontWeight="Bold"
@@ -576,6 +570,11 @@
                         <Setter Target="StatusPanel.(Grid.Row)" Value="1"/>
                         <Setter Target="StatusPanel.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="StatusPanel.(Grid.Column)" Value="0"/>
+                        <Setter Target="StatusPanel.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="OrderStatus.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="PaymentTerm.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="PaymentStatus.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="SpacerColumn.Width" Value="0"/>
                         <Setter Target="LineItemListView.ItemTemplate" Value="{StaticResource NarrowLineItemTemplate}"/>
                         <Setter Target="DefaultLineItemsHeader.Visibility" Value="Collapsed"/>
                         <Setter Target="NarrowLineItemsHeader.Visibility" Value="Visible"/>
@@ -602,6 +601,11 @@
                         <Setter Target="StatusPanel.(Grid.Row)" Value="1"/>
                         <Setter Target="StatusPanel.(Grid.RowSpan)" Value="1"/>
                         <Setter Target="StatusPanel.(Grid.Column)" Value="0"/>
+                        <Setter Target="StatusPanel.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="OrderStatus.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="PaymentTerm.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="PaymentStatus.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="SpacerColumn.Width" Value="0"/>
                         <Setter Target="LineItemListView.ItemTemplate" Value="{StaticResource NarrowLineItemTemplate}"/>
                         <Setter Target="DefaultLineItemsHeader.Visibility" Value="Collapsed"/>
                         <Setter Target="NarrowLineItemsHeader.Visibility" Value="Visible"/>
