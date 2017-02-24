@@ -30,6 +30,7 @@
       xmlns:uc="using:ContosoApp.UserControls"
       xmlns:viewModels="using:ContosoApp.ViewModels"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
       NavigationCacheMode="Required"
       mc:Ignorable="d">
 
@@ -48,6 +49,11 @@
                             Tag="&#xE14D;"
                             Text="Add order"/>
         </MenuFlyout>
+
+        <!-- This style is applied implicitly to all data grid headers. -->
+        <Style TargetType="gridPrimitives:DataGridColumnHeader">
+            <Setter Property="Background" Value="{ThemeResource AccentBackgroundColor}"/>
+        </Style>
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -108,10 +114,14 @@
                            TextWrapping="WrapWholeWords"/>
             </Grid>
 
-            <telerikGrid:RadDataGrid x:Name="DataGrid" 
+            <telerikGrid:RadDataGrid x:Name="DataGrid"
                                      ItemsSource="{x:Bind ViewModel.Customers}"
                                      SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                                      UserEditMode="Inline"
+                                     GroupPanelPosition="Bottom"
+                                     GridLinesVisibility="None"
+                                     BorderThickness="0"
+                                     ColumnDataOperationsMode="Flyout"
                                      RelativePanel.AlignLeftWithPanel="True"
                                      RelativePanel.AlignRightWithPanel="True"
                                      RelativePanel.Below="errorPane">
