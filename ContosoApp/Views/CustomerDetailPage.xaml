@@ -41,7 +41,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel>
+        <RelativePanel x:Name="RootPanel">
             <uc:PageHeader x:Name="PageTitle">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
@@ -299,6 +299,7 @@
                         <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText"/>
+                        <Setter Target="RootPanel.Margin" Value="12,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>

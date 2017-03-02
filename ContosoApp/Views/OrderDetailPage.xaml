@@ -574,17 +574,8 @@
                         <Setter Target="OrderStatus.HorizontalAlignment" Value="Left"/>
                         <Setter Target="PaymentTerm.HorizontalAlignment" Value="Left"/>
                         <Setter Target="PaymentStatus.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="totalsPanel.HorizontalAlignment" Value="Right"/>
                         <Setter Target="SpacerColumn.Width" Value="0"/>
-                        <Setter Target="LineItemListView.ItemTemplate" Value="{StaticResource NarrowLineItemTemplate}"/>
-                        <Setter Target="DefaultLineItemsHeader.Visibility" Value="Collapsed"/>
-                        <Setter Target="NarrowLineItemsHeader.Visibility" Value="Visible"/>
-                        <Setter Target="ItemQtyPanel.(Grid.Row)" Value="1"/>
-                        <Setter Target="ItemQtyPanel.(Grid.Column)" Value="0"/>
-                        <Setter Target="ItemQtyPanel.HorizontalAlignment" Value="Right"/>
-                        <Setter Target="ItemQtyPanel.Margin" Value="0,8,4,0"/>
-                        <Setter Target="ItemAddPanel.(Grid.Row)" Value="1"/>
-                        <Setter Target="ItemAddPanel.(Grid.Column)" Value="1"/>
-                        <Setter Target="totalsPanel.Margin" Value="0,20,0,0"/>
                         <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0"/>
                         <Setter Target="StatusPanel.Margin" Value="12,0,0,0"/>
                         <Setter Target="sp1.Margin" Value="12,40,0,0"/>

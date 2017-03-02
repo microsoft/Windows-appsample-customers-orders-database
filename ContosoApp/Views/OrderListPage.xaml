@@ -76,7 +76,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel Margin="12,0">
+        <RelativePanel>
 
             <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
             <uc:PageHeader x:Name="PageTitle">

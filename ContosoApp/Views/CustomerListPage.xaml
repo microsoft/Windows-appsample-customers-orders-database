@@ -118,7 +118,7 @@
                                      ItemsSource="{x:Bind ViewModel.Customers}"
                                      SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                                      UserEditMode="Inline"
-                                     GroupPanelPosition="Bottom"
+                                     GroupPanelPosition="Left"
                                      GridLinesVisibility="None"
                                      BorderThickness="0"
                                      ColumnDataOperationsMode="Flyout"
