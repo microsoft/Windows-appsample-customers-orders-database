@@ -41,7 +41,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel Margin="12,0">
+        <RelativePanel>
             <uc:PageHeader x:Name="PageTitle">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
@@ -85,7 +85,7 @@
 
             <uc:CollapsibleSearchBox x:Name="CustomerSearchBox"
                                      Width="240"
-                                     Margin="12,8,0,0"
+                                     Margin="12,8,12,0"
                                      CollapseWidth="360"
                                      Loaded="CustomerSearchBox_Loaded"
                                      RelativePanel.AlignRightWithPanel="True"/>

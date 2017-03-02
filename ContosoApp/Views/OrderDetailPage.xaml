@@ -134,7 +134,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel Margin="12,0">
+        <RelativePanel>
             <!--  Page title section  -->
             <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
             <uc:PageHeader x:Name="PageTitle">
@@ -208,7 +208,7 @@
 
 
                     <!--  Customer info section  -->
-                    <StackPanel x:Name="customerInfoPanel" Margin="24,20,0,0">
+                    <StackPanel x:Name="customerInfoPanel" Margin="0,20,0,0">
                         <TextBlock IsTextSelectionEnabled="True"
                                    Style="{StaticResource SubtitleTextBlockStyle}"
                                    Text="{x:Bind ViewModel.CustomerName, Mode=OneWay}"/>
@@ -294,7 +294,7 @@
                     <StackPanel x:Name="sp1"
                                 Grid.Row="2"
                                 Grid.ColumnSpan="3"
-                                Margin="24,40,0,0"
+                                Margin="0,40,0,0"
                                 HorizontalAlignment="Stretch">
 
                         <!--  Line items header  -->
@@ -585,6 +585,9 @@
                         <Setter Target="ItemAddPanel.(Grid.Row)" Value="1"/>
                         <Setter Target="ItemAddPanel.(Grid.Column)" Value="1"/>
                         <Setter Target="totalsPanel.Margin" Value="0,20,0,0"/>
+                        <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0"/>
+                        <Setter Target="StatusPanel.Margin" Value="12,0,0,0"/>
+                        <Setter Target="sp1.Margin" Value="12,40,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -616,8 +619,9 @@
                         <Setter Target="ItemAddPanel.(Grid.Row)" Value="1"/>
                         <Setter Target="ItemAddPanel.(Grid.Column)" Value="1"/>
                         <Setter Target="totalsPanel.Margin" Value="0,20,0,0"/>
-                        <Setter Target="customerInfoPanel.Margin" Value="0,20,0,0"/>
-                        <Setter Target="sp1.Margin" Value="0,40,0,0"/>
+                        <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0"/>
+                        <Setter Target="sp1.Margin" Value="12,40,0,0"/>
+                        <Setter Target="StatusPanel.Margin" Value="12,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
