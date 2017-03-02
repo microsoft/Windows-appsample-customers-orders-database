@@ -164,7 +164,7 @@
                         </uc:DetailExpander.Pane>
                         <uc:DetailExpander.HeaderContent>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.FirstName, Mode=OneWay}"/>
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.Email, Mode=OneWay}"/>
                                 <AppBarSeparator Height="12"/>
                             </StackPanel>
                         </uc:DetailExpander.HeaderContent>
@@ -185,7 +185,10 @@
                             </Grid>
                         </uc:DetailExpander.Pane>
                         <uc:DetailExpander.HeaderContent>
-                            <StackPanel Orientation="Horizontal"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind ViewModel.Customer.Address, Mode=OneWay}"/>
+                                <AppBarSeparator Height="12"/>
+                            </StackPanel>
                         </uc:DetailExpander.HeaderContent>
                     </uc:DetailExpander>
 
