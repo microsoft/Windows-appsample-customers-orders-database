@@ -41,7 +41,7 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel x:Name="RootPanel">
+        <RelativePanel>
             <uc:PageHeader x:Name="PageTitle">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
@@ -86,7 +86,7 @@
             <uc:CollapsibleSearchBox x:Name="CustomerSearchBox"
                                      Width="240"
                                      Margin="12,8,12,0"
-                                     CollapseWidth="360"
+                                     CollapseWidth="{StaticResource LargeWindowSnapPoint}"
                                      Loaded="CustomerSearchBox_Loaded"
                                      RelativePanel.AlignRightWithPanel="True"/>
 
@@ -281,25 +281,15 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}"/>
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
-                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
-                    </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
-                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText"/>
-                        <Setter Target="RootPanel.Margin" Value="12,0,0,0"/>
+                        <Setter Target="DetailPanel.Margin" Value="12,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>

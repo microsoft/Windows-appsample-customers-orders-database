@@ -355,7 +355,7 @@
                                        VerticalAlignment="Bottom"
                                        FontWeight="SemiBold"
                                        Padding="0,0,0,0"
-                                       Text="Qty"/>
+                                       Text="(Qty)"/>
                         </Grid>
                         <!--  Line item list  -->
                         <ListView x:Name="LineItemListView"
