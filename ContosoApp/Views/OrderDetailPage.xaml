@@ -137,7 +137,7 @@
         <RelativePanel>
             <!--  Page title section  -->
             <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
-            <uc:PageHeader x:Name="PageTitle">
+            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
                 <uc:PageHeader.HeaderContent>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="0"

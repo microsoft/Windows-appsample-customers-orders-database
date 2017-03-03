@@ -79,7 +79,7 @@
         <RelativePanel>
 
             <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
-            <uc:PageHeader x:Name="PageTitle">
+            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Orders"/>
                 </uc:PageHeader.HeaderContent>

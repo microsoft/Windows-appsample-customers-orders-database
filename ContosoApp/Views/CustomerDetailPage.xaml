@@ -42,7 +42,7 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel>
-            <uc:PageHeader x:Name="PageTitle">
+            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock x:Name="PageHeaderText"
                                Style="{StaticResource PageTitleTextBlockStyle}"
@@ -115,7 +115,7 @@
                             <RelativePanel>
                                 <TextBox x:Name="FirstName"
                                          MinWidth="120"
-                                         Margin="0,0,16,0"
+                                         Margin="0,8,16,8"
                                          Header="First name"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.AlignLeftWithPanel="True"
@@ -123,7 +123,7 @@
                                          Visibility="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolToVisConverter}, Mode=OneWay}"/>
                                 <TextBox x:Name="LastName"
                                          MinWidth="120"
-                                         Margin="0,0,16,0"
+                                         Margin="0,8,16,8"
                                          Header="Last name"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.RightOf="FirstName"
@@ -132,7 +132,7 @@
                                 <TextBox x:Name="CompanyText"
                                          Grid.Row="1"
                                          MinWidth="120"
-                                         Margin="0,16,16,0"
+                                         Margin="0,8,16,0"
                                          Header="Company name"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          RelativePanel.AlignLeftWithPanel="True"
@@ -142,7 +142,7 @@
                                          Grid.Row="1"
                                          Grid.Column="1"
                                          MinWidth="132"
-                                         Margin="0,16,16,0"
+                                         Margin="0,8,16,0"
                                          Header="Primary phone"
                                          InputScope="TelephoneNumber"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
@@ -152,7 +152,7 @@
                                 <TextBox x:Name="EmailText"
                                          Grid.Column="2"
                                          MinWidth="160"
-                                         Margin="0,16,16,0"
+                                         Margin="0,8,16,0"
                                          Header="Primary email"
                                          InputScope="EmailNameOrAddress"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
@@ -178,7 +178,7 @@
                                     <ColumnDefinition MaxWidth="260"/>
                                     <ColumnDefinition MaxWidth="260"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBox Grid.ColumnSpan="3"
+                                <TextBox Grid.ColumnSpan="3" Margin="0,8,0,0"
                                          Header="Primary address"
                                          IsReadOnly="{x:Bind ViewModel.IsInEdit, Converter={StaticResource boolInverterConverter}, Mode=OneWay}"
                                          Text="{x:Bind ViewModel.Customer.Address, Mode=TwoWay}" />
@@ -194,7 +194,7 @@
 
                     <uc:DetailExpander Label="Orders">
                         <uc:DetailExpander.Pane>
-                            <Grid>
+                            <Grid Margin="0,8,0,0">
                                 <Grid.Resources>
                                     <x:Double x:Key="InvoiceIdWidth">48</x:Double>
                                     <x:Double x:Key="DateWidth">64</x:Double>
