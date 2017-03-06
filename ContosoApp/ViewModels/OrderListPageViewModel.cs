@@ -1,18 +1,18 @@
 //  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
-// 
+//
 //  The MIT License (MIT)
-// 
+//
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-// 
+//
 //  The above copyright notice and this permission notice shall be included in
 //  all copies or substantial portions of the Software.
-// 
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,13 +33,13 @@ namespace ContosoApp.ViewModels
 {
     /// <summary>
     /// Encapsulates data for the OrderListPage. The page UI
-    /// binds to the properties defined here. 
+    /// binds to the properties defined here.
     /// </summary>
     public class OrderListPageViewModel : BindableBase
     {
         public OrderListPageViewModel()
         {
-            IsLoading = false; 
+            IsLoading = false;
         }
 
         /// <summary>
@@ -48,17 +48,17 @@ namespace ContosoApp.ViewModels
         public ObservableCollection<Order> Orders { get; private set; } = new ObservableCollection<Order>();
 
         /// <summary>
-        /// Keeps an unfiltered view of the orders list. 
+        /// Keeps an unfiltered view of the orders list.
         /// </summary>
         private List<Order> masterOrdersList { get; } = new List<Order>();
 
         /// <summary>
         /// Indicates whether orders are being loaded.
         /// </summary>
-        private bool _isLoading; 
+        private bool _isLoading;
 
         /// <summary>
-        /// Gets or sets a value that specifies whether orders are being loaded. 
+        /// Gets or sets a value that specifies whether orders are being loaded.
         /// </summary>
         public bool IsLoading
         {
@@ -93,7 +93,7 @@ namespace ContosoApp.ViewModels
                     // Clear out the existing customer.
                     SelectedCustomer = null;
                     if (_selectedOrder != null)
-                    {                      
+                    {
                         Task.Run(() => loadCustomer(_selectedOrder.CustomerId));
                     }
                 }
@@ -101,8 +101,8 @@ namespace ContosoApp.ViewModels
         }
 
         /// <summary>
-        /// Gets the SelectedOrder value as type Object, which is required for using the 
-        /// strongly-typed x:Bind with ListView.SelectedItem, which is of type Object. 
+        /// Gets the SelectedOrder value as type Object, which is required for using the
+        /// strongly-typed x:Bind with ListView.SelectedItem, which is of type Object.
         /// </summary>
         public object SelectedOrderAsObject
         {
@@ -120,7 +120,7 @@ namespace ContosoApp.ViewModels
         {
             var db = new ContosoModels.ContosoDataSource();
             var customer = await db.Customers.GetAsync(customerId);
-            
+
             await Utilities.CallOnUiThreadAsync(() =>
             {
                 SelectedCustomer = customer;
@@ -133,7 +133,7 @@ namespace ContosoApp.ViewModels
         private Customer _selectedCustomer;
 
         /// <summary>
-        /// Gets or sets the selected customer. 
+        /// Gets or sets the selected customer.
         /// </summary>
         public Customer SelectedCustomer
         {
@@ -148,13 +148,13 @@ namespace ContosoApp.ViewModels
         }
 
         /// <summary>
-        /// Retrieves orders from the data source. 
+        /// Retrieves orders from the data source.
         /// </summary>
         public async void LoadOrders()
         {
             await Utilities.CallOnUiThreadAsync(() =>
             {
-                IsLoading = true; 
+                IsLoading = true;
                 Orders.Clear();
                 masterOrdersList.Clear();
             });
@@ -164,23 +164,26 @@ namespace ContosoApp.ViewModels
 
             await Utilities.CallOnUiThreadAsync(() =>
             {
-                foreach(Order o in orders)
+                if (orders != null)
                 {
-                    Orders.Add(o);
-                    masterOrdersList.Add(o);
+                    foreach (Order o in orders)
+                    {
+                        Orders.Add(o);
+                        masterOrdersList.Add(o);
+                    }
                 }
-                IsLoading = false; 
+                IsLoading = false;
             });
 
         }
 
         /// <summary>
-        /// Submits a query to the data source. 
+        /// Submits a query to the data source.
         /// </summary>
         /// <param name="query"></param>
         public async void QueryOrders(string query)
         {
-            IsLoading = true; 
+            IsLoading = true;
             Orders.Clear();
             if (!string.IsNullOrEmpty(query))
             {
@@ -193,18 +196,18 @@ namespace ContosoApp.ViewModels
                     {
                         Orders.Add(o);
                     }
-                    IsLoading = false; 
+                    IsLoading = false;
                 });
             }
         }
 
         /// <summary>
-        /// Stores the order suggestions. 
+        /// Stores the order suggestions.
         /// </summary>
         public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
 
         /// <summary>
-        /// Queries the database and updates the list of new order suggestions. 
+        /// Queries the database and updates the list of new order suggestions.
         /// </summary>
         /// <param name="queryText">The query to submit.</param>
         public void UpdateOrderSuggestions(string queryText)
@@ -214,7 +217,7 @@ namespace ContosoApp.ViewModels
             if (!string.IsNullOrEmpty(queryText))
             {
 
-                string[] parameters = queryText.Split(new char[] { ' ' }, 
+                string[] parameters = queryText.Split(new char[] { ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
                 var resultList = masterOrdersList
@@ -237,7 +240,7 @@ namespace ContosoApp.ViewModels
         }
 
         /// <summary>
-        /// Deletes the specified order from the database. 
+        /// Deletes the specified order from the database.
         /// </summary>
         /// <param name="orderToDelete">The order to delete.</param>
         public async Task DeleteOrder(Order orderToDelete)
@@ -248,7 +251,7 @@ namespace ContosoApp.ViewModels
             if (!response.IsSuccessStatusCode)
             {
                 Orders.Remove(orderToDelete);
-                SelectedOrder = null;         
+                SelectedOrder = null;
             }
             else
             {

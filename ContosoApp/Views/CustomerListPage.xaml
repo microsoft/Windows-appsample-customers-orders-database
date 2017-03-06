@@ -30,6 +30,7 @@
       xmlns:uc="using:ContosoApp.UserControls"
       xmlns:viewModels="using:ContosoApp.ViewModels"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
+      xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
       NavigationCacheMode="Required"
       mc:Ignorable="d">
 
@@ -48,11 +49,16 @@
                             Tag="&#xE14D;"
                             Text="Add order"/>
         </MenuFlyout>
+
+        <!-- This style is applied implicitly to all data grid headers. -->
+        <Style TargetType="gridPrimitives:DataGridColumnHeader">
+            <Setter Property="Background" Value="{ThemeResource AccentBackgroundColor}"/>
+        </Style>
     </Page.Resources>
 
     <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel Margin="12,0">
-            <uc:PageHeader x:Name="PageTitle">
+        <RelativePanel>
+            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
                 <uc:PageHeader.HeaderContent>
                     <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Customers"/>
                 </uc:PageHeader.HeaderContent>
@@ -91,8 +97,8 @@
             </CommandBar>
             <uc:CollapsibleSearchBox x:Name="CustomerSearchBox"
                                      Width="240"
-                                     Margin="12,8,0,0"
-                                     CollapseWidth="360"
+                                     Margin="12,8,12,0"
+                                     CollapseWidth="{StaticResource LargeWindowSnapPoint}"
                                      Loaded="CustomerSearchBox_Loaded"
                                      RelativePanel.AlignRightWithPanel="True"/>
 
@@ -108,10 +114,14 @@
                            TextWrapping="WrapWholeWords"/>
             </Grid>
 
-            <telerikGrid:RadDataGrid x:Name="DataGrid" 
+            <telerikGrid:RadDataGrid x:Name="DataGrid"
                                      ItemsSource="{x:Bind ViewModel.Customers}"
                                      SelectedItem="{Binding SelectedCustomer, Mode=TwoWay}"
                                      UserEditMode="Inline"
+                                     GroupPanelPosition="Left"
+                                     GridLinesVisibility="None"
+                                     BorderThickness="0"
+                                     ColumnDataOperationsMode="Flyout"
                                      RelativePanel.AlignLeftWithPanel="True"
                                      RelativePanel.AlignRightWithPanel="True"
                                      RelativePanel.Below="errorPane">
@@ -129,34 +139,22 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}"/>
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
-                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
-                    </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}"/>
                     </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="mainCommandBar.(RelativePanel.Below)" Value="PageTitle"/>
-                        <Setter Target="errorPane.(RelativePanel.Below)" Value="mainCommandBar"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
-                    </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <stateTriggers:MobileScreenTrigger InteractionMode="Touch"/>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="DataGrid.(RelativePanel.Above)" Value="mainCommandBar"/>
                         <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
                         <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
                         <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
                         <Setter Target="CustomerSearchBox.Width" Value="300"/>
-                        <Setter Target="CustomerAddress.Height" Value="90"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

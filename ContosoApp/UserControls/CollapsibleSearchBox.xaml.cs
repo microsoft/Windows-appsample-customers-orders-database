@@ -7,6 +7,8 @@ namespace ContosoApp.UserControls
 {
     public sealed partial class CollapsibleSearchBox : UserControl
     {
+        private double RequestedWidth = 32;
+
         public CollapsibleSearchBox()
         {
             this.InitializeComponent();
@@ -34,6 +36,7 @@ namespace ContosoApp.UserControls
 
         private void CollapsableSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
+            RequestedWidth = Width;
             SetState(Window.Current.Bounds.Width);
         }
 
@@ -53,16 +56,19 @@ namespace ContosoApp.UserControls
             if (width <= CollapseWidth)
             {
                 VisualStateManager.GoToState(this, "CollapsedState", false);
+                Width = 32;
             }
             else
             {
                 VisualStateManager.GoToState(this, "OpenState", false);
+                Width = RequestedWidth;
             }
         }
 
         private void SearchButton_Checked(object sender, RoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "OpenState", false);
+            Width = RequestedWidth;
             if (searchBox != null)
             {
                 searchBox.Focus(FocusState.Programmatic);

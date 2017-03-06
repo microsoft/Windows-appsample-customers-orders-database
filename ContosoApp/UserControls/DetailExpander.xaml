@@ -30,13 +30,47 @@
 
     <UserControl.Resources>
 
-        <Style x:Key="DefaultLabelStyle"
-               BasedOn="{StaticResource HeaderTextBlockStyle}"
-               TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="4,0,0,0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
+        <!--
+            These resources are updated from generic.xaml to give ToggleButtons
+            a transparent background and border.
+        -->
+        <!--  Resources for Windows.UI.Xaml.Controls.Primitives.ToggleButton  -->
+        <StaticResource x:Key="ToggleButtonBackground" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundChecked" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="SystemControlDisabledTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundIndeterminate" ResourceKey="SystemControlBackgroundBaseLowBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePointerOver" ResourceKey="SystemControlBackgroundBaseLowBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePressed" ResourceKey="SystemControlBackgroundBaseMediumLowBrush"/>
+        <StaticResource x:Key="ToggleButtonBackgroundIndeterminateDisabled" ResourceKey="SystemControlBackgroundBaseLowBrush"/>
+        <StaticResource x:Key="ToggleButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundPointerOver" ResourceKey="SystemControlHighlightBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundPressed" ResourceKey="SystemControlHighlightBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="SystemControlForegroundBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="SystemControlForegroundBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="SystemControlForegroundBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundIndeterminate" ResourceKey="SystemControlForegroundBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundIndeterminatePointerOver" ResourceKey="SystemControlHighlightBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundIndeterminatePressed" ResourceKey="SystemControlHighlightBaseHighBrush"/>
+        <StaticResource x:Key="ToggleButtonForegroundIndeterminateDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrush" ResourceKey="SystemControlForegroundTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushPressed" ResourceKey="SystemControlHighlightTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushDisabled" ResourceKey="SystemControlDisabledTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushChecked" ResourceKey="SystemControlHighlightAltTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPointerOver" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedPressed" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushCheckedDisabled" ResourceKey="SystemControlDisabledTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushIndeterminate" ResourceKey="SystemControlForegroundTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushIndeterminatePointerOver" ResourceKey="SystemControlTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushIndeterminatePressed" ResourceKey="SystemControlHighlightTransparentBrush"/>
+        <StaticResource x:Key="ToggleButtonBorderBrushIndeterminateDisabled" ResourceKey="SystemControlDisabledTransparentBrush"/>
 
         <Style x:Key="HeaderContentStyle" TargetType="ContentPresenter">
             <Setter Property="Margin" Value="4,0"/>
@@ -52,8 +86,6 @@
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="Padding" Value="0"/>
-            <!--<Setter Property="Background" Value="{StaticResource AccentBackgroundColor}"/>-->
-            <Setter Property="Background" Value="Transparent"/>
         </Style>
 
         <Style x:Key="ExpanderButtonOpenStyle"
@@ -116,7 +148,7 @@
                                   Grid.RowSpan="2"
                                   VerticalAlignment="Top"
                                   Background="{TemplateBinding PaneBackground}">
-                                <Border BorderBrush="Gray"
+                                <Border BorderBrush="{ThemeResource SystemControlBackgroundListLowBrush}"
                                         BorderThickness="0,0,0,1"
                                         Child="{TemplateBinding Content}"/>
                                 <Rectangle x:Name="LightDismissLayer"
@@ -624,13 +656,13 @@
             <SplitView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Style="{StaticResource DefaultLabelStyle}" Text="{x:Bind Label}"/>
-                    <ContentPresenter Content="{x:Bind HeaderContent}" Style="{StaticResource HeaderContentStyle}"/>
 
-                    <ToggleButton Grid.Column="1"
+                    <ToggleButton x:Name="Toggle"
+                                  Grid.Column="0"
+                                  Margin="0,0,4,0"
                                   Checked="ToggleButton_Checked"
                                   IsChecked="{Binding IsPaneOpen,
                                                       Converter={StaticResource nullBoolConverter},
@@ -638,6 +670,14 @@
                                                       Mode=TwoWay}"
                                   Style="{StaticResource ExpanderButtonStyle}"
                                   Unchecked="ToggleButton_Unchecked"/>
+                    <TextBlock Grid.Column="1"
+                               Style="{ThemeResource SubtitleTextBlockStyle}"
+                               Tapped="Header_Tapped"
+                               Text="{x:Bind Label}"/>
+                    <ContentPresenter Grid.Column="1"
+                                      Content="{x:Bind HeaderContent}"
+                                      Style="{StaticResource HeaderContentStyle}"
+                                      Tapped="Header_Tapped"/>
                 </Grid>
             </SplitView.Content>
         </SplitView>
