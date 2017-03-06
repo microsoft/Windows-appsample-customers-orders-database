@@ -100,9 +100,7 @@
 
             <SplitView.Pane>
                 <Grid x:Name="PaneContentGrid"
-                      Background="Transparent"
-                      BorderBrush="{ThemeResource AccentBackgroundColor}"
-                      BorderThickness="0, 0, 0.5, 0">
+                      Background="Transparent">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
