@@ -24,7 +24,6 @@
 
 using ContosoModels;
 using ContosoApp.ViewModels;
-using PropertyChanged;
 using System;
 using Windows.ApplicationModel.Email;
 using Windows.UI.Xaml;
@@ -32,13 +31,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using System.Collections.ObjectModel;
 
 namespace ContosoApp.Views
 {
     /// <summary>
     /// Displays the list of orders.
     /// </summary>
-    [ImplementPropertyChanged]
     public sealed partial class OrderListPage : Page
     {
         /// <summary>

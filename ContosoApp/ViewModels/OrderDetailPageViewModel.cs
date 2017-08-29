@@ -23,6 +23,8 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoModels;
+using Microsoft.Toolkit.Uwp;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,9 +38,8 @@ namespace ContosoApp.ViewModels
     /// <summary>
     /// Encapsulates data for the Order detail page. 
     /// </summary>
-    public class OrderDetailPageViewModel : INotifyPropertyChanged
+    public class OrderDetailPageViewModel : BindableBase
     {
-
         /// <summary>
         /// Creates an OrderDetailPageViewModel that wraps the specified EnterpriseModels.Order.
         /// </summary>
@@ -53,13 +54,13 @@ namespace ContosoApp.ViewModels
                 new ObservableCollection<LineItem>(_order.LineItems) :
                 new ObservableCollection<LineItem>();
 
-            _lineItems.CollectionChanged += lineItems_Changed;
+            _lineItems.CollectionChanged += LineItems_Changed;
 
             NewLineItem = new LineItemWrapper();
 
             if (order.Customer == null)
             {
-                Task.Run(() => loadCustomer(_order.CustomerId));
+                Task.Run(() => LoadCustomer(_order.CustomerId));
             }
         }
 
@@ -70,11 +71,9 @@ namespace ContosoApp.ViewModels
         /// <returns></returns>
         public async static Task<OrderDetailPageViewModel> CreateFromGuid(Guid orderId)
         {
-            var order = await getOrder(orderId);
+            var order = await GetOrder(orderId);
             return new OrderDetailPageViewModel(order);
         }
-
-
 
         /// <summary>
         /// The EnterpriseModels.Order this object wraps. 
@@ -85,13 +84,13 @@ namespace ContosoApp.ViewModels
         /// Loads the customer with the specified ID. 
         /// </summary>
         /// <param name="customerId">The ID of the customer to load.</param>
-        private async void loadCustomer(Guid customerId)
+        private async void LoadCustomer(Guid customerId)
         {
 
             var db = new ContosoDataSource();
             var customer = await db.Customers.GetAsync(customerId);
 
-            await Utilities.CallOnUiThreadAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 Customer = customer;
             });
@@ -102,7 +101,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         /// <param name="orderId">The ID of the order to retrieve.</param>
         /// <returns>The order, if it exists; otherwise, null. </returns>
-        private static async Task<Order> getOrder(Guid orderId)
+        private static async Task<Order> GetOrder(Guid orderId)
         {
             var db = new ContosoDataSource();
             var order = await db.Orders.GetAsync(orderId);
@@ -112,34 +111,19 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Gets a value that specifies whether the user can refresh the page.
         /// </summary>
-        public bool CanRefresh
-        {
-            get
-            {
-                return _order != null && !HasChanges && IsExistingOrder;
-            }
-        }
+        public bool CanRefresh => _order != null && !HasChanges && IsExistingOrder;
 
         /// <summary>
         /// Gets a value that specifies whether the user can revert changes. 
         /// </summary>
-        public bool CanRevert
-        {
-            get
-            {
-                return _order != null && HasChanges && IsExistingOrder;
-            }
-        }
+        public bool CanRevert => _order != null && HasChanges && IsExistingOrder;
 
         /// <summary>
         /// Gets or sets the order's ID.
         /// </summary>
         public Guid Id
         {
-            get
-            {
-                return _order.Id;
-            }
+            get => _order.Id; 
             set
             {
                 if (_order.Id != value)
@@ -156,10 +140,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public Guid CustomerId
         {
-            get
-            {
-                return _order.CustomerId;
-            }
+            get => _order.CustomerId;
             set
             {
                 if (_order.CustomerId != value)
@@ -178,10 +159,7 @@ namespace ContosoApp.ViewModels
         bool _hasChanges = false;
         public bool HasChanges
         {
-            get
-            {
-                return _hasChanges;
-            }
+            get => _hasChanges; 
             set
             {
                 if (value != _hasChanges)
@@ -212,10 +190,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public int InvoiceNumber
         {
-            get
-            {
-                return _order.InvoiceNumber;
-            }
+            get => _order.InvoiceNumber;
             set
             {
                 if (_order.InvoiceNumber != value)
@@ -224,7 +199,6 @@ namespace ContosoApp.ViewModels
                     OnPropertyChanged(nameof(InvoiceNumber));
                     HasChanges = true;
                 }
-
             }
         }
 
@@ -235,10 +209,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public Customer Customer
         {
-            get
-            {
-                return _order.Customer;
-            }
+            get => _order.Customer;
             set
             {
                 if (_order.Customer != value)
@@ -262,28 +233,24 @@ namespace ContosoApp.ViewModels
         }
 
         private ObservableCollection<LineItem> _lineItems = new ObservableCollection<LineItem>();
-
         /// <summary>
         /// Gets the line items in this invoice. 
         /// </summary>
         public virtual ObservableCollection<LineItem> LineItems
         {
-            get
-            {
-                return _lineItems;
-            }
+            get => _lineItems; 
             set
             {
                 if (_lineItems != value)
                 {
                     if (value != null)
                     {
-                        value.CollectionChanged += lineItems_Changed;
+                        value.CollectionChanged += LineItems_Changed;
                     }
 
                     if (_lineItems != null)
                     {
-                        _lineItems.CollectionChanged -= lineItems_Changed;
+                        _lineItems.CollectionChanged -= LineItems_Changed;
                     }
                     _lineItems = value;
                     OnPropertyChanged(nameof(LineItems));
@@ -296,7 +263,7 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Notifies anyone listening to this object that a line item changed. 
         /// </summary>
-        private void lineItems_Changed(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void LineItems_Changed(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (LineItems != null)
             {
@@ -316,10 +283,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public LineItemWrapper NewLineItem
         {
-            get
-            {
-                return _newLineItem;
-            }
+            get => _newLineItem; 
             set
             {
                 if (value != _newLineItem)
@@ -327,11 +291,11 @@ namespace ContosoApp.ViewModels
 
                     if (value != null)
                     {
-                        value.PropertyChanged += _newLineItem_PropertyChanged;
+                        value.PropertyChanged += NewLineItem_PropertyChanged;
                     }
                     if (_newLineItem != null)
                     {
-                        _newLineItem.PropertyChanged -= _newLineItem_PropertyChanged;
+                        _newLineItem.PropertyChanged -= NewLineItem_PropertyChanged;
                     }
 
                     _newLineItem = value;
@@ -341,7 +305,7 @@ namespace ContosoApp.ViewModels
 
         }
 
-        private void _newLineItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void NewLineItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             OnPropertyChanged(nameof(NewLineItem));
             OnPropertyChanged(nameof(HasNewLineItem));
@@ -350,23 +314,14 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Gets or sets whether there is a new line item in progress.
         /// </summary>
-        public bool HasNewLineItem
-        {
-            get
-            {
-                return NewLineItem != null && NewLineItem.Product != null;
-            }
-        }
+        public bool HasNewLineItem => NewLineItem != null && NewLineItem.Product != null;
 
         /// <summary>
         /// Gets or sets the date this order was placed. 
         /// </summary>
         public DateTime DatePlaced
         {
-            get
-            {
-                return _order.DatePlaced;
-            }
+            get => _order.DatePlaced;
             set
             {
                 if (_order.DatePlaced != value)
@@ -386,11 +341,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public DateTime? DateFilled
         {
-            get
-            {
-                return _order.DateFilled;
-
-            }
+            get => _order.DateFilled;
             set
             {
                 if (value != _order.DateFilled)
@@ -406,7 +357,6 @@ namespace ContosoApp.ViewModels
         /// Gets the subtotal. This value is calculated automatically. 
         /// </summary>
         public decimal Subtotal => _order.Subtotal;
-
 
         /// <summary>
         /// Gets the tax. This value is calculated automatically. 
@@ -424,10 +374,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string Address
         {
-            get
-            {
-                return _order.Address;
-            }
+            get => _order.Address; 
             set
             {
                 if (_order.Address != value)
@@ -445,10 +392,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public PaymentStatus PaymentStatus
         {
-            get
-            {
-                return _order.PaymentStatus;
-            }
+            get => _order.PaymentStatus;
             set
             {
                 if (_order.PaymentStatus != value)
@@ -466,10 +410,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public Term Term
         {
-            get
-            {
-                return _order.Term;
-            }
+            get => _order.Term;
             set
             {
                 if (_order.Term != value)
@@ -487,10 +428,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public OrderStatus Status
         {
-            get
-            {
-                return _order.Status;
-            }
+            get => _order.Status;
             set
             {
                 if (_order.Status != value)
@@ -512,16 +450,13 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string CustomerName
         {
-            get
-            {
-                return _order.CustomerName;
-            }
+            get => _order.CustomerName;
             set
             {
                 if (_order.CustomerName != value)
                 {
                     _order.CustomerName = value;
-                    OnPropertyChanged("CustomerName");
+                    OnPropertyChanged(nameof(CustomerName)); 
                 }
 
             }
@@ -534,30 +469,13 @@ namespace ContosoApp.ViewModels
         public override string ToString() => $"{_order.InvoiceNumber}";
 
         /// <summary>
-        /// Fired when a property value changes. 
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Notifies listeners that a property value changed. 
-        /// </summary>
-        /// <param name="propertyName">The name of the property that changed. </param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        /// <summary>
         /// Converts an Order to an OrderDetailPageViewModel.
         /// </summary>
         /// <param name="order">The EnterpriseModels.Order to convert.</param>
         public static implicit operator OrderDetailPageViewModel(Order order)
         {
-
             return new OrderDetailPageViewModel(order);
         }
-
 
         /// <summary>
         /// Converts an OrderDetailPageViewModel to an Order.
@@ -584,7 +502,6 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public List<string> TermValues => Enum.GetNames(typeof(Term)).ToList();
 
-
         /// <summary>
         /// Saves the current order to the database. 
         /// </summary>
@@ -593,7 +510,7 @@ namespace ContosoApp.ViewModels
             Order result = null;
             try
             {
-                var db = new ContosoModels.ContosoDataSource();
+                var db = new ContosoDataSource();
                 result = await db.Orders.PostAsync(_order);
             }
             catch (Exception ex)
@@ -604,11 +521,11 @@ namespace ContosoApp.ViewModels
 
             if (result != null)
             {
-                await Utilities.CallOnUiThreadAsync(() => HasChanges = false);
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() => HasChanges = false);
             }
             else
             {
-                await Utilities.CallOnUiThreadAsync(() => new OrderSavingException(
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() => new OrderSavingException(
                     "Unable to save. There might have been a problem " +
                     "connecting to the database. Please try again."));
             }

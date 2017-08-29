@@ -23,7 +23,6 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoApp.ViewModels;
-using PropertyChanged;
 using System.Linq;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
@@ -31,17 +30,17 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using System;
 using System.Collections.ObjectModel;
+using Microsoft.Toolkit.Uwp;
+using Windows.UI.Core;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace ContosoApp.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    [ImplementPropertyChanged]
     public sealed partial class CustomerListPage : Page
     {
-        public CustomerListPageViewModel ViewModel { get; set; } = new CustomerListPageViewModel();
-
         /// <summary>
         /// Initializes the page.
         /// </summary>
@@ -55,10 +54,14 @@ namespace ContosoApp.Views
             }
         }
 
-        private void CurrentWindow_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        public CustomerListPageViewModel ViewModel { get; set; } =
+            new CustomerListPageViewModel();
+
+
+        private void CurrentWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && e.Size.Width >=
-                (double)App.Current.Resources["MediumWindowSnapPoint"])
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && 
+                e.Size.Width >= (double)App.Current.Resources["MediumWindowSnapPoint"])
             {
                 mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }
@@ -95,7 +98,7 @@ namespace ContosoApp.Views
                 // If no search query is entered, refresh the complete list.
                 if (String.IsNullOrEmpty(sender.Text))
                 {
-                    await Utilities.CallOnUiThreadAsync(async () =>
+                    await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                         await ViewModel.GetCustomerListAsync());
                     sender.ItemsSource = null;
                 }
@@ -124,7 +127,7 @@ namespace ContosoApp.Views
         {
             if (String.IsNullOrEmpty(args.QueryText))
             {
-                await Utilities.CallOnUiThreadAsync(async () => 
+                await DispatcherHelper.ExecuteOnUIThreadAsync(async () => 
                     await ViewModel.GetCustomerListAsync());
             }
             else
@@ -145,7 +148,7 @@ namespace ContosoApp.Views
                         x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
                     .ToList(); 
 
-                await Utilities.CallOnUiThreadAsync(() =>
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
                     ViewModel.Customers.Clear(); 
                     foreach (var match in matches)
