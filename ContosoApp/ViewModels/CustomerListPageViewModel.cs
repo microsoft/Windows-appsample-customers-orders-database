@@ -24,14 +24,14 @@
 
 using ContosoModels;
 using ContosoApp.Commands;
-using PropertyChanged;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Uwp;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace ContosoApp.ViewModels
 {
-    [ImplementPropertyChanged]
     /// <summary>
     /// Encapsulates data for the CustomerListPage. The page UI
     /// binds to the properties defined here. 
@@ -46,12 +46,16 @@ namespace ContosoApp.ViewModels
             Task.Run(GetCustomerListAsync);
             SyncCommand = new RelayCommand(OnSync);
         }
-        
+
+        private ObservableCollection<CustomerViewModel> _customers = new ObservableCollection<CustomerViewModel>(); 
         /// <summary>
         /// The collection of customers in the list. 
         /// </summary>
-        public ObservableCollection<CustomerViewModel> Customers { get; set; } = 
-            new ObservableCollection<CustomerViewModel>(); 
+        public ObservableCollection<CustomerViewModel> Customers
+        {
+            get => _customers;
+            set => SetProperty(ref _customers, value);
+        }
 
         private CustomerViewModel _selectedCustomer;
         /// <summary>
@@ -59,11 +63,8 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public CustomerViewModel SelectedCustomer
         {
-            get { return _selectedCustomer; }
-            set
-            {
-                SetProperty(ref _selectedCustomer, value); 
-            }
+            get => _selectedCustomer;
+            set => SetProperty(ref _selectedCustomer, value);
         }
 
         private string _errorText = null;
@@ -72,12 +73,8 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string ErrorText
         {
-            get { return _errorText; }
-
-            set
-            {
-                SetProperty(ref _errorText, value);
-            }
+            get => _errorText;
+            set => SetProperty(ref _errorText, value);
         }
 
         private bool _isLoading = false;
@@ -86,12 +83,8 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public bool IsLoading
         {
-            get { return _isLoading; }
-
-            set
-            {
-                SetProperty(ref _isLoading, value);
-            }
+            get => _isLoading; 
+            set => SetProperty(ref _isLoading, value);
         }
 
         /// <summary>
@@ -99,20 +92,20 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public async Task GetCustomerListAsync()
         {
-            await Utilities.CallOnUiThreadAsync(() => IsLoading = true); 
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
 
             var db = new ContosoDataSource();
             var customers = await db.Customers.GetAsync();
             if (customers == null)
             {
-                return; 
+                return;
             }
-            await Utilities.CallOnUiThreadAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
-                Customers.Clear(); 
+                Customers.Clear();
                 foreach (var c in customers)
                 {
-                    Customers.Add(new CustomerViewModel(c) { Validate = true }); 
+                    Customers.Add(new CustomerViewModel(c) { Validate = true });
                 }
                 IsLoading = false;
             });
@@ -127,16 +120,16 @@ namespace ContosoApp.ViewModels
         {
             Task.Run(async () =>
             {
-                IsLoading = true; 
-                var db = new ContosoDataSource(); 
+                IsLoading = true;
+                var db = new ContosoDataSource();
                 foreach (var modifiedCustomer in Customers
                     .Where(x => x.IsModified).Select(x => x.Model))
                 {
-                    await db.Customers.PostAsync(modifiedCustomer); 
+                    await db.Customers.PostAsync(modifiedCustomer);
                 }
                 await GetCustomerListAsync();
-                IsLoading = false; 
-            }); 
+                IsLoading = false;
+            });
         }
     }
 }

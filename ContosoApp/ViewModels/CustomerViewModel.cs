@@ -64,7 +64,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string FirstName
         {
-            get { return Model.FirstName; }
+            get => Model.FirstName; 
             set
             {
                 if (value != Model.FirstName)
@@ -80,7 +80,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string LastName
         {
-            get { return Model.LastName; }
+            get => Model.LastName; 
             set
             {
                 if (value != Model.LastName)
@@ -96,7 +96,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string Address
         {
-            get { return Model.Address; }
+            get => Model.Address;
             set
             {
                 if (value != Model.Address)
@@ -112,7 +112,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string Company
         {
-            get { return Model.Company; }
+            get => Model.Company; 
             set
             {
                 if (value != Model.Company)
@@ -129,7 +129,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string Phone
         {
-            get { return Model.Phone; }
+            get => Model.Phone; 
             set
             {
                 if (value == Model.Phone)
@@ -160,7 +160,7 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public string Email
         {
-            get { return Model.Email; }
+            get => Model.Email; 
             set
             {
                 if (value == Model.Email)

@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------------
+﻿//  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 // 
 //  The MIT License (MIT)
@@ -287,14 +287,14 @@ namespace ContosoApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void RootSplitView_PaneClosed(SplitView sender, object args) => 
+        private void RootSplitView_PaneClosed(SplitView sender, object args) =>
             NavPaneDivider.Visibility = Visibility.Collapsed;
 
         /// <summary>
         /// Callback when the SplitView's Pane is toggled closed.  When the Pane is not visible
         /// then the floating hamburger may be occluding other content in the app unless it is aware.
         /// </summary>
-        private void TogglePaneButton_Unchecked(object sender, RoutedEventArgs e) => 
+        private void TogglePaneButton_Unchecked(object sender, RoutedEventArgs e) =>
             CheckTogglePaneButtonSizeChanged();
 
         /// <summary>

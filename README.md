@@ -4,10 +4,9 @@
 
 # Customers Orders Database sample 
 
-A mini-app sample that shows common enterprise scenarios such as creating and maintaining customer accounts, orders, and products. 
-This sample runs on the Universal Windows Platform (UWP). 
+A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, UI controls (including a data grid), and cloud database and API integration using ASP.NET Core and Entity Framework. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso. 
 
-The app showcases features useful to enterprise developers, like user authentication, UI controls, and cloud database integration.
+This sample is for the Universal Windows Platform (UWP). 
 
 ![ContosoApp screenshot 1](screenshot1.png)
 
@@ -19,7 +18,7 @@ This sample highlights:
 - An editable DataGrid with input validation
 - Form layouts
 - Authenticating and obtaining user info using Azure Active Directory (AAD)
-- Connecting to an external data source
+- Connecting to an external data source using ASP.NET Core 2.0 and Entity Framework 
 
 ## Run the sample
 
@@ -29,25 +28,27 @@ This sample is designed to connect to an instance of Azure Active Directory for 
 
 ### Prepare your environment
 
-This sample requires Visual Studio 2015 with Update 3, the Windows 10 Software Development Kit (SDK), and .NET Core SDK.
+This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK), and the .NET Core 2.0 SDK.
 
-* [Get a free copy of Visual Studio 2015 Community Edition with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
-* [Get the .NET Core SDK and Visual Studio 2015 Update 3](https://www.microsoft.com/net/core)
+* [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
+* [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
 
 Additionally, to receive the latest updates to Windows and the development tools, and to help shape their development, join the [Windows Insider Program](https://insider.windows.com/ "Become a Windows Insider").
 
+> *Note* If you are using Visual Studio 2015, a previous version of this sample which doesn't require Visual Studio 2017 is available in the git commit history for this repo.
+
 ### Run
 
-Set your startup project as **ContosoApp**, then press F5 to run.
+Set your startup project as **ContosoApp**, the architecture to x86, and press F5 to run.
 
 ### Complete setup
 
-To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Here's the steps you'll need to take:  
+To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Values you need to fill are in [Constants.cs](ContosoModels/Constants.cs). 
 
-- Set your client Id: Set the *AccountClientId* field in [AuthenticationViewModel.cs](ContosoApp/ViewModels/AuthenticationViewModel.cs#55) to your Azure account client Id.
-- Set the API endpoint: In [ApiHelper.cs](ContosoModels/Database/ApiHelper.cs#44), set the value of the *BaseUrl* constant to match the url the backing service is running on.
-- Set a database connection string: In [ContosoContext.cs](ContosoService/ContosoContext.cs#39), set the connection string to one of your own local or remote databases.
-- Associate this sample with the Store: Authentication requires store association. To associate the app with the Store, right click the project in Visual Studio and select **Store** -> **Associate App with the Store**. Then follow the instructions in the wizard.
+- **Client Id**: Set the *AccountClientId* field to your Azure account client Id.
+- **API endpoint**: Set the value of the *BaseUrl* constant to match the url the backing service is running on.
+- **Set a database connection string**: Set the connection string to one of your own local or remote databases.
+- **Associate this sample with the Store**: Authentication requires store association. To associate the app with the Store, right click the project in Visual Studio and select **Store** -> *Associate App with the Store*. Then follow the instructions in the wizard.
 
 You can then either start the service running locally, or deploy it to Azure. 
 

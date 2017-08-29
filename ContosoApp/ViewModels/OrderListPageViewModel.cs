@@ -23,6 +23,8 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoModels;
+using Microsoft.Toolkit.Uwp;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,6 +39,8 @@ namespace ContosoApp.ViewModels
     /// </summary>
     public class OrderListPageViewModel : BindableBase
     {
+        private List<Order> _masterOrdersList { get; } = new List<Order>();
+
         public OrderListPageViewModel()
         {
             IsLoading = false;
@@ -50,33 +54,18 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Keeps an unfiltered view of the orders list.
         /// </summary>
-        private List<Order> masterOrdersList { get; } = new List<Order>();
 
-        /// <summary>
-        /// Indicates whether orders are being loaded.
-        /// </summary>
         private bool _isLoading;
-
         /// <summary>
         /// Gets or sets a value that specifies whether orders are being loaded.
         /// </summary>
         public bool IsLoading
         {
-            get
-            {
-                return _isLoading;
-            }
-            set
-            {
-                SetProperty(ref _isLoading, value);
-            }
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value); 
         }
 
-        /// <summary>
-        /// Backing field for the SelectedOrder property.
-        /// </summary>
         private Order _selectedOrder;
-
         /// <summary>
         /// Gets or sets the selected order.
         /// </summary>
@@ -94,7 +83,7 @@ namespace ContosoApp.ViewModels
                     SelectedCustomer = null;
                     if (_selectedOrder != null)
                     {
-                        Task.Run(() => loadCustomer(_selectedOrder.CustomerId));
+                        Task.Run(() => LoadCustomer(_selectedOrder.CustomerId));
                     }
                 }
             }
@@ -106,45 +95,39 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public object SelectedOrderAsObject
         {
-            get { return SelectedOrder; }
-            set { SelectedOrder = value as Order; }
+            get => SelectedOrder; 
+            set => SelectedOrder = value as Order; 
         }
 
+        private Customer _selectedCustomer;
+        /// <summary>
+        /// Gets or sets the selected customer.
+        /// </summary>
+        public Customer SelectedCustomer
+        {
+            get => _selectedCustomer; 
+            set => SetProperty(ref _selectedCustomer, value);
+        }
+
+        /// <summary>
+        /// Stores the order suggestions.
+        /// </summary>
+        public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
 
         /// <summary>
         /// Loads the specified customer and sets the
         /// SelectedCustomer property.
         /// </summary>
         /// <param name="customerId">The customer to load.</param>
-        private async void loadCustomer(Guid customerId)
+        private async void LoadCustomer(Guid customerId)
         {
             var db = new ContosoModels.ContosoDataSource();
             var customer = await db.Customers.GetAsync(customerId);
 
-            await Utilities.CallOnUiThreadAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 SelectedCustomer = customer;
             });
-        }
-
-        /// <summary>
-        /// The selected customer.
-        /// </summary>
-        private Customer _selectedCustomer;
-
-        /// <summary>
-        /// Gets or sets the selected customer.
-        /// </summary>
-        public Customer SelectedCustomer
-        {
-            get
-            {
-                return _selectedCustomer;
-            }
-            set
-            {
-                SetProperty(ref _selectedCustomer, value);
-            }
         }
 
         /// <summary>
@@ -152,24 +135,24 @@ namespace ContosoApp.ViewModels
         /// </summary>
         public async void LoadOrders()
         {
-            await Utilities.CallOnUiThreadAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 IsLoading = true;
                 Orders.Clear();
-                masterOrdersList.Clear();
+                _masterOrdersList.Clear();
             });
 
             var db = new ContosoModels.ContosoDataSource();
             var orders = await db.Orders.GetAsync();
 
-            await Utilities.CallOnUiThreadAsync(() =>
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 if (orders != null)
                 {
                     foreach (Order o in orders)
                     {
                         Orders.Add(o);
-                        masterOrdersList.Add(o);
+                        _masterOrdersList.Add(o);
                     }
                 }
                 IsLoading = false;
@@ -190,7 +173,7 @@ namespace ContosoApp.ViewModels
                 var dataSource = new ContosoModels.ContosoDataSource();
                 var results = await dataSource.Orders.GetAsync(query);
 
-                await Utilities.CallOnUiThreadAsync(() =>
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
                     foreach (Order o in results)
                     {
@@ -202,11 +185,6 @@ namespace ContosoApp.ViewModels
         }
 
         /// <summary>
-        /// Stores the order suggestions.
-        /// </summary>
-        public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
-
-        /// <summary>
         /// Queries the database and updates the list of new order suggestions.
         /// </summary>
         /// <param name="queryText">The query to submit.</param>
@@ -216,11 +194,10 @@ namespace ContosoApp.ViewModels
             OrderSuggestions.Clear();
             if (!string.IsNullOrEmpty(queryText))
             {
-
                 string[] parameters = queryText.Split(new char[] { ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
-                var resultList = masterOrdersList
+                var resultList = _masterOrdersList
                     .Where(x => parameters
                         .Any(y =>
                             x.Address.StartsWith(y) ||

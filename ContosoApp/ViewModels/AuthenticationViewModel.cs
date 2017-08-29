@@ -23,7 +23,6 @@
 //  ---------------------------------------------------------------------------------
 
 using Microsoft.Graph;
-using PropertyChanged;
 using System;
 using System.IO;
 using System.Linq.Expressions;
@@ -46,63 +45,107 @@ namespace ContosoApp.ViewModels
     /// <summary>
     /// Handles user authentication and getting user info from the Microsoft Graph API.
     /// </summary>
-    [ImplementPropertyChanged]
-    public class AuthenticationViewModel
+    public class AuthenticationViewModel : BindableBase
     {
-        /// <summary>
-        /// The Azure Active Directory (AAD) client id.
-        /// </summary>
-        private const string AccountClientId = "<TODO: Insert Azure client Id>";
-
+        private string _name;
         /// <summary>
         /// Gets or sets the user's name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
+        }
 
+        private string _email;
         /// <summary>
         /// Gets or sets the user's email.
         /// </summary>
-        public string Email { get; set; }
+        public string Email
+        {
+            get => _email;
+            set => SetProperty(ref _email, value);
+        }
 
+        private string _title;
         /// <summary>
         /// Gets or sets the user's standard title.
         /// </summary>
-        public string Title { get; set; }
+        public string Title
+        {
+            get => _title;
+            set => SetProperty(ref _title, value); 
+        }
 
+        private string _domain;
         /// <summary>
         /// Gets or sets the user's AAD domain.
         /// </summary>
-        public string Domain { get; set; }
+        public string Domain
+        {
+            get => _domain;
+            set => SetProperty(ref _domain, value);
+        }
 
+        private BitmapImage _photo;
         /// <summary>
         /// Gets or sets the user's photo.
         /// </summary>
-        public BitmapImage Photo { get; set; }
+        public BitmapImage Photo
+        {
+            get => _photo;
+            set => SetProperty(ref _photo, value);
+        }
 
+        private string _errorText;
         /// <summary>
         /// Gets or sets error text to show if the login operation fails.
         /// </summary>
-        public string ErrorText { get; set; }
+        public string ErrorText
+        {
+            get => _errorText;
+            set => SetProperty(ref _errorText, value);
+        }
 
+        private bool _showWelcome;
         /// <summary>
         /// Gets or sets whether to show the starting welcome UI. 
         /// </summary>
-        public bool ShowWelcome { get; set; }
+        public bool ShowWelcome
+        {
+            get => _showWelcome;
+            set => SetProperty(ref _showWelcome, value);
+        }
 
+        private bool _showLoading; 
         /// <summary>
         /// Gets or sets whether to show the logging in progress UI.
         /// </summary>
-        public bool ShowLoading { get; set; }
+        public bool ShowLoading
+        {
+            get => _showLoading;
+            set => SetProperty(ref _showLoading, value);
+        }
 
+        private bool _showData;
         /// <summary>
         /// Gets or sets whether to show user data UI.
         /// </summary>
-        public bool ShowData { get; set; }
+        public bool ShowData
+        {
+            get => _showData;
+            set => SetProperty(ref _showData, value); 
+        }
 
+        private bool _showError; 
         /// <summary>
         /// Gets or sets whether to show the error UI.
         /// </summary>
-        public bool ShowError { get; set; }
+        public bool ShowError
+        {
+            get => _showError;
+            set => SetProperty(ref _showError, value);
+        }
 
         /// <summary>
         /// Creates a new AuthenticationViewModel for logging users in and getting their info.
@@ -165,7 +208,8 @@ namespace ContosoApp.ViewModels
         private async Task<string> GetTokenAsync()
         {
             var provider = await GetAadProviderAsync();
-            var request = new WebTokenRequest(provider, "User.Read", AccountClientId);
+            var request = new WebTokenRequest(provider, "User.Read", 
+                ContosoModels.Constants.AccountClientId);
             request.Properties.Add("resource", "https://graph.microsoft.com");
             var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
             if (result.ResponseStatus != WebTokenRequestStatus.Success)
