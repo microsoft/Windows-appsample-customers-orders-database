@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using ContosoModels;
+using ContosoRepository;
 
 namespace ContosoService
 {
@@ -25,7 +26,10 @@ namespace ContosoService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ContosoContext>(x => x.UseSqlServer(Constants.DatabaseConnectionString));
+            services.AddDbContext<ContosoContext>(x => x.UseSqlServer("TODO"));
+            services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
+            services.AddScoped<IOrderRepository, SqlOrderRepository>();
+            services.AddScoped<IProductRepository, SqlProductRepository>();
             services.AddMvc();
         }
 

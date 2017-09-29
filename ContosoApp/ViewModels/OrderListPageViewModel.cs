@@ -121,7 +121,7 @@ namespace ContosoApp.ViewModels
         /// <param name="customerId">The customer to load.</param>
         private async void LoadCustomer(Guid customerId)
         {
-            var db = new ContosoModels.ContosoDataSource();
+            var db = new ContosoModels.ContosoAzureDataSource();
             var customer = await db.Customers.GetAsync(customerId);
 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -142,7 +142,7 @@ namespace ContosoApp.ViewModels
                 _masterOrdersList.Clear();
             });
 
-            var db = new ContosoModels.ContosoDataSource();
+            var db = new ContosoModels.ContosoAzureDataSource();
             var orders = await db.Orders.GetAsync();
 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -170,7 +170,7 @@ namespace ContosoApp.ViewModels
             Orders.Clear();
             if (!string.IsNullOrEmpty(query))
             {
-                var dataSource = new ContosoModels.ContosoDataSource();
+                var dataSource = new ContosoModels.ContosoAzureDataSource();
                 var results = await dataSource.Orders.GetAsync(query);
 
                 await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -222,7 +222,7 @@ namespace ContosoApp.ViewModels
         /// <param name="orderToDelete">The order to delete.</param>
         public async Task DeleteOrder(Order orderToDelete)
         {
-            var db = new ContosoModels.ContosoDataSource();
+            var db = new ContosoModels.ContosoAzureDataSource();
             var response = await db.Orders.DeleteAsync(orderToDelete.Id);
 
             if (!response.IsSuccessStatusCode)

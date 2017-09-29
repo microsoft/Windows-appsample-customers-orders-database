@@ -114,7 +114,7 @@ namespace ContosoApp.Views
                 }
                 else
                 {
-                    ContosoDataSource data = new ContosoDataSource();
+                    ContosoAzureDataSource data = new ContosoAzureDataSource();
                     sender.ItemsSource = await data.Customers.GetAsync(sender.Text);
                 }
             }

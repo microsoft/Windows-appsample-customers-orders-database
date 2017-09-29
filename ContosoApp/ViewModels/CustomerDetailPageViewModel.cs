@@ -128,7 +128,7 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Saves customer data that has been edited.
         /// </summary>
-        private async Task Save() => await new ContosoDataSource().Customers
+        private async Task Save() => await new ContosoAzureDataSource().Customers
             .PostAsync(_customer.Model); 
 
         public RelayCommand CancelEditsCommand { get; private set; }
@@ -159,7 +159,7 @@ namespace ContosoApp.ViewModels
         public async Task LoadCustomerOrders()
         {
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
-            var orders = await new ContosoDataSource()
+            var orders = await new ContosoAzureDataSource()
                 .Orders.GetAsync(_customer.Model);
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {

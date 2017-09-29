@@ -29,22 +29,38 @@ using System.Threading.Tasks;
 
 namespace ContosoModels
 {
-    internal class AzureCustomerDataSource : ICustomerDataSource
+    public interface IOrderRepository
     {
-        public async Task<IEnumerable<Customer>> GetAsync() => 
-            await ApiHelper.GetAsync<IEnumerable<Customer>>("customer");
+        /// <summary>
+        /// Gets all orders. 
+        /// </summary>
+        Task<IEnumerable<Order>> GetOrdersAsync();
 
-        public async Task<Customer> GetAsync(Guid id) => 
-            await ApiHelper.GetAsync<Customer>($"customer/{id}");
+        /// <summary>
+        /// Gets all the given customer's orders. 
+        /// </summary>
+        Task<IEnumerable<Order>> GetCustomerOrdersAsync(Guid customerId);
 
-        public async Task<IEnumerable<Customer>> GetAsync(string search) =>
-            await ApiHelper.GetAsync<IEnumerable<Customer>>($"customer/search?value={search}");
+        /// <summary>
+        /// Gets the order with the given id.
+        /// </summary>
+        Task<Order> GetOrderAsync(Guid orderId);
 
-        public async Task<Customer> PostAsync(Customer customer) =>
-            await ApiHelper.PostAsync<Customer, Customer>("customer", customer);
+        /// <summary>
+        /// Gets all order with a data field matching the start of the given string. 
+        /// </summary>
+        Task<IEnumerable<Order>> SearchOrdersAsync(string search);
 
-        public async Task DeleteAsync(Guid customerId) => 
-            await ApiHelper.DeleteAsync<HttpResponseMessage>("customer", customerId);
-       
+        /// <summary>
+        /// Adds a new order if the order does not exist, updates the 
+        /// existing order otherwise.
+        /// </summary>
+        Task<Order> UpsertOrderAsync(Order order);
+
+        /// <summary>
+        /// Deletes an order.
+        /// </summary>
+        Task<HttpResponseMessage> DeleteOrderAsync(Guid orderId);
+
     }
 }

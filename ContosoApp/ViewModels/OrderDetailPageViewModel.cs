@@ -87,7 +87,7 @@ namespace ContosoApp.ViewModels
         private async void LoadCustomer(Guid customerId)
         {
 
-            var db = new ContosoDataSource();
+            var db = new ContosoAzureDataSource();
             var customer = await db.Customers.GetAsync(customerId);
 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -103,7 +103,7 @@ namespace ContosoApp.ViewModels
         /// <returns>The order, if it exists; otherwise, null. </returns>
         private static async Task<Order> GetOrder(Guid orderId)
         {
-            var db = new ContosoDataSource();
+            var db = new ContosoAzureDataSource();
             var order = await db.Orders.GetAsync(orderId);
             return order;
         }
@@ -510,7 +510,7 @@ namespace ContosoApp.ViewModels
             Order result = null;
             try
             {
-                var db = new ContosoDataSource();
+                var db = new ContosoAzureDataSource();
                 result = await db.Orders.PostAsync(_order);
             }
             catch (Exception ex)
@@ -547,7 +547,7 @@ namespace ContosoApp.ViewModels
 
             if (!string.IsNullOrEmpty(queryText))
             {
-                var dataSource = new ContosoModels.ContosoDataSource();
+                var dataSource = new ContosoModels.ContosoAzureDataSource();
                 var suggestions = await dataSource.Products.GetAsync(queryText);
 
                 foreach (Product p in suggestions)

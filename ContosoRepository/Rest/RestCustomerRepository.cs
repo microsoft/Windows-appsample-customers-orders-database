@@ -22,31 +22,29 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using ContosoModels;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ContosoModels
+namespace ContosoApp.Data
 {
-    internal class AzureOrderDataSource : IOrderDataSource
+    public class RestCustomerRepository : ICustomerRepository
     {
-        public async Task<IEnumerable<Order>> GetAsync() =>
-            await ApiHelper.GetAsync<IEnumerable<Order>>("order");
+        public async Task<IEnumerable<Customer>> GetCustomersAsync() =>
+            await HttpHelper.GetAsync<IEnumerable<Customer>>("customer");
 
-        public async Task<Order> GetAsync(Guid id) =>
-            await ApiHelper.GetAsync<Order>($"order/{id}");
+        public async Task<IEnumerable<Customer>> SearchCustomersAsync(string search) => 
+            await HttpHelper.GetAsync<IEnumerable<Customer>>($"customer/search?value={search}");
 
-        public async Task<IEnumerable<Order>> GetAsync(Customer customer) =>
-            await ApiHelper.GetAsync<IEnumerable<Order>>($"order/customer/{customer.Id}");
+        public async Task<Customer> GetCustomerAsync(Guid id) =>
+            await HttpHelper.GetAsync<Customer>($"customer/{id}");
 
-        public async Task<IEnumerable<Order>> GetAsync(string search) =>
-            await ApiHelper.GetAsync<IEnumerable<Order>>($"order/search?value={search}");
+        public async Task<Customer> UpsertCustomerAsync(Customer customer) => 
+            await HttpHelper.PostAsync<Customer, Customer>("customer", customer);
 
-        public async Task<Order> PostAsync(Order order) =>
-            await ApiHelper.PostAsync<Order, Order>("order", order);
-
-        public async Task<HttpResponseMessage> DeleteAsync(Guid orderId) =>
-            await ApiHelper.DeleteAsync<HttpResponseMessage>("order", orderId);
+        public async Task DeleteCustomerAsync(Guid customerId) => 
+            await HttpHelper.DeleteAsync<HttpResponseMessage>("customer", customerId);
     }
 }

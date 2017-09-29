@@ -23,6 +23,7 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoApp.Views;
+using ContosoRepository;
 using System;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
@@ -36,6 +37,11 @@ namespace ContosoApp
     /// </summary>
     sealed partial class App : Application
     {
+        /// <summary>
+        /// Pipeline for interacting with backend service or database.
+        /// </summary>
+        public static IContosoRepository Repository { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -52,6 +58,7 @@ namespace ContosoApp
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            Repository = new ContosoRepository.EntityFramework.ContosoRepository(); 
             AppShell shell = Window.Current.Content as AppShell;
 
             // Do not repeat app initialization when the Window already has content,

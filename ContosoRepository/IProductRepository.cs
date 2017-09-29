@@ -24,43 +24,25 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ContosoModels
 {
-    public interface IOrderDataSource
+    public interface IProductRepository
     {
         /// <summary>
-        /// Gets all orders. 
+        /// Gets all products. 
         /// </summary>
-        Task<IEnumerable<Order>> GetAsync();
+        Task<IEnumerable<Product>> GetProductsAsync();
 
         /// <summary>
-        /// Gets all the given customer's orders. 
+        /// Gets the product with the given Id. 
         /// </summary>
-        Task<IEnumerable<Order>> GetAsync(Customer customer);
+        Task<Product> GetProductAsync(Guid id);
 
         /// <summary>
-        /// Gets the order with the given id.
+        /// Gets all products with a data field matching the start of the given string. 
         /// </summary>
-        Task<Order> GetAsync(Guid orderId);
-
-        /// <summary>
-        /// Gets all order with a data field matching the start of the given string. 
-        /// </summary>
-        Task<IEnumerable<Order>> GetAsync(string search);
-
-        /// <summary>
-        /// Adds a new order if the order does not exist, updates the 
-        /// existing order otherwise.
-        /// </summary>
-        Task<Order> PostAsync(Order order);
-
-        /// <summary>
-        /// Deletes an order.
-        /// </summary>
-        Task<HttpResponseMessage> DeleteAsync(Guid orderId);
-
+        Task<IEnumerable<Product>> SearchProductsAsync(string search);
     }
 }

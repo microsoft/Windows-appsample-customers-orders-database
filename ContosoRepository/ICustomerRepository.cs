@@ -22,12 +22,38 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace ContosoModels
 {
-    public interface IContosoDataSource
+    public interface ICustomerRepository
     {
-        ICustomerDataSource Customers { get; }
-        IOrderDataSource Orders { get; }
-        IProductDataSource Products { get; }
+        /// <summary>
+        /// Gets all customers. 
+        /// </summary>
+        Task<IEnumerable<Customer>> GetCustomersAsync();
+
+        /// <summary>
+        /// Gets all customers with a data field matching the start of the given string. 
+        /// </summary>
+        Task<IEnumerable<Customer>> SearchCustomersAsync(string search);
+
+        /// <summary>
+        /// Gets the customer with the given id. 
+        /// </summary>
+        Task<Customer> GetCustomerAsync(Guid id);
+
+        /// <summary>
+        /// Adds a new customer if the customer does not exist, updates the 
+        /// existing customer otherwise.
+        /// </summary>
+        Task<Customer> UpsertCustomerAsync(Customer customer);
+
+        /// <summary>
+        /// Deletes a customer.
+        /// </summary>
+        Task DeleteCustomerAsync(Guid customerId);
     }
 }

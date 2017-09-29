@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContosoService
+namespace ContosoRepository
 {
     /// <summary>
     /// Entity Framework DbContext for Contoso.
     /// </summary>
-    public class ContosoContext : DbContext
+    public abstract class ContosoContext : DbContext
     {
         /// <summary>
         /// Creates a new Contoso DbContext.

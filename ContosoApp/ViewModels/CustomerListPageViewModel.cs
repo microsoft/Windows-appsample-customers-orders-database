@@ -94,7 +94,7 @@ namespace ContosoApp.ViewModels
         {
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
 
-            var db = new ContosoDataSource();
+            var db = new ContosoAzureDataSource();
             var customers = await db.Customers.GetAsync();
             if (customers == null)
             {
@@ -121,7 +121,7 @@ namespace ContosoApp.ViewModels
             Task.Run(async () =>
             {
                 IsLoading = true;
-                var db = new ContosoDataSource();
+                var db = new ContosoAzureDataSource();
                 foreach (var modifiedCustomer in Customers
                     .Where(x => x.IsModified).Select(x => x.Model))
                 {

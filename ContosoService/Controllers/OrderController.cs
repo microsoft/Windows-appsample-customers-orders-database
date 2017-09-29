@@ -14,33 +14,39 @@ namespace ContosoService.Controllers
     [Route("api/[controller]")]
     public class OrderController : Controller
     {
-        private readonly ContosoContext _db; 
+        private readonly IOrderRepository _repository; 
 
-        public OrderController(ContosoContext db)
+        public OrderController(IOrderRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         /// <summary>
         /// Gets all orders.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<Order>> Get() => await _db.Orders.Include(x =>
-            x.LineItems).ThenInclude(x => x.Product).ToArrayAsync();
+        public async Task<IEnumerable<Order>> Get()
+        {
+            return await _repository.GetOrdersAsync(); 
+        }
 
         /// <summary>
         /// Gets the with the given id.
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<Order> Get(Guid id) => await _db.Orders.Include(x => x.LineItems)
-            .ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<Order> Get(Guid id)
+        {
+            return await _repository.GetOrderAsync(id); 
+        }
 
         /// <summary>
         /// Gets all the orders for a given customer. 
         /// </summary>
         [HttpGet("customer/{id}")]
-        public async Task<IEnumerable<Order>> GetCustomerOrders(Guid id) => await _db.Orders.Where(x =>
-            x.CustomerId == id).Include(x => x.LineItems).ThenInclude(x => x.Product).ToArrayAsync();
+        public async Task<IEnumerable<Order>> GetCustomerOrders(Guid id)
+        {
+            return await _repository.GetCustomerOrdersAsync(id); 
+        }
 
         /// <summary>
         /// Gets all orders with a data field matching the start of the given string.
@@ -48,24 +54,7 @@ namespace ContosoService.Controllers
         [HttpGet("search")]
         public async Task<IEnumerable<Order>> Search(string value)
         {
-            string[] parameters = value.Split(' ');
-            return await _db.Orders
-                .Include(x => x.Customer)
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
-                .Where(x => parameters
-                    .Any(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
-                .OrderByDescending(x => parameters
-                    .Count(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
-                .ToArrayAsync();
+            return await _repository.SearchOrdersAsync(value); 
         }
 
 
@@ -75,22 +64,8 @@ namespace ContosoService.Controllers
         [HttpPost]
         public async Task<Order> Post([FromBody]Order order)
         {
-            var existing = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
-            // Create new order
-            if (null == existing)
-            {
-                order.InvoiceNumber = _db.Orders.Max(x => x.InvoiceNumber) + 1;
-                _db.Orders.Add(order);
-            }
-            // Update existing order
-            else
-            {
-                _db.Entry(existing).CurrentValues.SetValues(order);
-            }
-            await _db.SaveChangesAsync();
-            return order;
+            return await _repository.UpsertOrderAsync(order); 
         }
-
 
         /// <summary>
         /// Deletes an order.
@@ -98,12 +73,7 @@ namespace ContosoService.Controllers
         [HttpDelete("{id}")]
         public async Task Delete(Order order)
         {
-            var match = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
-            if (match != null)
-            {
-                _db.Orders.Remove(match);
-            }
-            await _db.SaveChangesAsync();
+            await _repository.DeleteOrderAsync(order.Id); 
         }
     }
 }

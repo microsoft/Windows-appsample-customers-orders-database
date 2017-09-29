@@ -22,28 +22,22 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-namespace ContosoModels
+using ContosoModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ContosoApp.Data
 {
-    public class ContosoDataSource : IContosoDataSource
+    public class RestProductRepository : IProductRepository
     {
-        /// <summary>
-        /// Gets or sets whether to use local data (text files) or remote data (Azure web app).
-        /// </summary>
-        public bool Local { get; set; }
+        public async Task<IEnumerable<Product>> GetProductsAsync() =>
+            await HttpHelper.GetAsync<IEnumerable<Product>>("product"); 
 
-        /// <summary>
-        /// Gets the customer's API.
-        /// </summary>
-        public ICustomerDataSource Customers => new AzureCustomerDataSource();
+        public async Task<Product> GetProductAsync(Guid id) => 
+            await HttpHelper.GetAsync<Product>($"product/{id}");
 
-        /// <summary>
-        /// Gets the product's API.
-        /// </summary>
-        public IProductDataSource Products => new AzureProductDataSource();
-
-        /// <summary>
-        /// Gets the order's API.
-        /// </summary>
-        public IOrderDataSource Orders => new AzureOrderDataSource(); 
+        public async Task<IEnumerable<Product>> SearchProductsAsync(string search) =>
+            await HttpHelper.GetAsync<IEnumerable<Product>>($"product/search?value={search}");
     }
 }

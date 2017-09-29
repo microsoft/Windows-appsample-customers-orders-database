@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContosoModels\ContosoModels.csproj" />
+    <ProjectReference Include="..\ContosoRepository\ContosoRepository.csproj" />
   </ItemGroup>
 
 </Project>

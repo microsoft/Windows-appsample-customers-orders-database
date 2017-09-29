@@ -16,69 +16,59 @@ namespace ContosoService.Controllers
         [Route("api/[controller]")]
         public class CustomerController : Controller
         {
-            private readonly ContosoContext _db; 
+            private ICustomerRepository _repository; 
 
-            public CustomerController(ContosoContext db)
+            public CustomerController(ICustomerRepository repository)
             {
-                _db = db; 
+                _repository = repository; 
             }
 
             /// <summary>
             /// Gets all customers. 
             /// </summary>
             [HttpGet]
-            public async Task<IEnumerable<Customer>> Get() => await _db.Customers
-                .ToArrayAsync();
+            public async Task<IEnumerable<Customer>> Get()
+            {
+                return await _repository.GetCustomersAsync(); 
+            }
 
             /// <summary>
             /// Gets the customer with the given id.
             /// </summary>
             [HttpGet("{id}")]
-            public async Task<Customer> Get(Guid id) => await _db.Customers
-                .FirstOrDefaultAsync(x => x.Id == id);
+            public async Task<IActionResult> Get(Guid id)
+            {
+                if (id == Guid.Empty)
+                {
+                    return BadRequest(); 
+                }
+                var result = _repository.GetCustomerAsync(id);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(result); 
+                }
+            }
 
             /// <summary>
             /// Gets all customers with a data field matching the start of the given string.
             /// </summary>
             [HttpGet("search")]
-            public async Task<IEnumerable<Customer>> Search(string value)
+            public async Task<IActionResult> Search(string value)
             {
-                string[] parameters = value.Split(' ');
-                return await _db.Customers
-                    .Where(x =>
-                        parameters.Any(y =>
-                            x.FirstName.StartsWith(y) ||
-                            x.LastName.StartsWith(y) ||
-                            x.Email.StartsWith(y) ||
-                            x.Phone.StartsWith(y) ||
-                            x.Address.StartsWith(y)))
-                    .OrderByDescending(x =>
-                        parameters.Count(y =>
-                            x.FirstName.StartsWith(y) ||
-                            x.LastName.StartsWith(y) ||
-                            x.Email.StartsWith(y) ||
-                            x.Phone.StartsWith(y) ||
-                            x.Address.StartsWith(y)))
-                    .ToArrayAsync();
+                return Ok(await _repository.SearchCustomersAsync(value)); 
             }
 
             /// <summary>
             /// Adds a new customer or updates an existing one.
             /// </summary>
             [HttpPost]
-            public async Task<Customer> Post([FromBody]Customer customer)
+            public async Task<IActionResult> Post([FromBody]Customer customer)
             {
-                var current = await _db.Customers.FirstOrDefaultAsync(x => x.Id == customer.Id);
-                if (null == current)
-                {
-                    _db.Customers.Add(customer);
-                }
-                else
-                {
-                    _db.Entry(current).CurrentValues.SetValues(customer);
-                }
-                await _db.SaveChangesAsync();
-                return customer;
+                return Ok(await _repository.UpsertCustomerAsync(customer)); 
             }
 
             /// <summary>
@@ -87,14 +77,7 @@ namespace ContosoService.Controllers
             [HttpDelete("{id}")]
             public async Task Delete(Guid id)
             {
-                var customer = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
-                if (null != customer)
-                {
-                    var orders = await _db.Orders.Where(x => x.CustomerId == id).ToListAsync();
-                    _db.Orders.RemoveRange(orders);
-                    _db.Customers.Remove(customer);
-                    await _db.SaveChangesAsync();
-                }
+                await _repository.DeleteCustomerAsync(id); 
             }
         }
     }

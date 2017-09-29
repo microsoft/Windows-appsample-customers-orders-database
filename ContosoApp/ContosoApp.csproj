@@ -225,6 +225,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+      <Version>1.1.3</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Graph">
       <Version>1.5.1</Version>
     </PackageReference>
@@ -243,7 +246,12 @@
       <Project>{dd85a833-c876-44ce-ae65-c6cf655386b8}</Project>
       <Name>ContosoModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ContosoRepository\ContosoRepository.csproj">
+      <Project>{56d49efb-f0d3-423e-a0bc-ffa98c74ddc6}</Project>
+      <Name>ContosoRepository</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

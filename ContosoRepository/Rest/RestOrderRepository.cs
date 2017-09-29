@@ -22,27 +22,32 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using ContosoModels;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ContosoModels
+namespace ContosoApp.Data
 {
-    public interface IProductDataSource
+    public class RestOrderRepository : IOrderRepository
     {
-        /// <summary>
-        /// Gets all products. 
-        /// </summary>
-        Task<IEnumerable<Product>> GetAsync();
+        public async Task<IEnumerable<Order>> GetOrdersAsync() =>
+            await HttpHelper.GetAsync<IEnumerable<Order>>("order");
 
-        /// <summary>
-        /// Gets the product with the given Id. 
-        /// </summary>
-        Task<Product> GetAsync(Guid id);
+        public async Task<Order> GetOrderAsync(Guid id) =>
+            await HttpHelper.GetAsync<Order>($"order/{id}");
 
-        /// <summary>
-        /// Gets all products with a data field matching the start of the given string. 
-        /// </summary>
-        Task<IEnumerable<Product>> GetAsync(string search);
+        public async Task<IEnumerable<Order>> GetCustomerOrdersAsync(Guid customerId) =>
+            await HttpHelper.GetAsync<IEnumerable<Order>>($"order/customer/{customerId}");
+
+        public async Task<IEnumerable<Order>> SearchOrdersAsync(string search) =>
+            await HttpHelper.GetAsync<IEnumerable<Order>>($"order/search?value={search}");
+
+        public async Task<Order> UpsertOrderAsync(Order order) =>
+            await HttpHelper.PostAsync<Order, Order>("order", order);
+
+        public async Task<HttpResponseMessage> DeleteOrderAsync(Guid orderId) =>
+            await HttpHelper.DeleteAsync<HttpResponseMessage>("order", orderId);
     }
 }

@@ -31,12 +31,12 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ContosoModels
+namespace ContosoApp.Data
 {
     /// <summary>
     /// Wrapper for making strongly-typed REST calls. 
     /// </summary>
-    public static class ApiHelper
+    public static class HttpHelper
     {        
         /// <summary>           
         /// The Base URL for the API. Switch to localhost for debugging. 

@@ -1,52 +1,55 @@
 ﻿using ContosoModels;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace ContosoService.Controllers
+namespace ContosoRepository
 {
     /// <summary>
     /// Contains methods for interacting with product data.
     /// </summary>
-    [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class SqlProductRepository : IProductRepository
     {
-        private readonly IProductRepository _repository;
+        private readonly ContosoContext _db;
 
-        public ProductController(IProductRepository repository)
+        public SqlProductRepository(ContosoContext db)
         {
-            _repository = repository;
+            _db = db; 
         }
 
         /// <summary>
         /// Gets all products in the database.
         /// </summary>
-        [HttpGet]
         public async Task<IEnumerable<Product>> Get()
         {
-            return await _repository.GetProductsAsync(); 
+            return await _db.Products.ToListAsync();
         }
 
         /// <summary>
         /// Gets the product with the given id.
         /// </summary>
-        [HttpGet("{id}")]
         public async Task<Product> Get(Guid id)
         {
-            return await _repository.GetProductAsync(id); 
+            return await _db.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
-
 
         /// <summary>
         /// Gets all products with a data field matching the start of the given string.
         /// </summary>
-        [HttpGet("search")]
         public async Task<IEnumerable<Product>> Search(string value)
         {
-            return await _repository.SearchProductsAsync(value); 
+            return await _db.Products.Where(x =>
+                x.Name.StartsWith(value) ||
+                x.Color.StartsWith(value) ||
+                x.DaysToManufacture.ToString().StartsWith(value) ||
+                x.StandardCost.ToString().StartsWith(value) ||
+                x.ListPrice.ToString().StartsWith(value) ||
+                x.Weight.ToString().StartsWith(value) ||
+                x.Description.StartsWith(value))
+            .ToListAsync();
         }
     }
 }
