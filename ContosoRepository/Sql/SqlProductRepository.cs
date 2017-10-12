@@ -46,12 +46,16 @@ namespace ContosoRepository.Sql
 
         public async Task<IEnumerable<Product>> GetAsync()
         {
-            return await _db.Products.ToListAsync();
+            return await _db.Products
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Product> GetAsync(Guid id)
         {
-            return await _db.Products.FirstOrDefaultAsync(x => x.Id == id);
+            return await _db.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Product>> GetAsync(string value)
@@ -64,6 +68,7 @@ namespace ContosoRepository.Sql
                 x.ListPrice.ToString().StartsWith(value) ||
                 x.Weight.ToString().StartsWith(value) ||
                 x.Description.StartsWith(value))
+            .AsNoTracking()
             .ToListAsync();
         }
     }

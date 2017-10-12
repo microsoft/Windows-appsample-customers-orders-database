@@ -49,6 +49,7 @@ namespace ContosoRepository.Sql
             return await _db.Orders
                 .Include(x => x.LineItems)
                 .ThenInclude(x => x.Product)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -57,6 +58,7 @@ namespace ContosoRepository.Sql
             return await _db.Orders
                 .Include(x => x.LineItems)
                 .ThenInclude(x => x.Product)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
@@ -66,6 +68,7 @@ namespace ContosoRepository.Sql
                 .Where(x => x.CustomerId == id)
                 .Include(x => x.LineItems)
                 .ThenInclude(x => x.Product)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -88,6 +91,7 @@ namespace ContosoRepository.Sql
                         x.Customer.FirstName.StartsWith(y) ||
                         x.Customer.LastName.StartsWith(y) ||
                         x.InvoiceNumber.ToString().StartsWith(y)))
+                .AsNoTracking()
                 .ToListAsync();
         }
 

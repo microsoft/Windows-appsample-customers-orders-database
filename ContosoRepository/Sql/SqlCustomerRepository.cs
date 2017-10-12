@@ -46,12 +46,16 @@ namespace ContosoRepository.Sql
 
         public async Task<IEnumerable<Customer>> GetAsync()
         {
-            return await _db.Customers.ToListAsync();
+            return await _db.Customers
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Customer> GetAsync(Guid id)
         {
-            return await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
+            return await _db.Customers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<IEnumerable<Customer>> GetAsync(string value)
@@ -72,7 +76,8 @@ namespace ContosoRepository.Sql
                         x.Email.StartsWith(y) ||
                         x.Phone.StartsWith(y) ||
                         x.Address.StartsWith(y)))
-                .ToArrayAsync();
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Customer> UpsertAsync(Customer customer)
