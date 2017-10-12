@@ -32,7 +32,8 @@ using System.Threading.Tasks;
 namespace ContosoRepository.Sql
 {
     /// <summary>
-    /// Contains methods for interacting with product data.
+    /// Contains methods for interacting with the products backend using 
+    /// SQL via Entity Framework Core 2.0.
     /// </summary>
     public class SqlProductRepository : IProductRepository
     {
@@ -43,25 +44,16 @@ namespace ContosoRepository.Sql
             _db = db; 
         }
 
-        /// <summary>
-        /// Gets all products in the database.
-        /// </summary>
         public async Task<IEnumerable<Product>> GetAsync()
         {
             return await _db.Products.ToListAsync();
         }
 
-        /// <summary>
-        /// Gets the product with the given id.
-        /// </summary>
         public async Task<Product> GetAsync(Guid id)
         {
             return await _db.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Gets all products with a data field matching the start of the given string.
-        /// </summary>
         public async Task<IEnumerable<Product>> GetAsync(string value)
         {
             return await _db.Products.Where(x =>

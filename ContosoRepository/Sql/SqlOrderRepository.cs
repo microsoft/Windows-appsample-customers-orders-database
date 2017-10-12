@@ -32,7 +32,8 @@ using System.Threading.Tasks;
 namespace ContosoRepository.Sql
 {
     /// <summary>
-    /// Contains methods for interacting with customer data.
+    /// Contains methods for interacting with the orders backend using 
+    /// SQL via Entity Framework Core 2.0.
     /// </summary>
     public class SqlOrderRepository : IOrderRepository
     {
@@ -43,9 +44,6 @@ namespace ContosoRepository.Sql
             _db = db;
         }
 
-        /// <summary>
-        /// Gets all orders.
-        /// </summary>
         public async Task<IEnumerable<Order>> GetAsync()
         {
             return await _db.Orders
@@ -54,9 +52,6 @@ namespace ContosoRepository.Sql
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Gets the with the given id.
-        /// </summary>
         public async Task<Order> GetAsync(Guid id)
         {
             return await _db.Orders
@@ -65,9 +60,6 @@ namespace ContosoRepository.Sql
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Gets all the orders for a given customer. 
-        /// </summary>
         public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid id)
         {
             return await _db.Orders
@@ -77,9 +69,6 @@ namespace ContosoRepository.Sql
                 .ToListAsync();
         }
 
-        /// <summary>
-        /// Gets all orders with a data field matching the start of the given string.
-        /// </summary>
         public async Task<IEnumerable<Order>> GetAsync(string value)
         {
             string[] parameters = value.Split(' ');
@@ -102,10 +91,6 @@ namespace ContosoRepository.Sql
                 .ToListAsync();
         }
 
-
-        /// <summary>
-        /// Creates a new order or updates an existing one.
-        /// </summary>
         public async Task<Order> UpsertAsync(Order order)
         {
             var existing = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
@@ -122,10 +107,6 @@ namespace ContosoRepository.Sql
             return order;
         }
 
-
-        /// <summary>
-        /// Deletes an order.
-        /// </summary>
         public async Task DeleteAsync(Guid orderId)
         {
             var match = await _db.Orders.FindAsync(orderId);

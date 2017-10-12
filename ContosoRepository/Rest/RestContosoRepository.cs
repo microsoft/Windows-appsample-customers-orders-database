@@ -26,6 +26,9 @@ using ContosoModels;
 
 namespace ContosoRepository.Rest
 {
+    /// <summary>
+    /// Contains methods for interacting with the app backend using REST. 
+    /// </summary>
     public class RestContosoRepository : IContosoRepository
     {
         private readonly string _url; 

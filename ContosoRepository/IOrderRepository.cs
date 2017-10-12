@@ -28,6 +28,9 @@ using System.Threading.Tasks;
 
 namespace ContosoModels
 {
+    /// <summary>
+    /// Defines methods for interacting with the orders backend.
+    /// </summary>
     public interface IOrderRepository
     {
         /// <summary>

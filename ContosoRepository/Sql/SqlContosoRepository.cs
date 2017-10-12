@@ -27,6 +27,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContosoRepository.Sql
 {
+    /// <summary>
+    /// Contains methods for interacting with the app backend using 
+    /// SQL via Entity Framework Core 2.0. 
+    /// </summary>
     public class SqlContosoRepository : IContosoRepository
     {
         private readonly DbContextOptions<ContosoContext> _dbOptions; 

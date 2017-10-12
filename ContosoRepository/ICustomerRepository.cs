@@ -28,6 +28,9 @@ using System.Threading.Tasks;
 
 namespace ContosoModels
 {
+    /// <summary>
+    /// Defines methods for interacting with the customers backend.
+    /// </summary>
     public interface ICustomerRepository
     {
         /// <summary>

@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ContosoRepository.Sql
 {
     /// <summary>
-    /// Entity Framework DbContext for Contoso.
+    /// Entity Framework Core DbContext for Contoso.
     /// </summary>
     public class ContosoContext : DbContext
     {

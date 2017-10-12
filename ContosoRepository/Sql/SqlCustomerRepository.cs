@@ -32,7 +32,8 @@ using System.Threading.Tasks;
 namespace ContosoRepository.Sql
 {
     /// <summary>
-    /// Contains methods for interacting with customer data.
+    /// Contains methods for interacting with the customers backend using 
+    /// SQL via Entity Framework Core 2.0.
     /// </summary>
     public class SqlCustomerRepository : ICustomerRepository
     {
@@ -43,25 +44,16 @@ namespace ContosoRepository.Sql
             _db = db; 
         }
 
-        /// <summary>
-        /// Gets all customers. 
-        /// </summary>
         public async Task<IEnumerable<Customer>> GetAsync()
         {
             return await _db.Customers.ToListAsync();
         }
 
-        /// <summary>
-        /// Gets the customer with the given id.
-        /// </summary>
         public async Task<Customer> GetAsync(Guid id)
         {
             return await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Gets all customers with a data field matching the start of the given string.
-        /// </summary>
         public async Task<IEnumerable<Customer>> GetAsync(string value)
         {
             string[] parameters = value.Split(' ');
@@ -83,9 +75,6 @@ namespace ContosoRepository.Sql
                 .ToArrayAsync();
         }
 
-        /// <summary>
-        /// Adds a new customer or updates an existing one.
-        /// </summary>
         public async Task<Customer> UpsertAsync(Customer customer)
         {
             var current = await _db.Customers.FirstOrDefaultAsync(x => x.Id == customer.Id);
@@ -101,9 +90,6 @@ namespace ContosoRepository.Sql
             return customer;
         }
 
-        /// <summary>
-        /// Deletes a customer and all data associated with them.
-        /// </summary>
         public async Task DeleteAsync(Guid id)
         {
             var customer = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);

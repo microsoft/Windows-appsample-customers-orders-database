@@ -30,6 +30,9 @@ using System.Threading.Tasks;
 
 namespace ContosoRepository.Rest
 {
+    /// <summary>
+    /// Contains methods for interacting with the customers backend using REST. 
+    /// </summary>
     public class RestCustomerRepository : ICustomerRepository
     {
         private readonly HttpHelper _http;
