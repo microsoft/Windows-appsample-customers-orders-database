@@ -27,17 +27,24 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ContosoApp.Data
+namespace ContosoRepository.Rest
 {
     public class RestProductRepository : IProductRepository
     {
-        public async Task<IEnumerable<Product>> GetProductsAsync() =>
-            await HttpHelper.GetAsync<IEnumerable<Product>>("product"); 
+        private readonly HttpHelper _http;
 
-        public async Task<Product> GetProductAsync(Guid id) => 
-            await HttpHelper.GetAsync<Product>($"product/{id}");
+        public RestProductRepository(string baseUrl)
+        {
+            _http = new HttpHelper(baseUrl);
+        }
 
-        public async Task<IEnumerable<Product>> SearchProductsAsync(string search) =>
-            await HttpHelper.GetAsync<IEnumerable<Product>>($"product/search?value={search}");
+        public async Task<IEnumerable<Product>> GetAsync() =>
+            await _http.GetAsync<IEnumerable<Product>>("product"); 
+
+        public async Task<Product> GetAsync(Guid id) => 
+            await _http.GetAsync<Product>($"product/{id}");
+
+        public async Task<IEnumerable<Product>> GetAsync(string search) =>
+            await _http.GetAsync<IEnumerable<Product>>($"product/search?value={search}");
     }
 }

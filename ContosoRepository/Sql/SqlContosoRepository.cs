@@ -22,21 +22,32 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using ContosoModels;
+using Microsoft.EntityFrameworkCore;
 
-namespace ContosoService
+namespace ContosoRepository.Sql
 {
-    public class Program
+    public class SqlContosoRepository : IContosoRepository
     {
-        public static void Main(string[] args)
+        private readonly DbContextOptions<ContosoContext> _dbOptions; 
+
+        public SqlContosoRepository(DbContextOptionsBuilder<ContosoContext> 
+            dbOptionsBuilder)
         {
-            BuildWebHost(args).Run();
+            _dbOptions = dbOptionsBuilder.Options;
+            using (var db = new ContosoContext(_dbOptions))
+            {
+                db.Database.EnsureCreated(); 
+            }
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+        public ICustomerRepository Customers => new SqlCustomerRepository(
+            new ContosoContext(_dbOptions));
+
+        public IOrderRepository Orders => new SqlOrderRepository(
+            new ContosoContext(_dbOptions));
+
+        public IProductRepository Products => new SqlProductRepository(
+            new ContosoContext(_dbOptions));
     }
 }

@@ -22,21 +22,23 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using ContosoModels;
 
-namespace ContosoService
+namespace ContosoRepository.Rest
 {
-    public class Program
+    public class RestContosoRepository : IContosoRepository
     {
-        public static void Main(string[] args)
+        private readonly string _url; 
+
+        public RestContosoRepository(string url)
         {
-            BuildWebHost(args).Run();
+            _url = url; 
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+        public ICustomerRepository Customers => new RestCustomerRepository(_url); 
+
+        public IOrderRepository Orders => new RestOrderRepository(_url);
+
+        public IProductRepository Products => new RestProductRepository(_url); 
     }
 }

@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ThirdPartyNotices.txt = ThirdPartyNotices.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoRepository", "ContosoRepository\ContosoRepository.csproj", "{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoRepository", "ContosoRepository\ContosoRepository.csproj", "{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +32,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.Build.0 = Debug|x86
+		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.ActiveCfg = Debug|ARM
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.Build.0 = Debug|ARM
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.Deploy.0 = Debug|ARM

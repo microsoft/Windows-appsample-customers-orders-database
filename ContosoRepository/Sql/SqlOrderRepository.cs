@@ -1,12 +1,35 @@
-﻿using ContosoModels;
+﻿//  ---------------------------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+// 
+//  The MIT License (MIT)
+// 
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+// 
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+// 
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  ---------------------------------------------------------------------------------
+
+using ContosoModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace ContosoRepository
+namespace ContosoRepository.Sql
 {
     /// <summary>
     /// Contains methods for interacting with customer data.
@@ -23,7 +46,7 @@ namespace ContosoRepository
         /// <summary>
         /// Gets all orders.
         /// </summary>
-        public async Task<IEnumerable<Order>> Get()
+        public async Task<IEnumerable<Order>> GetAsync()
         {
             return await _db.Orders
                 .Include(x => x.LineItems)
@@ -34,7 +57,7 @@ namespace ContosoRepository
         /// <summary>
         /// Gets the with the given id.
         /// </summary>
-        public async Task<Order> Get(Guid id)
+        public async Task<Order> GetAsync(Guid id)
         {
             return await _db.Orders
                 .Include(x => x.LineItems)
@@ -45,7 +68,7 @@ namespace ContosoRepository
         /// <summary>
         /// Gets all the orders for a given customer. 
         /// </summary>
-        public async Task<IEnumerable<Order>> GetCustomerOrders(Guid id)
+        public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid id)
         {
             return await _db.Orders
                 .Where(x => x.CustomerId == id)
@@ -57,7 +80,7 @@ namespace ContosoRepository
         /// <summary>
         /// Gets all orders with a data field matching the start of the given string.
         /// </summary>
-        public async Task<IEnumerable<Order>> Search(string value)
+        public async Task<IEnumerable<Order>> GetAsync(string value)
         {
             string[] parameters = value.Split(' ');
             return await _db.Orders
@@ -83,7 +106,7 @@ namespace ContosoRepository
         /// <summary>
         /// Creates a new order or updates an existing one.
         /// </summary>
-        public async Task<Order> Upsert(Order order)
+        public async Task<Order> UpsertAsync(Order order)
         {
             var existing = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
             if (null == existing)
@@ -103,9 +126,9 @@ namespace ContosoRepository
         /// <summary>
         /// Deletes an order.
         /// </summary>
-        public async Task Delete(Order order)
+        public async Task DeleteAsync(Guid orderId)
         {
-            var match = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
+            var match = await _db.Orders.FindAsync(orderId);
             if (match != null)
             {
                 _db.Orders.Remove(match);

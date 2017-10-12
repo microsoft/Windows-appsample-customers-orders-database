@@ -31,29 +31,29 @@ namespace ContosoModels
     public interface ICustomerRepository
     {
         /// <summary>
-        /// Gets all customers. 
+        /// Returns all customers. 
         /// </summary>
-        Task<IEnumerable<Customer>> GetCustomersAsync();
+        Task<IEnumerable<Customer>> GetAsync();
 
         /// <summary>
-        /// Gets all customers with a data field matching the start of the given string. 
+        /// Returns all customers with a data field matching the start of the given string. 
         /// </summary>
-        Task<IEnumerable<Customer>> SearchCustomersAsync(string search);
+        Task<IEnumerable<Customer>> GetAsync(string search);
 
         /// <summary>
-        /// Gets the customer with the given id. 
+        /// Returns the customer with the given id. 
         /// </summary>
-        Task<Customer> GetCustomerAsync(Guid id);
+        Task<Customer> GetAsync(Guid id);
 
         /// <summary>
         /// Adds a new customer if the customer does not exist, updates the 
         /// existing customer otherwise.
         /// </summary>
-        Task<Customer> UpsertCustomerAsync(Customer customer);
+        Task<Customer> UpsertAsync(Customer customer);
 
         /// <summary>
         /// Deletes a customer.
         /// </summary>
-        Task DeleteCustomerAsync(Guid customerId);
+        Task DeleteAsync(Guid customerId);
     }
 }

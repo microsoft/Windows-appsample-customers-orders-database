@@ -31,18 +31,18 @@ namespace ContosoModels
     public interface IProductRepository
     {
         /// <summary>
-        /// Gets all products. 
+        /// Returns all products. 
         /// </summary>
-        Task<IEnumerable<Product>> GetProductsAsync();
+        Task<IEnumerable<Product>> GetAsync();
 
         /// <summary>
-        /// Gets the product with the given Id. 
+        /// Returns the product with the given Id. 
         /// </summary>
-        Task<Product> GetProductAsync(Guid id);
+        Task<Product> GetAsync(Guid id);
 
         /// <summary>
-        /// Gets all products with a data field matching the start of the given string. 
+        /// Returns all products with a data field matching the start of the given string. 
         /// </summary>
-        Task<IEnumerable<Product>> SearchProductsAsync(string search);
+        Task<IEnumerable<Product>> GetAsync(string search);
     }
 }

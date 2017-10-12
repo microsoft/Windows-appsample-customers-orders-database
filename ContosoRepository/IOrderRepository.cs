@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ContosoModels
@@ -32,35 +31,35 @@ namespace ContosoModels
     public interface IOrderRepository
     {
         /// <summary>
-        /// Gets all orders. 
+        /// Returns all orders. 
         /// </summary>
-        Task<IEnumerable<Order>> GetOrdersAsync();
+        Task<IEnumerable<Order>> GetAsync();
 
         /// <summary>
-        /// Gets all the given customer's orders. 
+        /// Returns the order with the given id.
         /// </summary>
-        Task<IEnumerable<Order>> GetCustomerOrdersAsync(Guid customerId);
+        Task<Order> GetAsync(Guid orderId);
 
         /// <summary>
-        /// Gets the order with the given id.
+        /// Returns all order with a data field matching the start of the given string. 
         /// </summary>
-        Task<Order> GetOrderAsync(Guid orderId);
+        Task<IEnumerable<Order>> GetAsync(string search);
 
         /// <summary>
-        /// Gets all order with a data field matching the start of the given string. 
+        /// Returns all the given customer's orders. 
         /// </summary>
-        Task<IEnumerable<Order>> SearchOrdersAsync(string search);
+        Task<IEnumerable<Order>> GetForCustomerAsync(Guid customerId);
 
         /// <summary>
         /// Adds a new order if the order does not exist, updates the 
         /// existing order otherwise.
         /// </summary>
-        Task<Order> UpsertOrderAsync(Order order);
+        Task<Order> UpsertAsync(Order order);
 
         /// <summary>
         /// Deletes an order.
         /// </summary>
-        Task<HttpResponseMessage> DeleteOrderAsync(Guid orderId);
+        Task DeleteAsync(Guid orderId);
 
     }
 }

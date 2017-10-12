@@ -23,10 +23,17 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoApp.Views;
+using ContosoModels;
 using ContosoRepository;
+using ContosoRepository.Rest;
+using ContosoRepository.Sql;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -37,6 +44,9 @@ namespace ContosoApp
     /// </summary>
     sealed partial class App : Application
     {
+        private readonly DbContextOptionsBuilder<ContosoContext> _dbOptions = new DbContextOptionsBuilder<ContosoContext>()
+            .UseSqlite("Data Source=" + Path.Combine(ApplicationData.Current.LocalFolder.Path, "Contoso.db")); 
+
         /// <summary>
         /// Pipeline for interacting with backend service or database.
         /// </summary>
@@ -56,9 +66,14 @@ namespace ContosoApp
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Repository = new ContosoRepository.EntityFramework.ContosoRepository(); 
+            Repository = new SqlContosoRepository(_dbOptions);
+
+            // The first time we launch the sample, ensure the database is populated with 
+            // demo data.
+            await PrepareDemoAsync(); 
+
             AppShell shell = Window.Current.Content as AppShell;
 
             // Do not repeat app initialization when the Window already has content,
@@ -83,6 +98,32 @@ namespace ContosoApp
             }
             // Ensure the current window is active
             Window.Current.Activate();
+        }
+
+        private async Task PrepareDemoAsync()
+        {
+            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("is_demo_loaded"))
+            {
+                return; 
+            }
+
+            var repository = new RestContosoRepository(Constants.ApiUrl);
+
+            var customersTask = repository.Customers.GetAsync();
+            var ordersTask = repository.Orders.GetAsync();
+            var productsTask = repository.Products.GetAsync();
+
+            await Task.WhenAll(customersTask, ordersTask, productsTask);
+
+            var db = new ContosoContext(_dbOptions.Options);
+
+            await db.Customers.AddRangeAsync(customersTask.Result);
+            await db.Products.AddRangeAsync(productsTask.Result);
+            await db.Orders.AddRangeAsync(ordersTask.Result);
+
+            await db.SaveChangesAsync();
+
+            ApplicationData.Current.LocalSettings.Values.Add("is_demo_loaded", true);  
         }
     }
 }

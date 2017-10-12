@@ -1,10 +1,32 @@
-﻿using System;
+﻿//  ---------------------------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+// 
+//  The MIT License (MIT)
+// 
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+// 
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+// 
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  ---------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ContosoModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace ContosoService.Controllers
 {
@@ -27,9 +49,9 @@ namespace ContosoService.Controllers
             /// Gets all customers. 
             /// </summary>
             [HttpGet]
-            public async Task<IEnumerable<Customer>> Get()
+            public async Task<IActionResult> Get()
             {
-                return await _repository.GetCustomersAsync(); 
+                return Ok(await _repository.GetAsync()); 
             }
 
             /// <summary>
@@ -42,14 +64,14 @@ namespace ContosoService.Controllers
                 {
                     return BadRequest(); 
                 }
-                var result = _repository.GetCustomerAsync(id);
-                if (result == null)
+                var customer = await _repository.GetAsync(id);
+                if (customer == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(result); 
+                    return Ok(customer); 
                 }
             }
 
@@ -59,7 +81,7 @@ namespace ContosoService.Controllers
             [HttpGet("search")]
             public async Task<IActionResult> Search(string value)
             {
-                return Ok(await _repository.SearchCustomersAsync(value)); 
+                return Ok(await _repository.GetAsync(value)); 
             }
 
             /// <summary>
@@ -68,16 +90,17 @@ namespace ContosoService.Controllers
             [HttpPost]
             public async Task<IActionResult> Post([FromBody]Customer customer)
             {
-                return Ok(await _repository.UpsertCustomerAsync(customer)); 
+                return Ok(await _repository.UpsertAsync(customer)); 
             }
 
             /// <summary>
             /// Deletes a customer and all data associated with them.
             /// </summary>
             [HttpDelete("{id}")]
-            public async Task Delete(Guid id)
+            public async Task<IActionResult> Delete(Guid id)
             {
-                await _repository.DeleteCustomerAsync(id); 
+                await _repository.DeleteAsync(id);
+                return Ok(); 
             }
         }
     }

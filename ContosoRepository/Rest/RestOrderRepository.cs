@@ -28,26 +28,33 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ContosoApp.Data
+namespace ContosoRepository.Rest
 {
     public class RestOrderRepository : IOrderRepository
     {
-        public async Task<IEnumerable<Order>> GetOrdersAsync() =>
-            await HttpHelper.GetAsync<IEnumerable<Order>>("order");
+        private readonly HttpHelper _http;
 
-        public async Task<Order> GetOrderAsync(Guid id) =>
-            await HttpHelper.GetAsync<Order>($"order/{id}");
+        public RestOrderRepository(string baseUrl)
+        {
+            _http = new HttpHelper(baseUrl);
+        }
 
-        public async Task<IEnumerable<Order>> GetCustomerOrdersAsync(Guid customerId) =>
-            await HttpHelper.GetAsync<IEnumerable<Order>>($"order/customer/{customerId}");
+        public async Task<IEnumerable<Order>> GetAsync() =>
+            await _http.GetAsync<IEnumerable<Order>>("order");
 
-        public async Task<IEnumerable<Order>> SearchOrdersAsync(string search) =>
-            await HttpHelper.GetAsync<IEnumerable<Order>>($"order/search?value={search}");
+        public async Task<Order> GetAsync(Guid id) =>
+            await _http.GetAsync<Order>($"order/{id}");
 
-        public async Task<Order> UpsertOrderAsync(Order order) =>
-            await HttpHelper.PostAsync<Order, Order>("order", order);
+        public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid customerId) =>
+            await _http.GetAsync<IEnumerable<Order>>($"order/customer/{customerId}");
 
-        public async Task<HttpResponseMessage> DeleteOrderAsync(Guid orderId) =>
-            await HttpHelper.DeleteAsync<HttpResponseMessage>("order", orderId);
+        public async Task<IEnumerable<Order>> GetAsync(string search) =>
+            await _http.GetAsync<IEnumerable<Order>>($"order/search?value={search}");
+
+        public async Task<Order> UpsertAsync(Order order) =>
+            await _http.PostAsync<Order, Order>("order", order);
+
+        public async Task DeleteAsync(Guid orderId) =>
+            await _http.DeleteAsync("order", orderId);
     }
 }

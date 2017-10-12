@@ -24,7 +24,6 @@
 
 using ContosoApp.Commands;
 using ContosoModels;
-using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -128,8 +127,7 @@ namespace ContosoApp.ViewModels
         /// <summary>
         /// Saves customer data that has been edited.
         /// </summary>
-        private async Task Save() => await new ContosoAzureDataSource().Customers
-            .PostAsync(_customer.Model); 
+        private async Task Save() => await App.Repository.Customers.UpsertAsync(_customer.Model); 
 
         public RelayCommand CancelEditsCommand { get; private set; }
 
@@ -159,8 +157,7 @@ namespace ContosoApp.ViewModels
         public async Task LoadCustomerOrders()
         {
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
-            var orders = await new ContosoAzureDataSource()
-                .Orders.GetAsync(_customer.Model);
+            var orders = await App.Repository.Orders.GetForCustomerAsync(_customer.Model.Id); 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 Orders.Clear();

@@ -22,12 +22,10 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
 using ContosoApp.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace ContosoApp.ViewModels
@@ -94,8 +92,7 @@ namespace ContosoApp.ViewModels
         {
             await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
 
-            var db = new ContosoAzureDataSource();
-            var customers = await db.Customers.GetAsync();
+            var customers = await App.Repository.Customers.GetAsync();
             if (customers == null)
             {
                 return;
@@ -121,11 +118,10 @@ namespace ContosoApp.ViewModels
             Task.Run(async () =>
             {
                 IsLoading = true;
-                var db = new ContosoAzureDataSource();
                 foreach (var modifiedCustomer in Customers
                     .Where(x => x.IsModified).Select(x => x.Model))
                 {
-                    await db.Customers.PostAsync(modifiedCustomer);
+                    await App.Repository.Customers.UpsertAsync(modifiedCustomer);
                 }
                 await GetCustomerListAsync();
                 IsLoading = false;

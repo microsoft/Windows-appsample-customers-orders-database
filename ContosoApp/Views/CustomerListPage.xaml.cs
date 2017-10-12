@@ -29,8 +29,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using System;
-using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Uwp;
 using Windows.UI.Core;
 using Microsoft.Toolkit.Uwp.Helpers;
 

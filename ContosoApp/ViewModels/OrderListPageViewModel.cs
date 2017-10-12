@@ -23,7 +23,6 @@
 //  ---------------------------------------------------------------------------------
 
 using ContosoModels;
-using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -121,9 +120,7 @@ namespace ContosoApp.ViewModels
         /// <param name="customerId">The customer to load.</param>
         private async void LoadCustomer(Guid customerId)
         {
-            var db = new ContosoModels.ContosoAzureDataSource();
-            var customer = await db.Customers.GetAsync(customerId);
-
+            var customer = await App.Repository.Customers.GetAsync(customerId);
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 SelectedCustomer = customer;
@@ -142,8 +139,7 @@ namespace ContosoApp.ViewModels
                 _masterOrdersList.Clear();
             });
 
-            var db = new ContosoModels.ContosoAzureDataSource();
-            var orders = await db.Orders.GetAsync();
+            var orders = await App.Repository.Orders.GetAsync();
 
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
@@ -170,8 +166,7 @@ namespace ContosoApp.ViewModels
             Orders.Clear();
             if (!string.IsNullOrEmpty(query))
             {
-                var dataSource = new ContosoModels.ContosoAzureDataSource();
-                var results = await dataSource.Orders.GetAsync(query);
+                var results = await App.Repository.Orders.GetAsync(query);
 
                 await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                 {
@@ -222,20 +217,8 @@ namespace ContosoApp.ViewModels
         /// <param name="orderToDelete">The order to delete.</param>
         public async Task DeleteOrder(Order orderToDelete)
         {
-            var db = new ContosoModels.ContosoAzureDataSource();
-            var response = await db.Orders.DeleteAsync(orderToDelete.Id);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                Orders.Remove(orderToDelete);
-                SelectedOrder = null;
-            }
-            else
-            {
-                throw new OrderDeletionException(response.ReasonPhrase);
-            }
+            await App.Repository.Orders.DeleteAsync(orderToDelete.Id);
         }
-
     }
 
     /// <summary>
