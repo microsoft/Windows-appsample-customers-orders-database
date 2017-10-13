@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="36f6a3bb-bfa8-410c-bcb3-ef39b6b22f6b" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Contoso.App</DisplayName>
-    <PublisherDisplayName>alkoren</PublisherDisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
