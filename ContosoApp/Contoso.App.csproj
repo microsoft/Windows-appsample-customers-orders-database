@@ -242,13 +242,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ContosoModels\ContosoModels.csproj">
+    <ProjectReference Include="..\ContosoModels\Contoso.Models.csproj">
       <Project>{dd85a833-c876-44ce-ae65-c6cf655386b8}</Project>
-      <Name>ContosoModels</Name>
+      <Name>Contoso.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ContosoRepository\ContosoRepository.csproj">
+    <ProjectReference Include="..\ContosoRepository\Contoso.Repository.csproj">
       <Project>{56d49efb-f0d3-423e-a0bc-ffa98c74ddc6}</Project>
-      <Name>ContosoRepository</Name>
+      <Name>Contoso.Repository</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

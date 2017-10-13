@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContosoModels\ContosoModels.csproj" />
+    <ProjectReference Include="..\ContosoModels\Contoso.Models.csproj" />
   </ItemGroup>
 
 </Project>
