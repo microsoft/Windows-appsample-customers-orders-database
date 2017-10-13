@@ -130,30 +130,30 @@ namespace Contoso.App
             FocusNavigationDirection direction = FocusNavigationDirection.None;
             switch (e.Key)
             {
-                case Windows.System.VirtualKey.Left:
-                case Windows.System.VirtualKey.GamepadDPadLeft:
-                case Windows.System.VirtualKey.GamepadLeftThumbstickLeft:
-                case Windows.System.VirtualKey.NavigationLeft:
+                case VirtualKey.Left:
+                case VirtualKey.GamepadDPadLeft:
+                case VirtualKey.GamepadLeftThumbstickLeft:
+                case VirtualKey.NavigationLeft:
                     direction = FocusNavigationDirection.Left;
                     break;
-                case Windows.System.VirtualKey.Right:
-                case Windows.System.VirtualKey.GamepadDPadRight:
-                case Windows.System.VirtualKey.GamepadLeftThumbstickRight:
-                case Windows.System.VirtualKey.NavigationRight:
+                case VirtualKey.Right:
+                case VirtualKey.GamepadDPadRight:
+                case VirtualKey.GamepadLeftThumbstickRight:
+                case VirtualKey.NavigationRight:
                     direction = FocusNavigationDirection.Right;
                     break;
 
-                case Windows.System.VirtualKey.Up:
-                case Windows.System.VirtualKey.GamepadDPadUp:
-                case Windows.System.VirtualKey.GamepadLeftThumbstickUp:
-                case Windows.System.VirtualKey.NavigationUp:
+                case VirtualKey.Up:
+                case VirtualKey.GamepadDPadUp:
+                case VirtualKey.GamepadLeftThumbstickUp:
+                case VirtualKey.NavigationUp:
                     direction = FocusNavigationDirection.Up;
                     break;
 
-                case Windows.System.VirtualKey.Down:
-                case Windows.System.VirtualKey.GamepadDPadDown:
-                case Windows.System.VirtualKey.GamepadLeftThumbstickDown:
-                case Windows.System.VirtualKey.NavigationDown:
+                case VirtualKey.Down:
+                case VirtualKey.GamepadDPadDown:
+                case VirtualKey.GamepadLeftThumbstickDown:
+                case VirtualKey.NavigationDown:
                     direction = FocusNavigationDirection.Down;
                     break;
             }
@@ -260,6 +260,15 @@ namespace Contoso.App
                 NavMenuList.SetSelectedItem(container);
                 if (container != null) container.IsTabStop = true;
             }
+        }
+
+        /// <summary>
+        /// Invoked when the View Code button is clicked. Launches the repo on GitHub. 
+        /// </summary>
+        private async void ViewCodeNavPaneButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(
+                "https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
         }
 
         #endregion
