@@ -113,7 +113,7 @@ namespace Contoso.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Order order)
         {
-            return Ok(_repository.UpsertAsync(order)); 
+            return Ok(await _repository.UpsertAsync(order)); 
         }
 
         /// <summary>
