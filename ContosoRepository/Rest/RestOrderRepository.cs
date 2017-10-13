@@ -22,13 +22,13 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ContosoRepository.Rest
+namespace Contoso.Repository.Rest
 {
     /// <summary>
     /// Contains methods for interacting with the orders backend using REST. 

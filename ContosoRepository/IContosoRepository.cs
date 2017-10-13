@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 
-namespace ContosoRepository
+namespace Contoso.Repository
 {
     /// <summary>
     /// Defines methods for interacting with the app backend.

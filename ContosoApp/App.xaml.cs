@@ -22,11 +22,11 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoApp.Views;
-using ContosoModels;
-using ContosoRepository;
-using ContosoRepository.Rest;
-using ContosoRepository.Sql;
+using Contoso.App.Views;
+using Contoso.Models;
+using Contoso.Repository;
+using Contoso.Repository.Rest;
+using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
@@ -37,7 +37,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace ContosoApp
+namespace Contoso.App
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

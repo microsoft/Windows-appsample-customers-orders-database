@@ -18,17 +18,17 @@
     THE SOFTWARE.
 -->
 
-<Page x:Class="ContosoApp.Views.CustomerListPage"
+<Page x:Class="Contoso.App.Views.CustomerListPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:converter="using:ContosoApp.ValueConverters"
+      xmlns:converter="using:Contoso.App.ValueConverters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:ContosoApp.Views"
+      xmlns:local="using:Contoso.App.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:stateTriggers="using:ContosoApp.StateTriggers"
-      xmlns:uc="using:ContosoApp.UserControls"
-      xmlns:viewModels="using:ContosoApp.ViewModels"
+      xmlns:stateTriggers="using:Contoso.App.StateTriggers"
+      xmlns:uc="using:Contoso.App.UserControls"
+      xmlns:viewModels="using:Contoso.App.ViewModels"
       xmlns:telerikGrid="using:Telerik.UI.Xaml.Controls.Grid"
       xmlns:gridPrimitives="using:Telerik.UI.Xaml.Controls.Grid.Primitives"
       NavigationCacheMode="Required"

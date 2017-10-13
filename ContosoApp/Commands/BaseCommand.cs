@@ -48,7 +48,7 @@
 
 using System;
 
-namespace ContosoApp.Commands
+namespace Contoso.App.Commands
 {
     /// <summary>
     /// Base command for relay commands.

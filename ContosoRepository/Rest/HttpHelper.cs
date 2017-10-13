@@ -28,7 +28,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ContosoRepository.Rest
+namespace Contoso.Repository.Rest
 {
     /// <summary>
     /// Wrapper for making strongly-typed REST calls. 

@@ -50,7 +50,7 @@ using System;
 using System.Windows.Input;
 using Windows.UI.Xaml.Controls;
 
-namespace ContosoApp.Commands
+namespace Contoso.App.Commands
 {
     /// <summary>
     /// A generic relay command that allows binding commands from the UI.

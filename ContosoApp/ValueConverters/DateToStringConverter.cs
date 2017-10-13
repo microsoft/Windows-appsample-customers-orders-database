@@ -26,7 +26,7 @@ using System;
 using System.Globalization;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     /// <summary>
     /// Converts DateTime values to strings. 

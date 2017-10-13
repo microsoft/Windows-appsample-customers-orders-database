@@ -26,7 +26,7 @@ using System;
 using System.Globalization;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
 
     /// <summary>
@@ -48,7 +48,7 @@ namespace ContosoApp.ValueConverters
         {
 
             // Verify that the value is an PaymentStatus
-            var paymentStatus = value as ContosoModels.PaymentStatus?;
+            var paymentStatus = value as Contoso.Models.PaymentStatus?;
             if (targetType.Equals(typeof(System.Object)) && paymentStatus != null)
             {
 
@@ -82,7 +82,7 @@ namespace ContosoApp.ValueConverters
             object parameter, string language)
         {
 
-            return Enum.Parse(typeof(ContosoModels.PaymentStatus), (string)value);
+            return Enum.Parse(typeof(Contoso.Models.PaymentStatus), (string)value);
         }
 
     }

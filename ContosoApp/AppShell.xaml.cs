@@ -22,8 +22,8 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoApp.Navigation;
-using ContosoApp.Views;
+using Contoso.App.Navigation;
+using Contoso.App.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
-namespace ContosoApp
+namespace Contoso.App
 {
     /// <summary>
     /// The "chrome" layer of the app that provides top-level navigation with

@@ -31,7 +31,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace ContosoApp.Navigation
+namespace Contoso.App.Navigation
 {
     /// <summary>
     /// A specialized ListView to represent the items in the navigation menu.

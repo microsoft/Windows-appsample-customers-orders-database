@@ -25,7 +25,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ContosoApp.Views
+namespace Contoso.App.Views
 {
     /// <summary>
     /// Creates a dialog that gives the users a chance to save changes, discard them, 

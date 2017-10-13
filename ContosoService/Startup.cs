@@ -27,11 +27,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using ContosoModels;
-using ContosoRepository;
-using ContosoRepository.Sql;
+using Contoso.Models;
+using Contoso.Repository;
+using Contoso.Repository.Sql;
 
-namespace ContosoService
+namespace Contoso.Service
 {
     public class Startup
     {

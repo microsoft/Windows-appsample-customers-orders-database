@@ -43,7 +43,7 @@ Set your startup project as **ContosoApp**, the architecture to x86, and press F
 
 ### Complete setup
 
-To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Values you need to fill are in [Constants.cs](ContosoModels/Constants.cs). 
+To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Values you need to fill are in [Constants.cs](Contoso.Models/Constants.cs). 
 
 - **Client Id**: Set the *AccountClientId* field to your Azure account client Id.
 - **API endpoint**: Set the value of the *BaseUrl* constant to match the url the backing service is running on.
@@ -52,8 +52,8 @@ To fully explore the sample, you'll need to connect to your own Azure Active Dir
 
 You can then either start the service running locally, or deploy it to Azure. 
 
-- To run locally, right-click the solution, choose *Properties*, and choose to start both **ContosoApp** and **ContosoService** at the same time. 
-- To deploy to Azure, right-click ContosoService, choose *Publish*, and then follow the steps in the wizard.
+- To run locally, right-click the solution, choose *Properties*, and choose to start both **ContosoApp** and **Contoso.Service** at the same time. 
+- To deploy to Azure, right-click Contoso.Service, choose *Publish*, and then follow the steps in the wizard.
 
 ## Code at a glance
 
@@ -62,7 +62,7 @@ If you're only interested in specific tasks and don't want to browse or run the 
 - Authentication, user info, and Microsoft Graph: [AuthenticationControl.xaml](ContosoApp/UserControls/AuthenticationControl.xaml) and [AuthenticationViewModel.cs](ContosoApp/ViewModels/AuthenticationViewModel.cs)
 - App shell and navigation menu: [AppShell.xaml](ContosoApp/AppShell.xaml), [NavMenuItem.cs](ContosoApp/Navigation/NavMenuItem.cs), and [NavMenuListView.cs](ContosoApp/Navigation/NavMenuListView.cs)
 - Master/details and form layouts UI: [CustomerListPage.xaml](ContosoApp/Views/CustomerListPage.xaml), [CustomerListPageViewModel.cs](ContosoApp/ViewModels/CustomerListPageViewModel.cs), [CustomerDetailPage.xaml](ContosoApp/Views/CustomerDetailPage.xaml), [CustomerDetailPageViewModel.cs](ContosoApp/ViewModels/CustomerDetailsPageViewModel.cs), [OrderListPage.xaml](ContosoApp/Views/OrderListPage.xaml), [OrderListPageViewModel.cs](ContosoApp/ViewModels/OrderListPageViewModel.cs), [OrderDetailPage.xaml](ContosoApp/Views/OrderDetailPage.xaml), [OrderDetailPageViewModel.cs](ContosoApp/ViewModels/OrderDetailPageViewModel.cs)
-- Database and REST API calls: [ContosoDataSource.cs](ContosoModels/Database/ContosoDataSource.cs), [ApiHelper.cs](ContosoModels/Database/ApiHelper.cs), [CustomerController.cs](ContosoService/Controllers/CustomerController.cs), [OrderController.cs](ContosoService/Controllers/OrderController.cs), [ProductController.cs](ContosoService/Controllers/ProductController.cs)
+- Database and REST API calls: [ContosoDataSource.cs](Contoso.Models/Database/ContosoDataSource.cs), [ApiHelper.cs](Contoso.Models/Database/ApiHelper.cs), [CustomerController.cs](Contoso.Service/Controllers/CustomerController.cs), [OrderController.cs](Contoso.Service/Controllers/OrderController.cs), [ProductController.cs](Contoso.Service/Controllers/ProductController.cs)
 
 ## Design patterns
 

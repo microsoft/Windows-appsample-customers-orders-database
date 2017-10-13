@@ -26,7 +26,7 @@ using System;
 using System.Globalization;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     /// <summary>
     /// Converts EnterpriseModels.OrderStatus values to strings. 
@@ -48,7 +48,7 @@ namespace ContosoApp.ValueConverters
         {
 
             // Verify that the value is an OrderStatus
-            var orderStatus = value as ContosoModels.OrderStatus?;
+            var orderStatus = value as Contoso.Models.OrderStatus?;
             if (targetType.Equals(typeof(System.Object)) && orderStatus != null)
             {
 
@@ -82,7 +82,7 @@ namespace ContosoApp.ValueConverters
         public object ConvertBack(object value, Type targetType,
             object parameter, string language)
         {
-            return Enum.Parse(typeof(ContosoModels.OrderStatus), (string)value);
+            return Enum.Parse(typeof(Contoso.Models.OrderStatus), (string)value);
         }
 
     }

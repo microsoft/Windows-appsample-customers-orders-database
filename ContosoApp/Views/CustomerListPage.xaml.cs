@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoApp.ViewModels;
+using Contoso.App.ViewModels;
 using System.Linq;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
@@ -32,7 +32,7 @@ using System;
 using Windows.UI.Core;
 using Microsoft.Toolkit.Uwp.Helpers;
 
-namespace ContosoApp.Views
+namespace Contoso.App.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

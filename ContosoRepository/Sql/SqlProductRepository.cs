@@ -22,14 +22,14 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContosoRepository.Sql
+namespace Contoso.Repository.Sql
 {
     /// <summary>
     /// Contains methods for interacting with the products backend using 

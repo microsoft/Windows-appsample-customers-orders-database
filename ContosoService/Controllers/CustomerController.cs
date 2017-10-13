@@ -26,11 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ContosoModels;
+using Contoso.Models;
 
-namespace ContosoService.Controllers
+namespace Contoso.Service.Controllers
 {
-    namespace ContosoService.Controllers
+    namespace Contoso.Service.Controllers
     {
         /// <summary>
         /// Contains methods for interacting with customer data.

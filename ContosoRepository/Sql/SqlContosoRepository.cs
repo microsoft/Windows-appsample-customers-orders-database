@@ -22,10 +22,10 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoRepository.Sql
+namespace Contoso.Repository.Sql
 {
     /// <summary>
     /// Contains methods for interacting with the app backend using 

@@ -19,14 +19,14 @@
 -->
 
 <Page
-    x:Class="ContosoApp.AppShell"
+    x:Class="Contoso.App.AppShell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:ContosoApp"
+    xmlns:local="using:Contoso.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:nav="using:ContosoApp.Navigation"
-    xmlns:uc="using:ContosoApp.UserControls"
+    xmlns:nav="using:Contoso.App.Navigation"
+    xmlns:uc="using:Contoso.App.UserControls"
     KeyDown="AppShell_KeyDown"
     TabNavigation="Cycle"
     mc:Ignorable="d">

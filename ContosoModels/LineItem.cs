@@ -25,7 +25,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Represents a line item (product + quantity) on an order.

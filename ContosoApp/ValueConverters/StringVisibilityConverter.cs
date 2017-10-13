@@ -30,7 +30,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     using System;
     using Windows.UI.Xaml;

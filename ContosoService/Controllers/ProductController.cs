@@ -22,13 +22,13 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ContosoService.Controllers
+namespace Contoso.Service.Controllers
 {
     /// <summary>
     /// Contains methods for interacting with product data.

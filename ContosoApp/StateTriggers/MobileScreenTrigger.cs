@@ -26,7 +26,7 @@ using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
-namespace ContosoApp.StateTriggers
+namespace Contoso.App.StateTriggers
 {
     /// <summary>
     /// Custom trigger for Mobile device UI states.

@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Represents a customer order.

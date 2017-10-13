@@ -3,7 +3,7 @@
   <Identity Name="36f6a3bb-bfa8-410c-bcb3-ef39b6b22f6b" Publisher="CN=alkoren" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="36f6a3bb-bfa8-410c-bcb3-ef39b6b22f6b" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ContosoApp</DisplayName>
+    <DisplayName>Contoso.App</DisplayName>
     <PublisherDisplayName>alkoren</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,7 +14,7 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ContosoApp.App">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Contoso.App.App">
       <uap:VisualElements DisplayName="Contoso" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="A UWP sample app showcasing features useful to enterprise developers. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso." BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>

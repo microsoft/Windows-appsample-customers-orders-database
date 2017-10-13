@@ -25,7 +25,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace ContosoService
+namespace Contoso.Service
 {
     public class Program
     {

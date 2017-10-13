@@ -22,8 +22,8 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
-using ContosoApp.ViewModels;
+using Contoso.Models;
+using Contoso.App.ViewModels;
 using System;
 using Windows.ApplicationModel.Email;
 using Windows.UI.Xaml;
@@ -32,7 +32,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace ContosoApp.Views
+namespace Contoso.App.Views
 {
     /// <summary>
     /// Displays the list of orders.
@@ -152,7 +152,7 @@ namespace ContosoApp.Views
         /// <summary>
         ///  Loads the specified order in the order details page. 
         /// </summary>
-        private void GoToDetailsPage(ContosoModels.Order order) => 
+        private void GoToDetailsPage(Contoso.Models.Order order) => 
             Frame.Navigate(typeof(OrderDetailPage), order);
 
         /// <summary>

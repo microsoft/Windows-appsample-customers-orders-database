@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Defines methods for interacting with the customers backend.

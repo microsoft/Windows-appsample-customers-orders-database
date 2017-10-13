@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Represents a product.

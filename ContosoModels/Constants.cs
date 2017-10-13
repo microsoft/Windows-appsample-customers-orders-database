@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Contains constant values you'll need to insert before running the sample. 
@@ -35,7 +35,7 @@ namespace ContosoModels
         /// <summary>
         /// Base URL for the app's API service. A live test service is provided for convenience; 
         /// however, you cannot modify any data on the server or deploy your own updates. 
-        /// To see the full functionality, deploy ContosoService using your own Azure account.
+        /// To see the full functionality, deploy Contoso.Service using your own Azure account.
         /// </summary>
         public const string ApiUrl = @"http://sulu-api-dev.azurewebsites.net/api/";
 

@@ -22,13 +22,13 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoApp.Commands;
-using ContosoModels;
+using Contoso.App.Commands;
+using Contoso.Models;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
-namespace ContosoApp.ViewModels
+namespace Contoso.App.ViewModels
 {
     /// <summary>
     /// Encapsulates data for the Customer detail page. 
