@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-namespace Contoso.Models
+namespace Contoso.Repository
 {
     /// <summary>
     /// Contains constant values you'll need to insert before running the sample. 

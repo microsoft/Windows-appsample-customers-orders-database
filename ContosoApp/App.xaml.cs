@@ -23,7 +23,6 @@
 //  ---------------------------------------------------------------------------------
 
 using Contoso.App.Views;
-using Contoso.Models;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;

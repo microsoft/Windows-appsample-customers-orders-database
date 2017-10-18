@@ -209,7 +209,7 @@ namespace Contoso.App.ViewModels
         {
             var provider = await GetAadProviderAsync();
             var request = new WebTokenRequest(provider, "User.Read", 
-                Contoso.Models.Constants.AccountClientId);
+                Repository.Constants.AccountClientId);
             request.Properties.Add("resource", "https://graph.microsoft.com");
             var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
             if (result.ResponseStatus != WebTokenRequestStatus.Success)
