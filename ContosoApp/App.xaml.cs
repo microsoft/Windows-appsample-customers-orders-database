@@ -100,6 +100,9 @@ namespace Contoso.App
             Window.Current.Activate();
         }
 
+        /// <summary>
+        /// Creates a local Sqlite database and loads demo data into it. 
+        /// </summary>
         private async Task PrepareDemoAsync()
         {
             if (ApplicationData.Current.LocalSettings.Values.ContainsKey("is_demo_loaded"))
