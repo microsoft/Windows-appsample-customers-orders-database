@@ -83,9 +83,7 @@ and [NavMenuListView.cs](Contoso.App/Navigation/NavMenuListView.cs)
 [CustomerDetailPageViewModel.cs](Contoso.App/ViewModels/CustomerDetailsPageViewModel.cs), [OrderListPage.xaml](Contoso.App/Views/OrderListPage.xaml), 
 [OrderListPageViewModel.cs](Contoso.App/ViewModels/OrderListPageViewModel.cs), [OrderDetailPage.xaml](Contoso.App/Views/OrderDetailPage.xaml), 
 [OrderDetailPageViewModel.cs](Contoso.App/ViewModels/OrderDetailPageViewModel.cs)
-- Database and REST API calls: [ContosoDataSource.cs](Contoso.Models/Database/ContosoDataSource.cs), 
-[ApiHelper.cs](Contoso.Models/Database/ApiHelper.cs), [CustomerController.cs](Contoso.Service/Controllers/CustomerController.cs), 
-[OrderController.cs](Contoso.Service/Controllers/OrderController.cs), [ProductController.cs](Contoso.Service/Controllers/ProductController.cs)
+- Database and REST connections: The [Contoso.Repository](Contoso.Repository/) project.
 
 ## Design patterns
 
