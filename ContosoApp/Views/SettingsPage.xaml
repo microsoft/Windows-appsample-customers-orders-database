@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="Contoso.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ContosoApp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:Contoso.App.UserControls"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
+                <uc:PageHeader.HeaderContent>
+                    <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Settings"/>
+                </uc:PageHeader.HeaderContent>
+            </uc:PageHeader>
+            <ToggleSwitch x:Name="TelemetryToggleSwitch" IsOn="True" Header="Diagnostic data" />
+            <TextBlock Text="Help us improve by sending anonymous diagnostic data." />
+            <HyperlinkButton x:Name="PrivacyButton" Content="Privacy policy" Click="PrivacyButton_Click" />
+        </StackPanel>
+    </Grid>
+</Page>

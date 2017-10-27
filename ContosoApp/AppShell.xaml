@@ -115,12 +115,15 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="6" />
                     </Grid.RowDefinitions>
 
                     <!--  A custom ListView to display the items in the pane.  The automation Name is set in the ContainerContentChanging event.  -->
                     <nav:NavMenuListView
                         x:Name="NavMenuList"
+                        ItemsSource="{x:Bind PrimaryMenuItems, Mode=OneTime}"
                         Margin="0,52,0,0"
                         ContainerContentChanging="NavMenuItemContainerContentChanging"
                         IsEnabled="True"
@@ -130,28 +133,27 @@
                         TabIndex="3" />
                     <Rectangle
                         x:Name="NavPaneDivider"
+                        Visibility="Collapsed"
                         Grid.Row="1"
                         Height="1"
                         Margin="16,0,16,6"
                         Fill="{ThemeResource SystemControlForegroundBaseLowBrush}" />
 
-                    <uc:AuthenticationControl Grid.Row="2" />
+                    <nav:NavMenuSecondaryButton x:Name="ViewCodeNavButton" 
+                        Grid.Row="2" 
+                        Label="View Code" 
+                        Icon="&#xE943;" 
+                        Click="ViewCodeNavPaneButton_Click" />
+                    <nav:NavMenuSecondaryButton x:Name="FeedbackNavButton" 
+                                                Grid.Row="3" 
+                                                Label="Feedback" 
+                                                Icon="&#xED15;">
+                        <nav:NavMenuSecondaryButton.Flyout>
+                            <uc:FeedbackFlyout Delay="1000" />
+                        </nav:NavMenuSecondaryButton.Flyout>
+                    </nav:NavMenuSecondaryButton>
+                    <uc:AuthenticationControl Grid.Row="4" />
 
-                    <!--<Button x:Name="FeedbackNavPaneButton"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Style="{StaticResource SplitViewPaneButtonStyle}"
-                            Content="&#xE76E;"
-                            AutomationProperties.Name="Feedback"
-                            ToolTipService.ToolTip="Feedback"/>-->
-                    <Button
-                        x:Name="SettingsNavPaneButton"
-                        Grid.Row="3"
-                        Grid.Column="2"
-                        AutomationProperties.Name="Settings"
-                        Content="&#xE713;"
-                        Style="{StaticResource SplitViewPaneButtonStyle}"
-                        ToolTipService.ToolTip="Settings" />
                 </Grid>
             </SplitView.Pane>
 

@@ -26,6 +26,7 @@ using Contoso.App.Navigation;
 using Contoso.App.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Foundation;
 using Windows.System;
@@ -45,23 +46,28 @@ namespace Contoso.App
     public sealed partial class AppShell : Page
     {
         private bool isPaddingAdded = false;
-        // Declare the top level nav items
-        private List<NavMenuItem> navlist = new List<NavMenuItem>(
-            new[]
+
+        public IReadOnlyCollection<NavMenuItem> PrimaryMenuItems = new ReadOnlyCollection<NavMenuItem>(new[]
+        {
+            new NavMenuItem
             {
-                new NavMenuItem()
-                {
-                    Symbol = Symbol.ContactInfo,
-                    Label = "Customer list",
-                    DestPage = typeof(CustomerListPage)
-                },
-                new NavMenuItem()
-                {
-                    Symbol = Symbol.Shop,
-                    Label = "Order list",
-                    DestPage = typeof(OrderListPage)
-                },
-            });
+                Symbol = Symbol.ContactInfo,
+                Label = "Customer list",
+                DestPage = typeof(CustomerListPage)
+            },
+            new NavMenuItem
+            {
+                Symbol = Symbol.Shop,
+                Label = "Order list",
+                DestPage = typeof(OrderListPage)
+            },
+            new NavMenuItem
+            {
+                Symbol = Symbol.Setting,
+                Label = "Settings",
+                DestPage = typeof(SettingsPage)
+            }
+        });
 
         public static AppShell Current = null;
 
@@ -97,7 +103,7 @@ namespace Contoso.App
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
 
-            NavMenuList.ItemsSource = navlist;
+            NavMenuList.ItemsSource = PrimaryMenuItems;
         }
 
         public Frame AppFrame { get { return frame; } }
@@ -204,7 +210,7 @@ namespace Contoso.App
         /// </summary>
         private void NavMenuList_ItemInvoked(object sender, ListViewItem listViewItem)
         {
-            foreach (var i in navlist)
+            foreach (var i in PrimaryMenuItems)
             {
                 i.IsSelected = false;
             }
@@ -230,20 +236,20 @@ namespace Contoso.App
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
-                var item = (from p in navlist where p.DestPage == e.SourcePageType select p).SingleOrDefault();
+                var item = (from p in PrimaryMenuItems where p.DestPage == e.SourcePageType select p).SingleOrDefault();
                 if (item == null && AppFrame.BackStackDepth > 0)
                 {
                     // In cases where a page drills into sub-pages then we'll highlight the most recent
                     // navigation menu item that appears in the BackStack
                     foreach (var entry in AppFrame.BackStack.Reverse())
                     {
-                        item = (from p in navlist where p.DestPage == entry.SourcePageType select p).SingleOrDefault();
+                        item = (from p in PrimaryMenuItems where p.DestPage == entry.SourcePageType select p).SingleOrDefault();
                         if (item != null)
                             break;
                     }
                 }
 
-                foreach (var i in navlist)
+                foreach (var i in PrimaryMenuItems)
                 {
                     i.IsSelected = false;
                 }
