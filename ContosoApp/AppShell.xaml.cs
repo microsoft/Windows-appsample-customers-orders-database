@@ -107,7 +107,14 @@ namespace Contoso.App
             NavMenuList.ItemsSource = PrimaryMenuItems;
         }
 
-        public Frame AppFrame { get { return frame; } }
+        public Frame AppFrame => frame; 
+
+        public Rect TogglePaneButtonRect { get; private set; }
+
+        private void SetFeedbackTimer()
+        {
+            // TODO: 
+        }
 
         /// <summary>
         /// Invoked when window title bar visibility changes, such as after loading or in tablet mode
@@ -177,8 +184,6 @@ namespace Contoso.App
             }
         }
 
-        #region BackRequested Handlers
-
         private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)
         {
             bool handled = e.Handled;
@@ -201,10 +206,6 @@ namespace Contoso.App
                 AppFrame.GoBack();
             }
         }
-
-        #endregion
-
-        #region Navigation
 
         /// <summary>
         /// Navigate to the Page for the selected <paramref name="listViewItem"/>.
@@ -264,24 +265,17 @@ namespace Contoso.App
                 // While updating the selection state of the item prevent it from taking keyboard focus.  If a
                 // user is invoking the back button via the keyboard causing the selected nav menu item to change
                 // then focus will remain on the back button.
-                if (container != null) container.IsTabStop = false;
+                if (container != null) 
+                {
+                    container.IsTabStop = false;
+                }
                 NavMenuList.SetSelectedItem(container);
-                if (container != null) container.IsTabStop = true;
+                if (container != null)
+                {
+                    container.IsTabStop = true;
+                }
             }
         }
-
-        /// <summary>
-        /// Invoked when the View Code button is clicked. Launches the repo on GitHub. 
-        /// </summary>
-        private async void ViewCodeNavPaneButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri(
-                "https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
-        }
-
-        #endregion
-
-        public Rect TogglePaneButtonRect { get; private set; }
 
         /// <summary>
         /// An event to notify listeners when the hamburger button may occlude other content in the app.
@@ -302,8 +296,6 @@ namespace Contoso.App
         /// <summary>
         /// Hides divider when nav pane is closed.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
         private void RootSplitView_PaneClosed(SplitView sender, object args) =>
             NavPaneDivider.Visibility = Visibility.Collapsed;
 
@@ -364,6 +356,16 @@ namespace Contoso.App
                 args.ItemContainer.ClearValue(AutomationProperties.NameProperty);
             }
         }
+
+        /// <summary>
+        /// Invoked when the View Code button is clicked. Launches the repo on GitHub. 
+        /// </summary>
+        private async void ViewCodeNavPaneButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(
+                "https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
+        }
+
 
         private void FeedbackNavButton_Click(object sender, RoutedEventArgs e)
         {

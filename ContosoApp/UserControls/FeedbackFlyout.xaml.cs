@@ -49,15 +49,13 @@ namespace Contoso.App.UserControls
             set => SetProperty(ref _url, value);
         }
 
+        public bool ShouldPrompt
+        {
+            get => !ApplicationData.Current.RoamingSettings.Values.ContainsKey(FeedbackRequestedKey); 
+        }
+
         private void Flyout_Opened(object sender, object e)
         {
-            //var item = (sender as Flyout);
-            //var itemDataContext = item.DataContext;
-
-            //FrameworkElement parent = (item.FindName("MenuFlyoutContainer") as MenuFlyout);
-
-            //var fx = VisualTreeHelper.GetParent(sender as DependencyObject); 
-
             _currentFeedback = new Feedback
             {
                 Timestamp = DateTime.UtcNow,
