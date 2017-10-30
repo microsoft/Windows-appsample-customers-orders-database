@@ -34,6 +34,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
@@ -361,6 +362,19 @@ namespace Contoso.App
             else
             {
                 args.ItemContainer.ClearValue(AutomationProperties.NameProperty);
+            }
+        }
+
+        private void FeedbackNavButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (RootSplitView.IsPaneOpen)
+            {
+                FlyoutBase.ShowAttachedFlyout((Button)sender);
+            }
+            else
+            {
+                var flyout = FlyoutBase.GetAttachedFlyout((Button)sender);
+                flyout.ShowAt(FeedbackNavButton.FontIcon);
             }
         }
     }

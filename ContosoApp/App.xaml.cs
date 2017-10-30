@@ -27,6 +27,7 @@ using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;

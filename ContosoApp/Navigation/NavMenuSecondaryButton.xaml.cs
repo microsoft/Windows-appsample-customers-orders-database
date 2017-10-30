@@ -36,6 +36,8 @@ namespace Contoso.App.Navigation
             typeof(NavMenuSecondaryButton),
             null);
 
+        public FontIcon FontIcon => ButtonIcon; 
+
         public string Label
         {
             get => (string)GetValue(LabelProperty);

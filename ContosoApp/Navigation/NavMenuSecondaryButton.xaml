@@ -2,7 +2,6 @@
     x:Class="Contoso.App.Navigation.NavMenuSecondaryButton"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ContosoApp.Navigation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -79,8 +78,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <FontIcon Grid.RowSpan="2"
-                          FontFamily="Segoe MDL2 Assets"
-                          Glyph="{x:Bind Icon, Mode=OneWay}"/>
+                  FontSize="16"
+                  x:Name="ButtonIcon"
+                  FontFamily="Segoe MDL2 Assets"
+                  Glyph="{x:Bind Icon, Mode=OneWay}"/>
         <TextBlock Grid.RowSpan="2"
                            Grid.Column="2"
                            VerticalAlignment="Center"

@@ -123,6 +123,7 @@
                 </Grid.RowDefinitions>
                 <FontIcon Grid.RowSpan="2"
                           FontFamily="Segoe MDL2 Assets"
+                          FontSize="16"
                           Glyph="&#xE1E2;"/>
                 <TextBlock Grid.RowSpan="2"
                            Grid.Column="2"

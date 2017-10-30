@@ -17,7 +17,10 @@
             </uc:PageHeader>
             <ToggleSwitch x:Name="TelemetryToggleSwitch" IsOn="True" Header="Diagnostic data" />
             <TextBlock Text="Help us improve by sending anonymous diagnostic data." />
-            <HyperlinkButton x:Name="PrivacyButton" Content="Privacy policy" Click="PrivacyButton_Click" />
+            
+            <HyperlinkButton Margin="0,10,0,0" x:Name="PrivacyButton" Content="Privacy policy" Click="PrivacyButton_Click" />
+            <HyperlinkButton x:Name="LicenseButton" Content="Additional license terms" Click="LicenseButton_Click" />
+            <HyperlinkButton x:Name="GitHubButton" Content="GitHub repository" Click="GitHubButton_Click" />
         </StackPanel>
     </Grid>
 </Page>

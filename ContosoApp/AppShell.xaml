@@ -147,10 +147,11 @@
                     <nav:NavMenuSecondaryButton x:Name="FeedbackNavButton" 
                                                 Grid.Row="3" 
                                                 Label="Feedback" 
-                                                Icon="&#xED15;">
-                        <nav:NavMenuSecondaryButton.Flyout>
+                                                Icon="&#xED15;" 
+                                                Click="FeedbackNavButton_Click">
+                        <FlyoutBase.AttachedFlyout>
                             <uc:FeedbackFlyout Delay="1000" />
-                        </nav:NavMenuSecondaryButton.Flyout>
+                        </FlyoutBase.AttachedFlyout>
                     </nav:NavMenuSecondaryButton>
                     <uc:AuthenticationControl Grid.Row="4" />
 

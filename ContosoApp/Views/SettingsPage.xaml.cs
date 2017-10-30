@@ -28,7 +28,17 @@ namespace Contoso.App.Views
 
         private async void PrivacyButton_Click(object sender, RoutedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri("https://privacy.microsoft.com/privacystatement"));
+            await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=521839"));
+        }
+
+        private async void LicenseButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=822631"));
+        }
+
+        private async void GitHubButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
         }
     }
 }

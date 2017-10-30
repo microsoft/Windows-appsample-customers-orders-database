@@ -5,9 +5,9 @@
     xmlns:local="using:ContosoApp.UserControls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Placement="Right"
     Closed="Flyout_Closed"
     Opened="Flyout_Opened"
+    Placement="Right"
     mc:Ignorable="d">
     <Grid>
         
@@ -41,7 +41,7 @@
                 <TextBlock Text="Thanks for the feedback!" />
                 <TextBlock Text="Additional comments or suggestions?" />
                 <TextBox x:Name="FeedbackTextBox"
-                            PlaceholderText="Please share your ideas. We welcome feedback in any language."
+                            PlaceholderText="Please share your ideas."
                                  Width="250"
                                  Height="100"
                                  TextWrapping="Wrap"
