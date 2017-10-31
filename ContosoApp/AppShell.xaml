@@ -150,7 +150,7 @@
                                                 Icon="&#xED15;" 
                                                 Click="FeedbackNavButton_Click">
                         <FlyoutBase.AttachedFlyout>
-                            <uc:FeedbackFlyout Delay="1000" />
+                            <uc:FeedbackFlyout x:Name="FeedbackFlyout" />
                         </FlyoutBase.AttachedFlyout>
                     </nav:NavMenuSecondaryButton>
                     <uc:AuthenticationControl Grid.Row="4" />
@@ -164,6 +164,7 @@
                     <Frame
                         x:Name="frame"
                         Grid.Row="1"
+                        
                         Margin="0,4,0,0"
                         Navigating="OnNavigatingToPage">
                         <Frame.ContentTransitions>
@@ -190,7 +191,6 @@
                         <Setter Target="RootSplitView.DisplayMode" Value="CompactInline" />
                         <Setter Target="RootSplitView.IsPaneOpen" Value="False" />
                         <Setter Target="NavPaneDivider.Visibility" Value="Collapsed" />
-                        <!--<Setter Target="FeedbackNavPaneButton.IsTabStop" Value="True"/>-->
                         <Setter Target="SettingsNavPaneButton.IsTabStop" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
@@ -202,7 +202,6 @@
                         <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay" />
                         <Setter Target="RootSplitView.IsPaneOpen" Value="False" />
                         <Setter Target="NavPaneDivider.Visibility" Value="Collapsed" />
-                        <!--<Setter Target="FeedbackNavPaneButton.IsTabStop" Value="False"/>-->
                         <Setter Target="SettingsNavPaneButton.IsTabStop" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
@@ -213,7 +212,6 @@
                     <VisualState.Setters>
                         <Setter Target="RootSplitView.DisplayMode" Value="Overlay" />
                         <Setter Target="RootSplitView.IsPaneOpen" Value="False" />
-                        <!--<Setter Target="FeedbackNavPaneButton.IsTabStop" Value="True"/>-->
                         <Setter Target="SettingsNavPaneButton.IsTabStop" Value="True" />
                     </VisualState.Setters>
                 </VisualState>

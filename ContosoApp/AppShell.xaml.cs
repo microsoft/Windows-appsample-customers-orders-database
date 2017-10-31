@@ -23,13 +23,16 @@
 //  ---------------------------------------------------------------------------------
 
 using Contoso.App.Navigation;
+using Contoso.App.UserControls;
 using Contoso.App.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using Windows.Foundation;
 using Windows.System;
+using Windows.System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
@@ -46,7 +49,57 @@ namespace Contoso.App
     /// </summary>
     public sealed partial class AppShell : Page
     {
-        private bool isPaddingAdded = false;
+        private bool _isPaddingAdded = false;
+
+        public static AppShell Current { get; private  set; }
+
+        /// <summary>
+        /// Initializes a new instance of the AppShell, sets the static 'Current' reference,
+        /// adds callbacks for Back requests and changes in the SplitView's DisplayMode, and
+        /// provide the nav menu list with the data to display.
+        /// </summary>
+        public AppShell()
+        {
+            InitializeComponent();
+            
+            Loaded += (sender, args) =>
+            {
+                Current = this;
+
+                CheckTogglePaneButtonSizeChanged();
+
+                var titleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
+                titleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+
+                AppFrame.Navigating += AppFrame_Navigating;
+                Window.Current.Activated += Current_Activated;
+            };
+
+            RootSplitView.RegisterPropertyChangedCallback(
+                SplitView.DisplayModeProperty,
+                (s, a) =>
+                {
+                    // Ensure that we update the reported size of the TogglePaneButton when the SplitView's
+                    // DisplayMode changes.
+                    CheckTogglePaneButtonSizeChanged();
+                });
+
+            SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+
+            SetFeedbackTimer(); 
+        }
+
+        private void AppFrame_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            // TODO: Page view telemetry
+        }
+
+        private void Current_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            // TODO: Activation telemetry
+            Debug.WriteLine(e.WindowActivationState.ToString()); 
+        }
 
         public IReadOnlyCollection<NavMenuItem> PrimaryMenuItems = new ReadOnlyCollection<NavMenuItem>(new[]
         {
@@ -70,51 +123,9 @@ namespace Contoso.App
             }
         });
 
-        public static AppShell Current = null;
-
-        /// <summary>
-        /// Initializes a new instance of the AppShell, sets the static 'Current' reference,
-        /// adds callbacks for Back requests and changes in the SplitView's DisplayMode, and
-        /// provide the nav menu list with the data to display.
-        /// </summary>
-        public AppShell()
-        {
-            InitializeComponent();
-
-            Loaded += (sender, args) =>
-            {
-                Current = this;
-
-                CheckTogglePaneButtonSizeChanged();
-
-                var titleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
-                titleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
-            };
-
-            RootSplitView.RegisterPropertyChangedCallback(
-                SplitView.DisplayModeProperty,
-                (s, a) =>
-                {
-                    // Ensure that we update the reported size of the TogglePaneButton when the SplitView's
-                    // DisplayMode changes.
-                    CheckTogglePaneButtonSizeChanged();
-                });
-
-            SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-
-
-            NavMenuList.ItemsSource = PrimaryMenuItems;
-        }
-
         public Frame AppFrame => frame; 
 
         public Rect TogglePaneButtonRect { get; private set; }
-
-        private void SetFeedbackTimer()
-        {
-            // TODO: 
-        }
 
         /// <summary>
         /// Invoked when window title bar visibility changes, such as after loading or in tablet mode
@@ -122,11 +133,11 @@ namespace Contoso.App
         /// </summary>s
         private void TitleBar_IsVisibleChanged(Windows.ApplicationModel.Core.CoreApplicationViewTitleBar sender, object args)
         {
-            if (!isPaddingAdded && sender.IsVisible)
+            if (!_isPaddingAdded && sender.IsVisible)
             {
                 //add extra padding between window title bar and app content
                 double extraPadding = (Double)App.Current.Resources["DesktopWindowTopPadding"];
-                isPaddingAdded = true;
+                _isPaddingAdded = true;
 
                 Thickness margin = NavMenuList.Margin;
                 NavMenuList.Margin = new Thickness(margin.Left, margin.Top + extraPadding, margin.Right, margin.Bottom);
@@ -369,14 +380,35 @@ namespace Contoso.App
 
         private void FeedbackNavButton_Click(object sender, RoutedEventArgs e)
         {
+            ShowFeedbackFlyout(); 
+        }
+
+        private void ShowFeedbackFlyout()
+        {
             if (RootSplitView.IsPaneOpen)
             {
-                FlyoutBase.ShowAttachedFlyout((Button)sender);
+                FlyoutBase.ShowAttachedFlyout(FeedbackNavButton);
             }
             else
             {
-                var flyout = FlyoutBase.GetAttachedFlyout((Button)sender);
-                flyout.ShowAt(FeedbackNavButton.FontIcon);
+                FlyoutBase.GetAttachedFlyout(FeedbackNavButton).ShowAt(FeedbackNavButton.FontIcon);
+            }
+        }
+
+        private void SetFeedbackTimer()
+        {
+            if (FeedbackFlyout.ShouldPrompt)
+            {
+                ThreadPoolTimer.CreateTimer(async (args) =>
+                {
+                    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (FeedbackFlyout.ShouldPrompt)
+                        {
+                            ShowFeedbackFlyout();
+                        }
+                    });
+                }, new TimeSpan(0, 3, 0));
             }
         }
     }

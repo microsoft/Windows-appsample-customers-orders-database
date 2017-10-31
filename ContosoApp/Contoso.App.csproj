@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Diagnostics\DiagnosticService.cs" />
     <Compile Include="Navigation\NavMenuItem.cs" />
     <Compile Include="Navigation\NavMenuListView.cs" />
     <Compile Include="Navigation\NavMenuSecondaryButton.xaml.cs">

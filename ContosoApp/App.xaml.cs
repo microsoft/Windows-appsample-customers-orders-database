@@ -59,6 +59,14 @@ namespace Contoso.App
         public App()
         {
             InitializeComponent();
+            EnteredBackground += App_EnteredBackground;
+        }
+
+        private void App_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
+        {
+            e.GetDeferral(); 
+
+            throw new NotImplementedException();
         }
 
         /// <summary>

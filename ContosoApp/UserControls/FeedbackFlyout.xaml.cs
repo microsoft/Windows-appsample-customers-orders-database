@@ -19,8 +19,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace Contoso.App.UserControls
 {
     public sealed partial class FeedbackFlyout : Flyout
@@ -28,19 +26,11 @@ namespace Contoso.App.UserControls
         public FeedbackFlyout()
         {
             InitializeComponent();
-            SetTimerAsync();
         }
 
         private const string FeedbackRequestedKey = "feedback_requested";
 
         private Feedback _currentFeedback = new Feedback();
-
-        private int _delay;
-        public int Delay
-        {
-            get => _delay;
-            set => SetProperty(ref _delay, value);
-        }
 
         private string _url;
         public string Url
@@ -113,29 +103,6 @@ namespace Contoso.App.UserControls
             FinishedPhase.Visibility = Visibility.Visible;
         }
 
-        private void SetTimerAsync()
-        {
-            // If we didn't already ask for feedback, set a timer to pop the dialog 
-            // after the user has spent some time using the app.
-
-            if (!ApplicationData.Current.RoamingSettings.Values.ContainsKey(FeedbackRequestedKey))
-            {
-                var timer = ThreadPoolTimer.CreateTimer(async (x) =>
-                {
-                    // When the task fires, double-check to see if the user already gave feedback 
-                    // voluntarily so we don't annoy them to submit twice.
-
-                    if (!ApplicationData.Current.RoamingSettings.Values.ContainsKey(FeedbackRequestedKey))
-                    {
-                        await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                        {
-                            
-                        });
-                    }
-                }, TimeSpan.FromMilliseconds(Delay));
-            }
-        }
-
         private async Task SendAsync(Feedback data)
         {
             using (var client = new HttpClient())
@@ -161,12 +128,30 @@ namespace Contoso.App.UserControls
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private class Feedback
+        private class Fx
         {
+            public Guid UserId { get; set; }
+
             /// <summary>
             /// Gets or sets the date and time the feedback was submitted.
             /// </summary>
             public DateTime Timestamp { get; set; }
+
+            /// <summary>
+            /// Gets or sets info on the current app package, such as display name, 
+            /// version, architecture, etc.
+            /// </summary>
+            public Package Package { get; set; }
+        }
+
+        public class Diagnostic
+        {
+            public object Data { get; set; }
+        }
+
+        private class Feedback : Fx
+        {
+
 
             /// <summary>
             /// Gets or sets if the user voted the sample helpful or not. 
@@ -185,11 +170,6 @@ namespace Contoso.App.UserControls
             /// </summary>
             public string FeedbackText { get; set; }
 
-            /// <summary>
-            /// Gets or sets info on the current app package, such as display name, 
-            /// version, architecture, etc.
-            /// </summary>
-            public Package Package { get; set; }
         }
     }
 }
