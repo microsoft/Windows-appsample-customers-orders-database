@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Contoso.App.Diagnostics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -128,48 +129,5 @@ namespace Contoso.App.UserControls
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private class Fx
-        {
-            public Guid UserId { get; set; }
-
-            /// <summary>
-            /// Gets or sets the date and time the feedback was submitted.
-            /// </summary>
-            public DateTime Timestamp { get; set; }
-
-            /// <summary>
-            /// Gets or sets info on the current app package, such as display name, 
-            /// version, architecture, etc.
-            /// </summary>
-            public Package Package { get; set; }
-        }
-
-        public class Diagnostic
-        {
-            public object Data { get; set; }
-        }
-
-        private class Feedback : Fx
-        {
-
-
-            /// <summary>
-            /// Gets or sets if the user voted the sample helpful or not. 
-            /// Null if the user dismissed the flyout and did not respond.
-            /// </summary>
-            public bool? IsHelpful { get; set; }
-
-            /// <summary>
-            /// Gets or sets whether the user voluntarily chose to provide 
-            /// feedback or was prompted by the system. 
-            /// </summary>
-            public bool IsUserInitiated { get; set; }
-
-            /// <summary>
-            /// Gets or sets the user's verbatim comments.
-            /// </summary>
-            public string FeedbackText { get; set; }
-
-        }
     }
 }

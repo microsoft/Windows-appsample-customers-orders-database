@@ -22,6 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using Contoso.App.Diagnostics;
 using Contoso.App.Views;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
@@ -31,6 +32,7 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
 using Windows.Storage;
@@ -52,6 +54,8 @@ namespace Contoso.App
         /// </summary>
         public static IContosoRepository Repository { get; private set; }
 
+        public static DiagnosticService Diagnostics { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -59,14 +63,6 @@ namespace Contoso.App
         public App()
         {
             InitializeComponent();
-            EnteredBackground += App_EnteredBackground;
-        }
-
-        private void App_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
-        {
-            e.GetDeferral(); 
-
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -76,6 +72,7 @@ namespace Contoso.App
         /// <param name="e">Details about the launch request and process.</param>
         protected override async void OnLaunched(LaunchActivatedEventArgs e)
         {
+            Diagnostics = new DiagnosticService(); 
             Repository = new SqlContosoRepository(_dbOptions);
 
             // The first time we launch the sample, ensure the database is populated with 
