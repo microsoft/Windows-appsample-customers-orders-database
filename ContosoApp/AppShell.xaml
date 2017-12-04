@@ -123,32 +123,34 @@
                     <!--  A custom ListView to display the items in the pane.  The automation Name is set in the ContainerContentChanging event.  -->
                     <nav:NavMenuListView
                         x:Name="NavMenuList"
-                        ItemsSource="{x:Bind PrimaryMenuItems, Mode=OneTime}"
                         Margin="0,52,0,0"
                         ContainerContentChanging="NavMenuItemContainerContentChanging"
                         IsEnabled="True"
                         ItemContainerStyle="{StaticResource NavMenuItemContainerStyle}"
                         ItemInvoked="NavMenuList_ItemInvoked"
                         ItemTemplate="{StaticResource NavMenuItemTemplate}"
+                        ItemsSource="{x:Bind PrimaryMenuItems, Mode=OneTime}"
                         TabIndex="3" />
                     <Rectangle
                         x:Name="NavPaneDivider"
-                        Visibility="Collapsed"
                         Grid.Row="1"
                         Height="1"
                         Margin="16,0,16,6"
-                        Fill="{ThemeResource SystemControlForegroundBaseLowBrush}" />
+                        Fill="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                        Visibility="Collapsed" />
 
-                    <nav:NavMenuSecondaryButton x:Name="ViewCodeNavButton" 
-                        Grid.Row="2" 
-                        Label="View Code" 
-                        Icon="&#xE943;" 
-                        Click="ViewCodeNavPaneButton_Click" />
-                    <nav:NavMenuSecondaryButton x:Name="FeedbackNavButton" 
-                                                Grid.Row="3" 
-                                                Label="Feedback" 
-                                                Icon="&#xED15;" 
-                                                Click="FeedbackNavButton_Click">
+                    <nav:NavMenuSecondaryButton
+                        x:Name="ViewCodeNavButton"
+                        Grid.Row="2"
+                        Click="ViewCodeNavPaneButton_Click"
+                        Icon="&#xE943;"
+                        Label="View Code" />
+                    <nav:NavMenuSecondaryButton
+                        x:Name="FeedbackNavButton"
+                        Grid.Row="3"
+                        Click="FeedbackNavButton_Click"
+                        Icon="&#xED15;"
+                        Label="Feedback">
                         <FlyoutBase.AttachedFlyout>
                             <uc:FeedbackFlyout x:Name="FeedbackFlyout" />
                         </FlyoutBase.AttachedFlyout>
@@ -164,7 +166,6 @@
                     <Frame
                         x:Name="frame"
                         Grid.Row="1"
-                        
                         Margin="0,4,0,0"
                         Navigating="OnNavigatingToPage">
                         <Frame.ContentTransitions>

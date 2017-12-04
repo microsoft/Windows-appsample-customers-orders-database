@@ -18,59 +18,64 @@
     THE SOFTWARE.
 -->
 
-<Page x:Class="Contoso.App.Views.OrderListPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:Contoso.App="using:Contoso.App"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:Contoso.App.Views"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:models="using:Contoso.Models"
-      xmlns:stateTriggers="using:Contoso.App.StateTriggers"
-      xmlns:uc="using:Contoso.App.UserControls"
-      xmlns:valueConverters="using:Contoso.App.ValueConverters"
-      NavigationCacheMode="Required"
-      mc:Ignorable="d">
-
+<Page
+    x:Class="Contoso.App.Views.OrderListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Contoso.App="using:Contoso.App"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Contoso.App.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Contoso.Models"
+    xmlns:stateTriggers="using:Contoso.App.StateTriggers"
+    xmlns:uc="using:Contoso.App.UserControls"
+    xmlns:valueConverters="using:Contoso.App.ValueConverters"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
     <Page.Resources>
-
-        <valueConverters:DateToStringConverter x:Key="dateToStringConverter"/>
-        <valueConverters:NullToBooleanConverter x:Key="nullToBoolConverter"/>
-        <valueConverters:StringFormatterConverter x:Key="stringFormatterConverter"/>
-        <valueConverters:NullToVisibilityConverter x:Key="nullToVisibilityConverter"/>
-        <valueConverters:BooleanToVisibilityConverter x:Key="boolToVisibilityConverter"/>
-
+        <valueConverters:DateToStringConverter x:Key="dateToStringConverter" />
+        <valueConverters:NullToBooleanConverter x:Key="nullToBoolConverter" />
+        <valueConverters:StringFormatterConverter x:Key="stringFormatterConverter" />
+        <valueConverters:NullToVisibilityConverter x:Key="nullToVisibilityConverter" />
+        <valueConverters:BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <MenuFlyout x:Key="ListViewContextMenu">
-            <MenuFlyoutItem Click="MenuFlyoutViewDetails_Click"
-                            Style="{StaticResource MenuFlyoutItemIconTemplate}"
-                            Tag="&#xE1A5;"
-                            Text="View details"/>
+            <MenuFlyoutItem
+                Click="MenuFlyoutViewDetails_Click"
+                Style="{StaticResource MenuFlyoutItemIconTemplate}"
+                Tag="&#xE1A5;"
+                Text="View details" />
         </MenuFlyout>
 
-        <Style x:Key="SearchSuggestionItemStyle" TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Style
+            x:Key="SearchSuggestionItemStyle"
+            TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
 
-        <DataTemplate x:Key="SearchSuggestionItemTemplate" x:DataType="models:Order">
+        <DataTemplate
+            x:Key="SearchSuggestionItemTemplate"
+            x:DataType="models:Order">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="Margin" Value="8,0,0,0"/>
+                        <Setter Property="Margin" Value="8,0,0,0" />
                     </Style>
                 </Grid.Resources>
-                <TextBlock Grid.Column="0"
-                           Margin="0,0,20,0"
-                           HorizontalAlignment="Stretch"
-                           Padding="0"
-                           Text="{x:Bind InvoiceNumber, Mode=OneWay}"/>
-                <TextBlock Grid.Column="1"
-                           Margin="0,0,20,0"
-                           HorizontalAlignment="Stretch"
-                           Text="{x:Bind CustomerName, Mode=OneWay}"/>
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="0,0,20,0"
+                    Padding="0"
+                    HorizontalAlignment="Stretch"
+                    Text="{x:Bind InvoiceNumber, Mode=OneWay}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="0,0,20,0"
+                    HorizontalAlignment="Stretch"
+                    Text="{x:Bind CustomerName, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -79,9 +84,13 @@
         <RelativePanel>
 
             <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
-            <uc:PageHeader x:Name="PageTitle" Margin="0,0,0,20">
+            <uc:PageHeader
+                x:Name="PageTitle"
+                Margin="0,0,0,20">
                 <uc:PageHeader.HeaderContent>
-                    <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Orders"/>
+                    <TextBlock
+                        Style="{StaticResource PageTitleTextBlockStyle}"
+                        Text="Orders" />
                 </uc:PageHeader.HeaderContent>
             </uc:PageHeader>
 
@@ -89,83 +98,106 @@
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar x:Name="mainCommandBar"
-                        HorizontalAlignment="Stretch"
-                        Background="Transparent"
-                        Loaded="CommandBar_Loaded"
-                        RelativePanel.LeftOf="OrderSearchBox"
-                        RelativePanel.RightOf="PageTitle">
-                <AppBarButton x:Name="CommandBarEditButton"
-                              Click="EditButton_Click"
-                              Icon="Edit"
-                              IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
-                              Label="Edit"/>
-                <AppBarButton x:Name="CommandBarDeleteButton"
-                              Click="DeleteOrder_Click"
-                              Icon="Delete"
-                              IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
-                              Label="Delete"/>
-                <AppBarButton Click="RefreshButton_Click"
-                              Icon="Refresh"
-                              Label="Refresh"/>
+            <CommandBar
+                x:Name="mainCommandBar"
+                HorizontalAlignment="Stretch"
+                Background="Transparent"
+                Loaded="CommandBar_Loaded"
+                RelativePanel.LeftOf="OrderSearchBox"
+                RelativePanel.RightOf="PageTitle">
+                <AppBarButton
+                    x:Name="CommandBarEditButton"
+                    Click="EditButton_Click"
+                    Icon="Edit"
+                    IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                    Label="Edit" />
+                <AppBarButton
+                    x:Name="CommandBarDeleteButton"
+                    Click="DeleteOrder_Click"
+                    Icon="Delete"
+                    IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                    Label="Delete" />
+                <AppBarButton
+                    Click="RefreshButton_Click"
+                    Icon="Refresh"
+                    Label="Refresh" />
             </CommandBar>
-            <uc:CollapsibleSearchBox x:Name="OrderSearchBox"
-                                     Width="240"
-                                     Margin="12,8,12,0"
-                                     CollapseWidth="{StaticResource MediumWindowSnapPoint}"
-                                     Loaded="OrderSearchBox_Loaded"
-                                     RelativePanel.AlignRightWithPanel="True"/>
+            <uc:CollapsibleSearchBox
+                x:Name="OrderSearchBox"
+                Width="240"
+                Margin="12,8,12,0"
+                CollapseWidth="{StaticResource MediumWindowSnapPoint}"
+                Loaded="OrderSearchBox_Loaded"
+                RelativePanel.AlignRightWithPanel="True" />
 
-            <SplitView x:Name="listSplitView"
-                       DisplayMode="Inline"
-                       IsPaneOpen="True"
-                       OpenPaneLength="260"
-                       PanePlacement="Right"
-                       RelativePanel.AlignBottomWithPanel="True"
-                       RelativePanel.AlignLeftWithPanel="True"
-                       RelativePanel.AlignRightWithPanel="True"
-                       RelativePanel.Below="PageTitle">
+            <SplitView
+                x:Name="listSplitView"
+                DisplayMode="Inline"
+                IsPaneOpen="True"
+                OpenPaneLength="260"
+                PanePlacement="Right"
+                RelativePanel.AlignBottomWithPanel="True"
+                RelativePanel.AlignLeftWithPanel="True"
+                RelativePanel.AlignRightWithPanel="True"
+                RelativePanel.Below="PageTitle">
 
                 <!--  Displays details about the currently selected order.  -->
                 <SplitView.Pane>
-                    <StackPanel x:Name="OrderInfoPanel"
-                                Margin="24,28,24,0"
-                                Visibility="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToVisibilityConverter}, Mode=OneWay}">
+                    <StackPanel
+                        x:Name="OrderInfoPanel"
+                        Margin="24,28,24,0"
+                        Visibility="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToVisibilityConverter}, Mode=OneWay}">
                         <StackPanel.Resources>
                             <Style TargetType="TextBox">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="TextWrapping" Value="Wrap" />
                             </Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                <Setter Property="TextWrapping" Value="Wrap" />
                             </Style>
                         </StackPanel.Resources>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock FontWeight="SemiBold" Text="Invoice #"/>
-                            <TextBlock FontWeight="SemiBold" Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}"/>
+                            <TextBlock
+                                FontWeight="SemiBold"
+                                Text="Invoice #" />
+                            <TextBlock
+                                FontWeight="SemiBold"
+                                Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}" />
                         </StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
+                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}" />
 
-                        <StackPanel Margin="0, 20, 0, 20">
-                            <TextBlock FontWeight="SemiBold"
-                                       IsTextSelectionEnabled="True"
-                                       Text="{x:Bind ViewModel.SelectedOrder.CustomerName, Mode=OneWay}"/>
-                            <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}"/>
-                            <HyperlinkButton Margin="0,0,0,0"
-                                             Click="EmailButton_Click"
-                                             Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}"
-                                             Padding="0,0,0,0"/>
+                        <StackPanel Margin="0,20,0,20">
+                            <TextBlock
+                                FontWeight="SemiBold"
+                                IsTextSelectionEnabled="True"
+                                Text="{x:Bind ViewModel.SelectedOrder.CustomerName, Mode=OneWay}" />
+                            <TextBlock
+                                IsTextSelectionEnabled="True"
+                                Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}" />
+                            <HyperlinkButton
+                                Margin="0,0,0,0"
+                                Padding="0,0,0,0"
+                                Click="EmailButton_Click"
+                                Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}" />
                         </StackPanel>
 
                         <TextBlock FontWeight="SemiBold">Shipping address</TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Address, Mode=OneWay}"/>
+                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Address, Mode=OneWay}" />
 
-                        <TextBlock Margin="0,20,0,0" FontWeight="SemiBold">Order status</TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Status, Mode=OneWay}"/>
+                        <TextBlock
+                            Margin="0,20,0,0"
+                            FontWeight="SemiBold">
+                            Order status
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Status, Mode=OneWay}" />
 
-                        <TextBlock Margin="0,20,0,0" FontWeight="SemiBold">Payment status</TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.PaymentStatus, Mode=OneWay}"/>
+                        <TextBlock
+                            Margin="0,20,0,0"
+                            FontWeight="SemiBold">
+                            Payment status
+                        </TextBlock>
+                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.PaymentStatus, Mode=OneWay}" />
 
                     </StackPanel>
                 </SplitView.Pane>
@@ -173,102 +205,120 @@
                 <SplitView.Content>
                     <Grid HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{StaticResource GridHeaderHeight}"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="{StaticResource GridHeaderHeight}" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <!--  The list header. We define this outside the ListView so that it doesn't scroll.  -->
-                        <Grid HorizontalAlignment="Stretch" Background="{ThemeResource AccentBackgroundColor}">
+                        <Grid
+                            HorizontalAlignment="Stretch"
+                            Background="{ThemeResource AccentBackgroundColor}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.Resources>
-                                <Style BasedOn="{StaticResource HeaderTextBlockStyle}" TargetType="TextBlock">
-                                    <Setter Property="FontSize" Value="16"/>
-                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                    <Setter Property="Padding" Value="0,4"/>
-                                    <Setter Property="Margin" Value="8,0,0,0"/>
-                                    <Setter Property="TextWrapping" Value="NoWrap"/>
+                                <Style
+                                    BasedOn="{StaticResource HeaderTextBlockStyle}"
+                                    TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="16" />
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="Padding" Value="0,4" />
+                                    <Setter Property="Margin" Value="8,0,0,0" />
+                                    <Setter Property="TextWrapping" Value="NoWrap" />
                                 </Style>
                             </Grid.Resources>
-                            <TextBlock Grid.Column="0"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Invoice"/>
-                            <TextBlock Grid.Column="1"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Customer"/>
-                            <TextBlock Grid.Column="2"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Date"/>
-                            <TextBlock Grid.Column="3"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Total"/>
-                            <TextBlock Grid.Column="4"
-                                       HorizontalAlignment="Stretch"
-                                       Text="Status"/>
+                            <TextBlock
+                                Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                Text="Invoice" />
+                            <TextBlock
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                Text="Customer" />
+                            <TextBlock
+                                Grid.Column="2"
+                                HorizontalAlignment="Stretch"
+                                Text="Date" />
+                            <TextBlock
+                                Grid.Column="3"
+                                HorizontalAlignment="Stretch"
+                                Text="Total" />
+                            <TextBlock
+                                Grid.Column="4"
+                                HorizontalAlignment="Stretch"
+                                Text="Status" />
                         </Grid>
 
                         <!--  This progress indicator should be hidden when the data is finished loading.  -->
-                        <ProgressBar Grid.Row="1"
-                                     Margin="0,4"
-                                     HorizontalAlignment="Stretch"
-                                     VerticalAlignment="Top"
-                                     IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                                     Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource boolToVisibilityConverter}}"/>
+                        <ProgressBar
+                            Grid.Row="1"
+                            Margin="0,4"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Top"
+                            IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource boolToVisibilityConverter}}" />
 
                         <!--  The list of orders.  -->
-                        <uc:ContosoListView x:Name="OrderList"
-                                            Grid.Row="1"
-                                            HorizontalAlignment="Stretch"
-                                            HorizontalContentAlignment="Stretch"
-                                            ContextMenu="{StaticResource ListViewContextMenu}"
-                                            ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
-                                            KeyUp="ListView_KeyUp"
-                                            SelectedItem="{x:Bind ViewModel.SelectedOrderAsObject, Mode=TwoWay}">
+                        <uc:ContosoListView
+                            x:Name="OrderList"
+                            Grid.Row="1"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            ContextMenu="{StaticResource ListViewContextMenu}"
+                            ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
+                            KeyUp="ListView_KeyUp"
+                            SelectedItem="{x:Bind ViewModel.SelectedOrderAsObject, Mode=TwoWay}">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:Order">
-                                    <Border BorderThickness="0,0,0,0" DoubleTapped="ListViewItem_DoubleTapped">
+                                    <Border
+                                        BorderThickness="0,0,0,0"
+                                        DoubleTapped="ListViewItem_DoubleTapped">
                                         <Grid HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="2*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="2*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.Resources>
                                                 <Style TargetType="TextBlock">
-                                                    <Setter Property="Padding" Value="8,0,0,0"/>
+                                                    <Setter Property="Padding" Value="8,0,0,0" />
                                                 </Style>
                                             </Grid.Resources>
-                                            <TextBlock Grid.Column="0"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="{x:Bind InvoiceNumber, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="1"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="{x:Bind CustomerName, Mode=OneWay}"/>
-                                            <TextBlock Grid.Column="2"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="{x:Bind DatePlaced, Mode=OneWay, Converter={StaticResource dateToStringConverter}, ConverterParameter=MM/dd/yyyy}"/>
-                                            <TextBlock Grid.Column="3"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="{x:Bind GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}"/>
-                                            <TextBlock Grid.Column="4"
-                                                       HorizontalAlignment="Stretch"
-                                                       Text="{x:Bind Status, Mode=OneWay}"/>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Stretch"
+                                                Text="{x:Bind InvoiceNumber, Mode=OneWay}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Stretch"
+                                                Text="{x:Bind CustomerName, Mode=OneWay}" />
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Stretch"
+                                                Text="{x:Bind DatePlaced, Mode=OneWay, Converter={StaticResource dateToStringConverter}, ConverterParameter=MM/dd/yyyy}" />
+                                            <TextBlock
+                                                Grid.Column="3"
+                                                HorizontalAlignment="Stretch"
+                                                Text="{x:Bind GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}" />
+                                            <TextBlock
+                                                Grid.Column="4"
+                                                HorizontalAlignment="Stretch"
+                                                Text="{x:Bind Status, Mode=OneWay}" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Padding" Value="0" />
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </uc:ContosoListView>
@@ -281,35 +331,35 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}"/>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}"/>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}"/>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="listSplitView.DisplayMode" Value="Overlay"/>
-                        <Setter Target="listSplitView.IsPaneOpen" Value="False"/>
+                        <Setter Target="listSplitView.DisplayMode" Value="Overlay" />
+                        <Setter Target="listSplitView.IsPaneOpen" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch"/>
+                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="listSplitView.(RelativePanel.Above)" Value="mainCommandBar"/>
-                        <Setter Target="listSplitView.(RelativePanel.AlignBottomWithPanel)" Value="False"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True"/>
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True"/>
-                        <Setter Target="OrderSearchBox.Width" Value="300"/>
-                        <Setter Target="listSplitView.IsPaneOpen" Value="False"/>
+                        <Setter Target="listSplitView.(RelativePanel.Above)" Value="mainCommandBar" />
+                        <Setter Target="listSplitView.(RelativePanel.AlignBottomWithPanel)" Value="False" />
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True" />
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                        <Setter Target="OrderSearchBox.Width" Value="300" />
+                        <Setter Target="listSplitView.IsPaneOpen" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

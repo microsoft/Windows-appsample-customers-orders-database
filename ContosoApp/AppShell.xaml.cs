@@ -28,8 +28,8 @@ using Contoso.App.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.System;
 using Windows.System.Threading;
@@ -51,7 +51,7 @@ namespace Contoso.App
     {
         private bool _isPaddingAdded = false;
 
-        public static AppShell Current { get; private  set; }
+        public static AppShell Current { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the AppShell, sets the static 'Current' reference,
@@ -61,44 +61,29 @@ namespace Contoso.App
         public AppShell()
         {
             InitializeComponent();
-            
+
             Loaded += (sender, args) =>
             {
                 Current = this;
 
                 CheckTogglePaneButtonSizeChanged();
 
-                var titleBar = Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar;
+                var titleBar = CoreApplication.GetCurrentView().TitleBar;
                 titleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
-
-                AppFrame.Navigating += AppFrame_Navigating;
-                Window.Current.Activated += Current_Activated;
             };
 
-            RootSplitView.RegisterPropertyChangedCallback(
-                SplitView.DisplayModeProperty,
-                (s, a) =>
-                {
-                    // Ensure that we update the reported size of the TogglePaneButton when the SplitView's
-                    // DisplayMode changes.
-                    CheckTogglePaneButtonSizeChanged();
-                });
+
+            RootSplitView.RegisterPropertyChangedCallback(SplitView.DisplayModeProperty, (s, a) =>
+            {
+                // Ensure that we update the reported size of the TogglePaneButton when the SplitView's
+                // DisplayMode changes.
+                CheckTogglePaneButtonSizeChanged();
+            });
 
             SystemNavigationManager.GetForCurrentView().BackRequested += SystemNavigationManager_BackRequested;
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
-            SetFeedbackTimer(); 
-        }
-
-        private void AppFrame_Navigating(object sender, NavigatingCancelEventArgs e)
-        {
-            // TODO: Page view telemetry
-        }
-
-        private void Current_Activated(object sender, WindowActivatedEventArgs e)
-        {
-            // TODO: Activation telemetry
-            Debug.WriteLine(e.WindowActivationState.ToString()); 
+            SetFeedbackTimer();
         }
 
         public IReadOnlyCollection<NavMenuItem> PrimaryMenuItems = new ReadOnlyCollection<NavMenuItem>(new[]
@@ -123,7 +108,7 @@ namespace Contoso.App
             }
         });
 
-        public Frame AppFrame => frame; 
+        public Frame AppFrame => frame;
 
         public Rect TogglePaneButtonRect { get; private set; }
 
@@ -131,7 +116,7 @@ namespace Contoso.App
         /// Invoked when window title bar visibility changes, such as after loading or in tablet mode
         /// Ensures correct padding at window top, between title bar and app content
         /// </summary>s
-        private void TitleBar_IsVisibleChanged(Windows.ApplicationModel.Core.CoreApplicationViewTitleBar sender, object args)
+        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
         {
             if (!_isPaddingAdded && sender.IsVisible)
             {
@@ -184,14 +169,11 @@ namespace Contoso.App
                     break;
             }
 
-            if (direction != FocusNavigationDirection.None)
+            if (direction != FocusNavigationDirection.None &&
+                FocusManager.FindNextFocusableElement(direction) is Control control)
             {
-                var control = FocusManager.FindNextFocusableElement(direction) as Control;
-                if (control != null)
-                {
-                    control.Focus(FocusState.Keyboard);
-                    e.Handled = true;
-                }
+                control.Focus(FocusState.Keyboard);
+                e.Handled = true;
             }
         }
 
@@ -233,8 +215,7 @@ namespace Contoso.App
             if (item != null)
             {
                 item.IsSelected = true;
-                if (item.DestPage != null &&
-                    item.DestPage != AppFrame.CurrentSourcePageType)
+                if (item.DestPage != null && item.DestPage != AppFrame.CurrentSourcePageType)
                 {
                     AppFrame.Navigate(item.DestPage, item.Arguments);
                 }
@@ -258,7 +239,9 @@ namespace Contoso.App
                     {
                         item = (from p in PrimaryMenuItems where p.DestPage == entry.SourcePageType select p).SingleOrDefault();
                         if (item != null)
-                            break;
+                        {
+
+                        }
                     }
                 }
 
@@ -276,16 +259,21 @@ namespace Contoso.App
                 // While updating the selection state of the item prevent it from taking keyboard focus.  If a
                 // user is invoking the back button via the keyboard causing the selected nav menu item to change
                 // then focus will remain on the back button.
-                if (container != null) 
+                if (container != null)
                 {
                     container.IsTabStop = false;
                 }
+
                 NavMenuList.SetSelectedItem(container);
+
                 if (container != null)
                 {
                     container.IsTabStop = true;
                 }
             }
+
+            App.Diagnostics.TrackNavigatingFromPage(AppFrame.CurrentSourcePageType);
+            App.Diagnostics.TrackNavigatingToPage(AppFrame.CurrentSourcePageType, e.SourcePageType);
         }
 
         /// <summary>
@@ -378,37 +366,49 @@ namespace Contoso.App
         }
 
 
+        /// <summary>
+        /// Invoked when the Feedback button is clicked.
+        /// </summary>
         private void FeedbackNavButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowFeedbackFlyout(); 
+            ShowFeedbackFlyout(true);
         }
 
-        private void ShowFeedbackFlyout()
-        {
-            if (RootSplitView.IsPaneOpen)
-            {
-                FlyoutBase.ShowAttachedFlyout(FeedbackNavButton);
-            }
-            else
-            {
-                FlyoutBase.GetAttachedFlyout(FeedbackNavButton).ShowAt(FeedbackNavButton.FontIcon);
-            }
-        }
-
+        /// <summary>
+        /// Automatically shows the feedback flyout after 3 minutes.
+        /// </summary>
         private void SetFeedbackTimer()
         {
-            if (FeedbackFlyout.ShouldPrompt)
+            if (!App.Diagnostics.FeedbackProvided)
             {
                 ThreadPoolTimer.CreateTimer(async (args) =>
                 {
                     await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        if (FeedbackFlyout.ShouldPrompt)
+                        if (!App.Diagnostics.FeedbackProvided)
                         {
-                            ShowFeedbackFlyout();
+                            ShowFeedbackFlyout(false);
                         }
                     });
-                }, new TimeSpan(0, 3, 0));
+                }, new TimeSpan(0, 1, 0));
+            }
+        }
+
+        /// <summary>
+        /// Displays the feedback flyout.
+        /// </summary>
+        private void ShowFeedbackFlyout(bool isUserInitiated)
+        {
+            var flyout = (FeedbackFlyout)FlyoutBase.GetAttachedFlyout(FeedbackNavButton);
+            flyout.IsUserInitiated = isUserInitiated;
+
+            if (RootSplitView.IsPaneOpen)
+            {
+                flyout.ShowAt(FeedbackNavButton);
+            }
+            else
+            {
+                flyout.ShowAt(FeedbackNavButton.FontIcon);
             }
         }
     }

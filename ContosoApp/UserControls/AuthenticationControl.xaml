@@ -18,44 +18,50 @@
     THE SOFTWARE.
 -->
 
-<UserControl x:Class="Contoso.App.UserControls.AuthenticationControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converter="using:Contoso.App.ValueConverters"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="using:Contoso.App"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="using:Contoso.App.ViewModels"
-             d:DesignHeight="300"
-             d:DesignWidth="400"
-             mc:Ignorable="d">
+<UserControl
+    x:Class="Contoso.App.UserControls.AuthenticationControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:Contoso.App.ValueConverters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Contoso.App"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Contoso.App.ViewModels"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converter:BooleanToVisibilityConverter x:Key="boolToVisConverter"/>
+        <converter:BooleanToVisibilityConverter x:Key="boolToVisConverter" />
 
-        <Style x:Key="SplitViewPaneButtonStyle" TargetType="Button">
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
+        <Style
+            x:Key="SplitViewPaneButtonStyle"
+            TargetType="Button">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
             <!--<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>-->
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="MinHeight" Value="48"/>
-            <Setter Property="MinWidth" Value="48"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="MinHeight" Value="48" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
             <!--<Setter Property="FocusVisualMargin" Value="0"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                            <ContentPresenter x:Name="ContentPresenter"
-                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                              AutomationProperties.AccessibilityView="Raw"
-                                              Content="{TemplateBinding Content}"
-                                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                                              ContentTransitions="{TemplateBinding ContentTransitions}"
-                                              Padding="{TemplateBinding Padding}"/>
+                        <Grid
+                            x:Name="RootGrid"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Padding="{TemplateBinding Padding}"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                AutomationProperties.AccessibilityView="Raw"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}" />
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
@@ -65,30 +71,50 @@
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames
+                                                Storyboard.TargetName="RootGrid"
+                                                Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame
+                                                    KeyTime="0"
+                                                    Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames
+                                                Storyboard.TargetName="RootGrid"
+                                                Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame
+                                                    KeyTime="0"
+                                                    Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <!--<PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames
+                                                Storyboard.TargetName="RootGrid"
+                                                Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame
+                                                    KeyTime="0"
+                                                    Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames
+                                                Storyboard.TargetName="ContentPresenter"
+                                                Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame
+                                                    KeyTime="0"
+                                                    Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            <ObjectAnimationUsingKeyFrames
+                                                Storyboard.TargetName="ContentPresenter"
+                                                Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame
+                                                    KeyTime="0"
+                                                    Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -104,69 +130,76 @@
     <Grid Height="48">
 
         <!--  Start  -->
-        <Button HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Left"
-                Click="{x:Bind ViewModel.LoginClick}"
-                Padding="0"
-                Style="{StaticResource SplitViewPaneButtonStyle}"
-                Visibility="{Binding ShowWelcome, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+        <Button
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Click="{x:Bind ViewModel.LoginClick}"
+            Style="{StaticResource SplitViewPaneButtonStyle}"
+            Visibility="{Binding ShowWelcome, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48"/>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <FontIcon Grid.RowSpan="2"
-                          FontFamily="Segoe MDL2 Assets"
-                          FontSize="16"
-                          Glyph="&#xE1E2;"/>
-                <TextBlock Grid.RowSpan="2"
-                           Grid.Column="2"
-                           VerticalAlignment="Center"
-                           Text="Sign in"/>
+                <FontIcon
+                    Grid.RowSpan="2"
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="16"
+                    Glyph="&#xE1E2;" />
+                <TextBlock
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Text="Sign in" />
             </Grid>
         </Button>
 
 
         <!--  User info  -->
-        <Button HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Left"
-                Click="{x:Bind ViewModel.LogoutClick}"
-                Padding="0"
-                Style="{StaticResource SplitViewPaneButtonStyle}"
-                Visibility="{Binding ShowData, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+        <Button
+            Padding="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            Click="{x:Bind ViewModel.LogoutClick}"
+            Style="{StaticResource SplitViewPaneButtonStyle}"
+            Visibility="{Binding ShowData, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48"/>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <Ellipse x:Name="Ellipse"
-                         Grid.RowSpan="2"
-                         Width="24"
-                         Height="24">
+                <Ellipse
+                    x:Name="Ellipse"
+                    Grid.RowSpan="2"
+                    Width="24"
+                    Height="24">
                     <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Photo, Mode=OneWay}"/>
+                        <ImageBrush ImageSource="{Binding Photo, Mode=OneWay}" />
                     </Ellipse.Fill>
                 </Ellipse>
-                <TextBlock Grid.Column="2"
-                           HorizontalAlignment="Center"
-                           Style="{StaticResource CaptionTextBlockStyle}"
-                           Text="{Binding Email}"/>
-                <TextBlock Grid.Row="1"
-                           Grid.Column="2"
-                           VerticalAlignment="Center"
-                           Text="Sign out"/>
+                <TextBlock
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{Binding Email}" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    VerticalAlignment="Center"
+                    Text="Sign out" />
             </Grid>
         </Button>
 
@@ -174,42 +207,46 @@
         <!--  Loading  -->
         <Grid Visibility="{Binding ShowLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <ProgressRing Grid.RowSpan="2"
-                          Width="36"
-                          Height="36"
-                          IsActive="True"/>
-            <TextBlock Grid.RowSpan="2"
-                       Grid.Column="2"
-                       VerticalAlignment="Center"
-                       Text="Signing in..."/>
+            <ProgressRing
+                Grid.RowSpan="2"
+                Width="36"
+                Height="36"
+                IsActive="True" />
+            <TextBlock
+                Grid.RowSpan="2"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Text="Signing in..." />
         </Grid>
 
         <!--  Error  -->
         <Grid Visibility="{Binding ShowError, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="8"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <FontIcon Grid.RowSpan="2"
-                      FontFamily="Segoe MDL2 Assets"
-                      Glyph="&#xE1E0;"/>
-            <TextBlock Grid.RowSpan="2"
-                       Grid.Column="2"
-                       VerticalAlignment="Center"
-                       Text=":( Something went wrong."/>
+            <FontIcon
+                Grid.RowSpan="2"
+                FontFamily="Segoe MDL2 Assets"
+                Glyph="&#xE1E0;" />
+            <TextBlock
+                Grid.RowSpan="2"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Text=":( Something went wrong." />
         </Grid>
 
     </Grid>

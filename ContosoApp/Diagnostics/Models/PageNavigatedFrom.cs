@@ -23,53 +23,27 @@
 //  ---------------------------------------------------------------------------------
 
 using System;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
-namespace Contoso.App.Views
-{
-    public sealed partial class SettingsPage : Page
+namespace Contoso.App.Diagnostics.Models
+{ 
+    /// <summary>
+    /// Contains diagnostic data about when a user navigates from a page.
+    /// </summary>
+    public class PageNavigatedFrom : Diagnostic
     {
-        private const string IsDiagnosticsEnabledKey = "diag_enabled"; 
-
-        public SettingsPage()
-        {
-            InitializeComponent();
-        }
+        /// <summary>
+        /// The name of the page.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets if app diagnostics are enabled.
+        /// The total time the user spent on the page.
         /// </summary>
-        public bool IsDiagnosticsEnabled
-        {
-            get => App.Diagnostics.IsEnabled; 
-            set => App.Diagnostics.IsEnabled = value;
-        }
+        public TimeSpan TotalTime { get; set; }
 
         /// <summary>
-        ///  Launches the privacy statement in the user's default browser.
+        /// The total time the user spent on the page while the app was in focus.
         /// </summary>
-        private async void PrivacyButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=521839"));
-        }
-
-        /// <summary>
-        /// Launches the license terms in the user's default browser.
-        /// </summary>
-        private async void LicenseButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=822631"));
-        }
-
-        /// <summary>
-        /// Launches the sample's GitHub page in the user's default browser.
-        /// </summary>
-        private async void GitHubButton_Click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
-        }
+        public TimeSpan FocusTime { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------------
+﻿//  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 // 
 //  The MIT License (MIT)
@@ -22,20 +22,18 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Windows.UI.Xaml.Controls;
+using System;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
-namespace Contoso.App.Views
+namespace Contoso.App.Diagnostics.Models
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Contains diagnostic data about app launch.
     /// </summary>
-    public sealed partial class OrdersListPage : Page
+    public class Launch : Diagnostic
     {
-        public OrdersListPage()
-        {
-            this.InitializeComponent();
-        }
+        /// <summary>
+        /// Gets or sets the time it took to run in-app loading code.
+        /// </summary>
+        public TimeSpan LoadTime { get; set; }
     }
 }

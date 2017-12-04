@@ -25,13 +25,10 @@
 using Contoso.App.Diagnostics;
 using Contoso.App.Views;
 using Contoso.Repository;
-using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
+using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
@@ -46,14 +43,17 @@ namespace Contoso.App
     /// </summary>
     sealed partial class App : Application
     {
-        private readonly DbContextOptionsBuilder<ContosoContext> _dbOptions = new DbContextOptionsBuilder<ContosoContext>()
-            .UseSqlite("Data Source=" + Path.Combine(ApplicationData.Current.LocalFolder.Path, "Contoso.db")); 
+        private readonly string _demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Contoso.db";
+        private readonly string _databasePath = ApplicationData.Current.LocalFolder.Path + @"\Contoso.db";
 
         /// <summary>
         /// Pipeline for interacting with backend service or database.
         /// </summary>
         public static IContosoRepository Repository { get; private set; }
 
+        /// <summary>
+        /// Service for collecting feedback and diagnostic data.
+        /// </summary>
         public static DiagnosticService Diagnostics { get; private set; }
 
         /// <summary>
@@ -66,72 +66,43 @@ namespace Contoso.App
         }
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used such as when the application is launched to open a specific file.
+        /// Invoked when the application is launched normally by the end user.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Diagnostics = new DiagnosticService(); 
-            Repository = new SqlContosoRepository(_dbOptions);
+            // Start app diagnostics.
 
-            // The first time we launch the sample, ensure the database is populated with 
-            // demo data.
-            await PrepareDemoAsync(); 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Diagnostics = new DiagnosticService();
 
-            AppShell shell = Window.Current.Content as AppShell;
+            // Load the database. If one doesn't already exist, copy over a demo one. 
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (shell == null)
+            if (!File.Exists(_databasePath))
             {
-                // Create a AppShell to act as the navigation context and navigate to the first page
-                shell = new AppShell();
-                // Set the default language
-                shell.Language = ApplicationLanguages.Languages[0];
-                shell.AppFrame.NavigationFailed += (s, args) =>
-                    new Exception("Failed to load Page " + args.SourcePageType.FullName);
+                File.Copy(_demoDatabasePath, _databasePath);
             }
-            // Place our app shell in the current Window
+            var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
+                "Data Source=" + _databasePath);
+            Repository = new SqlContosoRepository(dbOptions);
+
+            // Prepare the app shell and window content.
+
+            AppShell shell = Window.Current.Content as AppShell ?? new AppShell();
+            shell.Language = ApplicationLanguages.Languages[0];
             Window.Current.Content = shell;
+
             if (shell.AppFrame.Content == null)
             {
                 // When the navigation stack isn't restored, navigate to the first page
                 // suppressing the initial entrance animation.
-                shell.AppFrame.Navigate(typeof(CustomerListPage), e.Arguments, 
+
+                shell.AppFrame.Navigate(typeof(CustomerListPage), e.Arguments,
                     new SuppressNavigationTransitionInfo());
             }
-            // Ensure the current window is active
+
             Window.Current.Activate();
-        }
-
-        /// <summary>
-        /// Creates a local Sqlite database and loads demo data into it. 
-        /// </summary>
-        private async Task PrepareDemoAsync()
-        {
-            if (ApplicationData.Current.LocalSettings.Values.ContainsKey("is_demo_loaded"))
-            {
-                return; 
-            }
-
-            var repository = new RestContosoRepository(Constants.ApiUrl);
-
-            var customersTask = repository.Customers.GetAsync();
-            var ordersTask = repository.Orders.GetAsync();
-            var productsTask = repository.Products.GetAsync();
-
-            await Task.WhenAll(customersTask, ordersTask, productsTask);
-
-            var db = new ContosoContext(_dbOptions.Options);
-
-            await db.Customers.AddRangeAsync(customersTask.Result);
-            await db.Products.AddRangeAsync(productsTask.Result);
-            await db.Orders.AddRangeAsync(ordersTask.Result);
-
-            await db.SaveChangesAsync();
-
-            ApplicationData.Current.LocalSettings.Values.Add("is_demo_loaded", true);  
+            Diagnostics.TrackLaunch(stopwatch.Elapsed);
         }
     }
 }

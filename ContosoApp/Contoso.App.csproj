@@ -99,7 +99,15 @@
     </Compile>
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Diagnostics\Models\Diagnostic.cs" />
     <Compile Include="Diagnostics\DiagnosticService.cs" />
+    <Compile Include="Diagnostics\Models\Error.cs" />
+    <Compile Include="Diagnostics\Models\Interaction.cs" />
+    <Compile Include="Diagnostics\Models\Feedback.cs" />
+    <Compile Include="Diagnostics\Models\Launch.cs" />
+    <Compile Include="Diagnostics\Models\PageNavigatedFrom.cs" />
+    <Compile Include="Diagnostics\Models\PageNavigatedTo.cs" />
+    <Compile Include="Diagnostics\Models\Session.cs" />
     <Compile Include="Navigation\NavMenuItem.cs" />
     <Compile Include="Navigation\NavMenuListView.cs" />
     <Compile Include="Navigation\NavMenuSecondaryButton.xaml.cs">
@@ -117,7 +125,7 @@
     <Compile Include="UserControls\DetailExpander.xaml.cs">
       <DependentUpon>DetailExpander.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\FeedbackFlyout.xaml.cs">
+    <Compile Include="Diagnostics\FeedbackFlyout.xaml.cs">
       <DependentUpon>FeedbackFlyout.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PageHeader.xaml.cs">
@@ -153,9 +161,6 @@
     </Compile>
     <Compile Include="Views\OrderListPage.xaml.cs">
       <DependentUpon>OrderListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OrdersListPage.xaml.cs">
-      <DependentUpon>OrdersListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SaveChangesDialog.xaml.cs">
       <DependentUpon>SaveChangesDialog.xaml</DependentUpon>
@@ -206,13 +211,11 @@
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\userPlaceholder.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
@@ -248,7 +251,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\FeedbackFlyout.xaml">
+    <Page Include="Diagnostics\FeedbackFlyout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,10 +272,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OrderListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\OrdersListPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -316,7 +315,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Themes\" />
+    <Content Include="Assets\Contoso.db" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
