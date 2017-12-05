@@ -25,6 +25,7 @@
 using Contoso.App.Diagnostics;
 using Contoso.App.Views;
 using Contoso.Repository;
+using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -43,9 +44,6 @@ namespace Contoso.App
     /// </summary>
     sealed partial class App : Application
     {
-        private readonly string _demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Contoso.db";
-        private readonly string _databasePath = ApplicationData.Current.LocalFolder.Path + @"\Contoso.db";
-
         /// <summary>
         /// Pipeline for interacting with backend service or database.
         /// </summary>
@@ -76,15 +74,21 @@ namespace Contoso.App
             stopwatch.Start();
             Diagnostics = new DiagnosticService();
 
-            // Load the database. If one doesn't already exist, copy over a demo one. 
+            // Load the database.
 
-            if (!File.Exists(_databasePath))
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
+                "data_source", out object dataSource))
             {
-                File.Copy(_demoDatabasePath, _databasePath);
+                switch (dataSource.ToString())
+                {
+                    case "Rest": UseRest(); break;
+                    default: UseSqlite(); break; 
+                }
             }
-            var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
-                "Data Source=" + _databasePath);
-            Repository = new SqlContosoRepository(dbOptions);
+            else
+            {
+                UseSqlite();
+            }
 
             // Prepare the app shell and window content.
 
@@ -103,6 +107,32 @@ namespace Contoso.App
 
             Window.Current.Activate();
             Diagnostics.TrackLaunch(stopwatch.Elapsed);
+        }
+
+        /// <summary>
+        /// Configures the app to use the Sqlite data source. If no existing Sqlite database exists, 
+        /// loads a demo database filled with fake data so the app has content.
+        /// </summary>
+        public static void UseSqlite()
+        {
+            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Contoso.db";
+            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\Contoso.db";
+            if (!File.Exists(databasePath))
+            {
+                File.Copy(demoDatabasePath, databasePath);
+            }
+            var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
+                "Data Source=" + databasePath);
+            Repository = new SqlContosoRepository(dbOptions);
+        }
+
+        /// <summary>
+        /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
+        /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
+        /// </summary>
+        public static void UseRest()
+        {
+            Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/"); 
         }
     }
 }

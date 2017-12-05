@@ -22,6 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using Contoso.Repository.Sql;
 using System;
 using Windows.Storage;
 using Windows.System;
@@ -32,11 +33,20 @@ namespace Contoso.App.Views
 {
     public sealed partial class SettingsPage : Page
     {
-        private const string IsDiagnosticsEnabledKey = "diag_enabled"; 
+        public const string DataSourceKey = "data_source"; 
 
         public SettingsPage()
         {
             InitializeComponent();
+
+            if (App.Diagnostics.GetType() == typeof(SqlContosoRepository))
+            {
+                SqliteRadio.IsChecked = true;
+            }
+            else
+            {
+                RestRadio.IsChecked = true; 
+            }
         }
 
         /// <summary>
@@ -48,10 +58,23 @@ namespace Contoso.App.Views
             set => App.Diagnostics.IsEnabled = value;
         }
 
+        private void OnDataSourceChanged(object sender, RoutedEventArgs e)
+        {
+            var radio = (RadioButton)sender; 
+            switch (radio.Tag)
+            {
+                case "Sqlite": App.UseSqlite(); break;
+                case "Rest": App.UseRest(); break;
+                default: throw new NotImplementedException(); 
+            }
+            ApplicationData.Current.LocalSettings.Values[DataSourceKey] = radio.Tag; 
+        }
+
+
         /// <summary>
         ///  Launches the privacy statement in the user's default browser.
         /// </summary>
-        private async void PrivacyButton_Click(object sender, RoutedEventArgs e)
+        private async void OnPrivacyButtonClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=521839"));
         }
@@ -59,7 +82,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Launches the license terms in the user's default browser.
         /// </summary>
-        private async void LicenseButton_Click(object sender, RoutedEventArgs e)
+        private async void OnLicenseButtonClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://go.microsoft.com/fwlink/?LinkId=822631"));
         }
@@ -67,7 +90,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Launches the sample's GitHub page in the user's default browser.
         /// </summary>
-        private async void GitHubButton_Click(object sender, RoutedEventArgs e)
+        private async void OnCodeButtonClick(object sender, RoutedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri("https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
         }
