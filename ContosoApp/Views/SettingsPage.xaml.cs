@@ -39,7 +39,7 @@ namespace Contoso.App.Views
         {
             InitializeComponent();
 
-            if (App.Diagnostics.GetType() == typeof(SqlContosoRepository))
+            if (App.Repository.GetType() == typeof(SqlContosoRepository))
             {
                 SqliteRadio.IsChecked = true;
             }
@@ -58,6 +58,9 @@ namespace Contoso.App.Views
             set => App.Diagnostics.IsEnabled = value;
         }
 
+        /// <summary>
+        /// Changes the app's data source.
+        /// </summary>
         private void OnDataSourceChanged(object sender, RoutedEventArgs e)
         {
             var radio = (RadioButton)sender; 
