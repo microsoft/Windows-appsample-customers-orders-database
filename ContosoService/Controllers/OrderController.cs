@@ -1,12 +1,34 @@
-﻿using ContosoModels;
+﻿//  ---------------------------------------------------------------------------------
+//  Copyright (c) Microsoft Corporation.  All rights reserved.
+// 
+//  The MIT License (MIT)
+// 
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+// 
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+// 
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//  ---------------------------------------------------------------------------------
+
+using Contoso.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContosoService.Controllers
+namespace Contoso.Service.Controllers
 {
     /// <summary>
     /// Contains methods for interacting with order data.
@@ -14,58 +36,74 @@ namespace ContosoService.Controllers
     [Route("api/[controller]")]
     public class OrderController : Controller
     {
-        private readonly ContosoContext _db; 
+        private readonly IOrderRepository _repository; 
 
-        public OrderController(ContosoContext db)
+        public OrderController(IOrderRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         /// <summary>
         /// Gets all orders.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<Order>> Get() => await _db.Orders.Include(x =>
-            x.LineItems).ThenInclude(x => x.Product).ToArrayAsync();
+        public async Task<IActionResult> Get()
+        {
+            return Ok(await _repository.GetAsync()); 
+        }
 
         /// <summary>
         /// Gets the with the given id.
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<Order> Get(Guid id) => await _db.Orders.Include(x => x.LineItems)
-            .ThenInclude(x => x.Product).FirstOrDefaultAsync(x => x.Id == id);
+        public async Task<IActionResult> Get(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest(); 
+            }
+            var order = await _repository.GetAsync(id); 
+            if (order == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(order); 
+        }
 
         /// <summary>
         /// Gets all the orders for a given customer. 
         /// </summary>
         [HttpGet("customer/{id}")]
-        public async Task<IEnumerable<Order>> GetCustomerOrders(Guid id) => await _db.Orders.Where(x =>
-            x.CustomerId == id).Include(x => x.LineItems).ThenInclude(x => x.Product).ToArrayAsync();
+        public async Task<IActionResult> GetCustomerOrders(Guid id)
+        {
+            if (id == Guid.Empty)
+            {
+                return BadRequest(); 
+            }
+            var orders = await _repository.GetForCustomerAsync(id);
+            if (orders == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(orders); 
+        }
 
         /// <summary>
         /// Gets all orders with a data field matching the start of the given string.
         /// </summary>
         [HttpGet("search")]
-        public async Task<IEnumerable<Order>> Search(string value)
+        public async Task<IActionResult> Search(string value)
         {
-            string[] parameters = value.Split(' ');
-            return await _db.Orders
-                .Include(x => x.Customer)
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
-                .Where(x => parameters
-                    .Any(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
-                .OrderByDescending(x => parameters
-                    .Count(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
-                .ToArrayAsync();
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return BadRequest(); 
+            }
+            var orders = await _repository.GetAsync(value); 
+            if (orders == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(orders); 
         }
 
 
@@ -73,37 +111,19 @@ namespace ContosoService.Controllers
         /// Creates a new order or updates an existing one.
         /// </summary>
         [HttpPost]
-        public async Task<Order> Post([FromBody]Order order)
+        public async Task<IActionResult> Post([FromBody]Order order)
         {
-            var existing = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
-            // Create new order
-            if (null == existing)
-            {
-                order.InvoiceNumber = _db.Orders.Max(x => x.InvoiceNumber) + 1;
-                _db.Orders.Add(order);
-            }
-            // Update existing order
-            else
-            {
-                _db.Entry(existing).CurrentValues.SetValues(order);
-            }
-            await _db.SaveChangesAsync();
-            return order;
+            return Ok(await _repository.UpsertAsync(order)); 
         }
-
 
         /// <summary>
         /// Deletes an order.
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task Delete(Order order)
+        public async Task<IActionResult> Delete(Order order)
         {
-            var match = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
-            if (match != null)
-            {
-                _db.Orders.Remove(match);
-            }
-            await _db.SaveChangesAsync();
+            await _repository.DeleteAsync(order.Id);
+            return Ok(); 
         }
     }
 }

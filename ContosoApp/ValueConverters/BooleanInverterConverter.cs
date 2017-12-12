@@ -25,7 +25,7 @@
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     // Inverts a Boolean value.
     class BooleanInverterConverter : IValueConverter

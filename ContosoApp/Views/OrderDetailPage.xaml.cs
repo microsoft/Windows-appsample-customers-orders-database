@@ -22,8 +22,8 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
-using ContosoApp.ViewModels;
+using Contoso.Models;
+using Contoso.App.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -33,7 +33,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace ContosoApp.Views
+namespace Contoso.App.Views
 {
     /// <summary>
     /// Displays and edits an order.

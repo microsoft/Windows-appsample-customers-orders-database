@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoApp", "ContosoApp\ContosoApp.csproj", "{FD02E736-1832-4D38-847F-0A11087B3AF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contoso.App", "ContosoApp\Contoso.App.csproj", "{FD02E736-1832-4D38-847F-0A11087B3AF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoModels", "ContosoModels\ContosoModels.csproj", "{DD85A833-C876-44CE-AE65-C6CF655386B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contoso.Models", "ContosoModels\Contoso.Models.csproj", "{DD85A833-C876-44CE-AE65-C6CF655386B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoService", "ContosoService\ContosoService.csproj", "{FB0D787E-7902-4253-B02E-0AA074F9CB64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contoso.Service", "ContosoService\Contoso.Service.csproj", "{FB0D787E-7902-4253-B02E-0AA074F9CB64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{061E8524-0025-4C32-A021-9C354F9E8DDA}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		ThirdPartyNotices.txt = ThirdPartyNotices.txt
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contoso.Repository", "ContosoRepository\Contoso.Repository.csproj", "{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.Build.0 = Debug|x86
+		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.ActiveCfg = Debug|ARM
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.Build.0 = Debug|ARM
 		{FD02E736-1832-4D38-847F-0A11087B3AF1}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -81,6 +85,22 @@ Global
 		{FB0D787E-7902-4253-B02E-0AA074F9CB64}.Release|x64.Build.0 = Release|Any CPU
 		{FB0D787E-7902-4253-B02E-0AA074F9CB64}.Release|x86.ActiveCfg = Release|Any CPU
 		{FB0D787E-7902-4253-B02E-0AA074F9CB64}.Release|x86.Build.0 = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|ARM.Build.0 = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|x64.Build.0 = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Debug|x86.Build.0 = Debug|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|ARM.Build.0 = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|x64.ActiveCfg = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|x64.Build.0 = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{56D49EFB-F0D3-423E-A0BC-FFA98C74DDC6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,20 +22,38 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoApp.Views;
-using System;
+using Contoso.App.Diagnostics;
+using Contoso.App.Views;
+using Contoso.Repository;
+using Contoso.Repository.Rest;
+using Contoso.Repository.Sql;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.IO;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace ContosoApp
+namespace Contoso.App
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
     {
+        /// <summary>
+        /// Pipeline for interacting with backend service or database.
+        /// </summary>
+        public static IContosoRepository Repository { get; private set; }
+
+        /// <summary>
+        /// Service for collecting feedback and diagnostic data.
+        /// </summary>
+        public static DiagnosticService Diagnostics { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -46,36 +64,75 @@ namespace ContosoApp
         }
 
         /// <summary>
-        /// Invoked when the application is launched normally by the end user.  Other entry points
-        /// will be used such as when the application is launched to open a specific file.
+        /// Invoked when the application is launched normally by the end user.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            AppShell shell = Window.Current.Content as AppShell;
+            // Start app diagnostics.
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
-            if (shell == null)
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Diagnostics = new DiagnosticService();
+
+            // Load the database.
+
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
+                "data_source", out object dataSource))
             {
-                // Create a AppShell to act as the navigation context and navigate to the first page
-                shell = new AppShell();
-                // Set the default language
-                shell.Language = ApplicationLanguages.Languages[0];
-                shell.AppFrame.NavigationFailed += (s, args) =>
-                    new Exception("Failed to load Page " + args.SourcePageType.FullName);
+                switch (dataSource.ToString())
+                {
+                    case "Rest": UseRest(); break;
+                    default: UseSqlite(); break; 
+                }
             }
-            // Place our app shell in the current Window
+            else
+            {
+                UseSqlite();
+            }
+
+            // Prepare the app shell and window content.
+
+            AppShell shell = Window.Current.Content as AppShell ?? new AppShell();
+            shell.Language = ApplicationLanguages.Languages[0];
             Window.Current.Content = shell;
+
             if (shell.AppFrame.Content == null)
             {
                 // When the navigation stack isn't restored, navigate to the first page
                 // suppressing the initial entrance animation.
-                shell.AppFrame.Navigate(typeof(CustomerListPage), e.Arguments, 
+
+                shell.AppFrame.Navigate(typeof(CustomerListPage), e.Arguments,
                     new SuppressNavigationTransitionInfo());
             }
-            // Ensure the current window is active
+
             Window.Current.Activate();
+            Diagnostics.TrackLaunch(stopwatch.Elapsed);
+        }
+
+        /// <summary>
+        /// Configures the app to use the Sqlite data source. If no existing Sqlite database exists, 
+        /// loads a demo database filled with fake data so the app has content.
+        /// </summary>
+        public static void UseSqlite()
+        {
+            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Contoso.db";
+            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\Contoso.db";
+            if (!File.Exists(databasePath))
+            {
+                File.Copy(demoDatabasePath, databasePath);
+            }
+            var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
+                "Data Source=" + databasePath);
+            Repository = new SqlContosoRepository(dbOptions);
+        }
+
+        /// <summary>
+        /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
+        /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
+        /// </summary>
+        public static void UseRest()
+        {
+            Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/"); 
         }
     }
 }

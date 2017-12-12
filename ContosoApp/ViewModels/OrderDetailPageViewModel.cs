@@ -22,8 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
-using Microsoft.Toolkit.Uwp;
+using Contoso.Models;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -33,7 +32,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace ContosoApp.ViewModels
+namespace Contoso.App.ViewModels
 {
     /// <summary>
     /// Encapsulates data for the Order detail page. 
@@ -86,10 +85,7 @@ namespace ContosoApp.ViewModels
         /// <param name="customerId">The ID of the customer to load.</param>
         private async void LoadCustomer(Guid customerId)
         {
-
-            var db = new ContosoDataSource();
-            var customer = await db.Customers.GetAsync(customerId);
-
+            var customer = await App.Repository.Customers.GetAsync(customerId);
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 Customer = customer;
@@ -103,9 +99,7 @@ namespace ContosoApp.ViewModels
         /// <returns>The order, if it exists; otherwise, null. </returns>
         private static async Task<Order> GetOrder(Guid orderId)
         {
-            var db = new ContosoDataSource();
-            var order = await db.Orders.GetAsync(orderId);
-            return order;
+            return await App.Repository.Orders.GetAsync(orderId); 
         }
 
         /// <summary>
@@ -510,8 +504,7 @@ namespace ContosoApp.ViewModels
             Order result = null;
             try
             {
-                var db = new ContosoDataSource();
-                result = await db.Orders.PostAsync(_order);
+                result = await App.Repository.Orders.UpsertAsync(_order);
             }
             catch (Exception ex)
             {
@@ -547,8 +540,7 @@ namespace ContosoApp.ViewModels
 
             if (!string.IsNullOrEmpty(queryText))
             {
-                var dataSource = new ContosoModels.ContosoDataSource();
-                var suggestions = await dataSource.Products.GetAsync(queryText);
+                var suggestions = await App.Repository.Products.GetAsync(queryText);
 
                 foreach (Product p in suggestions)
                 {

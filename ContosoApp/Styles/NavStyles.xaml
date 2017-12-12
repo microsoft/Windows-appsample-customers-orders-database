@@ -18,19 +18,23 @@
     THE SOFTWARE.
 -->
 
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:ContosoApp.Styles">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Contoso.App.Styles">
 
     <!--
         This resource doesn't exist in Generic.xaml prior to SDK version 14393, so we copy
         it here so it's available when the app runs on earlier versions of Windows 10.
     -->
-    <StaticResource x:Key="ListViewItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush"/>
+    <StaticResource
+        x:Key="ListViewItemForegroundPointerOver"
+        ResourceKey="SystemControlHighlightAltBaseHighBrush" />
 
-    <SolidColorBrush x:Key="SplitViewLightDismissOverlayBackground"
-                     Opacity="0.6"
-                     Color="{ThemeResource SystemChromeLowColor}"/>
+    <SolidColorBrush
+        x:Key="SplitViewLightDismissOverlayBackground"
+        Opacity="0.6"
+        Color="{ThemeResource SystemChromeLowColor}" />
 
     <!--  window width adaptive snap points  -->
     <x:Double x:Key="MinWindowSnapPoint">0</x:Double>
@@ -40,87 +44,132 @@
     <!--  padding between window title bar and content  -->
     <x:Double x:Key="DesktopWindowTopPadding">12</x:Double>
 
-    <Style x:Key="SplitViewTogglePaneButtonStyle" TargetType="ToggleButton">
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
-        <Setter Property="MinHeight" Value="48"/>
-        <Setter Property="MinWidth" Value="48"/>
-        <Setter Property="Margin" Value="0,4,0,0"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
-        <Setter Property="Content" Value="&#xE700;"/>
-        <Setter Property="AutomationProperties.Name" Value="Navigation"/>
-        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+    <Style
+        x:Key="SplitViewTogglePaneButtonStyle"
+        TargetType="ToggleButton">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="Margin" Value="0,4,0,0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="Content" Value="&#xE700;" />
+        <Setter Property="AutomationProperties.Name" Value="Navigation" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Grid x:Name="LayoutRoot" Background="{TemplateBinding Background}">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          Content="{TemplateBinding Content}"/>
+                    <Grid
+                        x:Name="LayoutRoot"
+                        Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Content="{TemplateBinding Content}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="LayoutRoot"
+                                            Storyboard.TargetProperty="(Grid.Background)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="LayoutRoot"
+                                            Storyboard.TargetProperty="(Grid.Background)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="(TextBlock.Foreground)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Checked"/>
+                                <VisualState x:Name="Checked" />
                                 <VisualState x:Name="CheckedPointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="LayoutRoot"
+                                            Storyboard.TargetProperty="(Grid.Background)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="CheckedPressed">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="(Grid.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="LayoutRoot"
+                                            Storyboard.TargetProperty="(Grid.Background)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="CheckedDisabled">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="(TextBlock.Foreground)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="(TextBlock.Foreground)">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlDisabledBaseLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -132,61 +181,86 @@
         </Setter>
     </Style>
 
-    <Style x:Key="SplitViewPaneButtonStyle" TargetType="Button">
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="MinHeight" Value="48"/>
-        <Setter Property="MinWidth" Value="48"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+    <Style
+        x:Key="SplitViewPaneButtonStyle"
+        TargetType="Button">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="MinHeight" Value="48" />
+        <Setter Property="MinWidth" Value="48" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          Padding="{TemplateBinding Padding}"/>
+                    <Grid
+                        x:Name="RootGrid"
+                        Background="{TemplateBinding Background}">
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="RootGrid"
+                                            Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="RootGrid" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightListMediumBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="RootGrid"
+                                            Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="RootGrid" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="RootGrid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="RootGrid"
+                                            Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="Foreground">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetName="ContentPresenter"
+                                            Storyboard.TargetProperty="BorderBrush">
+                                            <DiscreteObjectKeyFrame
+                                                KeyTime="0"
+                                                Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -198,44 +272,49 @@
         </Setter>
     </Style>
 
-    <Style x:Key="PageTitleTextBlockStyle"
-           BasedOn="{StaticResource TitleTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="FontSize" Value="28"/>
-        <Setter Property="TextWrapping" Value="NoWrap"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Margin" Value="0,4,0,0"/>
+    <Style
+        x:Key="PageTitleTextBlockStyle"
+        BasedOn="{StaticResource TitleTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,4,0,0" />
     </Style>
 
-    <Style x:Key="NarrowPageTitleTextBlockStyle"
-           BasedOn="{StaticResource PageTitleTextBlockStyle}"
-           TargetType="TextBlock">
-        <Setter Property="Margin" Value="0,4,0,0"/>
+    <Style
+        x:Key="NarrowPageTitleTextBlockStyle"
+        BasedOn="{StaticResource PageTitleTextBlockStyle}"
+        TargetType="TextBlock">
+        <Setter Property="Margin" Value="0,4,0,0" />
     </Style>
 
-    <Style x:Key="NavMenuItemContainerStyle" TargetType="ListViewItem">
-        <Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}"/>
-        <Setter Property="Height" Value="48"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="UseSystemFocusVisuals" Value="True"/>
+    <Style
+        x:Key="NavMenuItemContainerStyle"
+        TargetType="ListViewItem">
+        <Setter Property="MinWidth" Value="{StaticResource SplitViewCompactPaneThemeLength}" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <ListViewItemPresenter HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                           ContentMargin="{TemplateBinding Padding}"
-                                           ContentTransitions="{TemplateBinding ContentTransitions}"
-                                           Control.IsTemplateFocusTarget="True"
-                                           DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
-                                           PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                           PointerOverForeground="{ThemeResource ListViewItemForegroundPointerOver}"
-                                           PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                           SelectedBackground="Transparent"
-                                           SelectedForeground="{ThemeResource SystemControlForegroundAccentBrush}"
-                                           SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
-                                           SelectedPressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                           SelectionCheckMarkVisualEnabled="False"/>
+                    <ListViewItemPresenter
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        ContentMargin="{TemplateBinding Padding}"
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        Control.IsTemplateFocusTarget="True"
+                        DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                        PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                        PointerOverForeground="{ThemeResource ListViewItemForegroundPointerOver}"
+                        PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                        SelectedBackground="Transparent"
+                        SelectedForeground="{ThemeResource SystemControlForegroundAccentBrush}"
+                        SelectedPointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
+                        SelectedPressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
+                        SelectionCheckMarkVisualEnabled="False" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

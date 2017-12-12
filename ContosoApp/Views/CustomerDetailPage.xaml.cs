@@ -22,15 +22,15 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
-using ContosoApp.ViewModels;
+using Contoso.Models;
+using Contoso.App.ViewModels;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-namespace ContosoApp.Views
+namespace Contoso.App.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -114,8 +114,7 @@ namespace ContosoApp.Views
                 }
                 else
                 {
-                    ContosoDataSource data = new ContosoDataSource();
-                    sender.ItemsSource = await data.Customers.GetAsync(sender.Text);
+                    sender.ItemsSource = await App.Repository.Customers.GetAsync(sender.Text);
                 }
             }
         }

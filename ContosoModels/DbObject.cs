@@ -24,7 +24,7 @@
 
 using System;
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Base class for database entities.

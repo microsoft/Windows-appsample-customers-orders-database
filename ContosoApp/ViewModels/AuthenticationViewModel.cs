@@ -40,7 +40,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace ContosoApp.ViewModels
+namespace Contoso.App.ViewModels
 {
     /// <summary>
     /// Handles user authentication and getting user info from the Microsoft Graph API.
@@ -209,7 +209,7 @@ namespace ContosoApp.ViewModels
         {
             var provider = await GetAadProviderAsync();
             var request = new WebTokenRequest(provider, "User.Read", 
-                ContosoModels.Constants.AccountClientId);
+                Repository.Constants.AccountClientId);
             request.Properties.Add("resource", "https://graph.microsoft.com");
             var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
             if (result.ResponseStatus != WebTokenRequestStatus.Success)

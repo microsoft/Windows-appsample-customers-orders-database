@@ -26,7 +26,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     /// <summary>
     /// This class converts a Boolean value into a Visibility value (if the value is null or empty returns a collapsed value).

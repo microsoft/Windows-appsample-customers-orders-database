@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="Contoso.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:ContosoApp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="using:Contoso.App.UserControls"
+    mc:Ignorable="d">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+            <uc:PageHeader
+                x:Name="PageTitle"
+                Margin="0,0,0,20">
+                <uc:PageHeader.HeaderContent>
+                    <TextBlock
+                        Style="{StaticResource PageTitleTextBlockStyle}"
+                        Text="Settings" />
+                </uc:PageHeader.HeaderContent>
+            </uc:PageHeader>
+
+            <TextBlock
+                Margin="0,0,0,5"
+                Text="Diagnostic data" />
+            <ToggleSwitch
+                x:Name="TelemetryToggleSwitch"
+                IsOn="{x:Bind IsDiagnosticsEnabled, Mode=TwoWay}" />
+            <TextBlock Text="Help us improve our code samples by sending diagnostic data." />
+
+            <TextBlock
+                Margin="0,25,0,5"
+                Text="Data source" />
+            <RadioButton
+                x:Name="SqliteRadio"
+                Checked="OnDataSourceChanged"
+                Content="Sqlite (Local)"
+                GroupName="DataSource"
+                Tag="Sqlite" />
+            <RadioButton
+                x:Name="RestRadio"
+                Checked="OnDataSourceChanged"
+                Content="REST (Azure)"
+                GroupName="DataSource"
+                Tag="Rest" />
+            <TextBlock Text="Data is read-only while using REST unless you deploy your own service. See the README for details." />
+
+            <HyperlinkButton
+                x:Name="PrivacyButton"
+                Margin="0,25,0,0"
+                Click="OnPrivacyButtonClick"
+                Content="Privacy statement" />
+            <HyperlinkButton
+                x:Name="LicenseButton"
+                Click="OnLicenseButtonClick"
+                Content="Additional license terms" />
+            <HyperlinkButton
+                x:Name="GitHubButton"
+                Click="OnCodeButtonClick"
+                Content="GitHub repository" />
+        </StackPanel>
+    </Grid>
+</Page>

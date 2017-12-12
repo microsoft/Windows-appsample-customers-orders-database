@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "ContosoService": {
+    "Contoso.Service": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

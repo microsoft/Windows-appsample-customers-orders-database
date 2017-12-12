@@ -26,7 +26,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
 
-namespace ContosoModels
+namespace Contoso.Models
 {
     /// <summary>
     /// Represents a customer.

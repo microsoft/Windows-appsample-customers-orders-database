@@ -27,7 +27,7 @@ using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ContosoApp.Navigation
+namespace Contoso.App.Navigation
 {
     /// <summary>
     /// Data to represent an item in the nav menu.

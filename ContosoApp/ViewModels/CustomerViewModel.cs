@@ -22,11 +22,11 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using ContosoModels;
+using Contoso.Models;
 using System.Text.RegularExpressions;
 using Telerik.Core;
 
-namespace ContosoApp.ViewModels
+namespace Contoso.App.ViewModels
 {
     /// <summary>
     /// Wrapper for the Customer model in the master/details Customers page.

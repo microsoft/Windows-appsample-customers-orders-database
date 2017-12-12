@@ -25,7 +25,7 @@
 using System;
 using Windows.UI.Xaml.Data;
 
-namespace ContosoApp.ValueConverters
+namespace Contoso.App.ValueConverters
 {
     // Converts a generic value to a specified value.
     public class GenericConverter : IValueConverter
