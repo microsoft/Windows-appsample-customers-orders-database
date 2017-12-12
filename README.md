@@ -4,8 +4,8 @@
 
 # Customers Orders Database sample 
 
-A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, UI controls (including a data grid), 
-Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. 
+A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, 
+UI controls (including a data grid), Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. 
 The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso. 
 
 This sample is for the Universal Windows Platform (UWP). 
@@ -14,9 +14,11 @@ This sample is for the Universal Windows Platform (UWP).
 
 ## What's new
 
-- Local database connection using Sqlite
-- Use of the repository pattern for easier testing and swapping between data sources with minimal code changes
-- Extended splash screen 
+- Local database connection using Sqlite. 
+- Use of the repository pattern for easier testing and swapping between data sources with minimal code changes. 
+- Splash screen and logo branding. 
+- Diagnostic and feedback data collection control.
+- Code quality improvements. 
 
 ## Features
 
