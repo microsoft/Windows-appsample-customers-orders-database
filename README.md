@@ -4,11 +4,12 @@
 
 # Customers Orders Database sample 
 
-A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, 
-UI controls (including a data grid), Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. 
-The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso. 
+A UWP (Universal Windows Platform) sample app showcasing features useful to enterprise developers, like 
+Azure Active Directory (AAD) authentication, UI controls (including a data grid), Sqlite and SQL Azure database integration, 
+Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, 
+and products for the fictitious company Contoso. 
 
-This sample is for the Universal Windows Platform (UWP). 
+[Download and try it now from the Microsoft Store](https://www.microsoft.com/store/apps/9PF1WCV13501). Visual Studio not required. 
 
 ![ContosoApp screenshot 1](screenshot1.png)
 
