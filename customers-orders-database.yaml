@@ -1,0 +1,12 @@
+### YamlMime:Sample
+sample:
+- name: Customers orders database sample
+  description: A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, 
+UI controls (including a data grid), Sqlite and SQL Azure database integration, Entity Framework, and cloud API services.
+  generateZip: false
+  author: karler
+  languages:
+  - csharp
+  - xaml
+  technologies:
+  - windows
