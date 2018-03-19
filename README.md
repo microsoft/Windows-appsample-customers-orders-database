@@ -41,13 +41,13 @@ However, in order to debug and explore the full functionality of the app, you'll
 
 ### Prepare your environment
 
-This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK), and the .NET Core 2.0 SDK.
+This sample requires Visual Studio 2017 and the latest versions of the Windows 10 Software Development Kit (SDK) and the .NET Core SDK.
 
 * [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
-* [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
+* [Get the .NET Core SDK](https://www.microsoft.com/net/download/windows)
 
 Additionally, to receive the latest updates to Windows and the development tools, and to help shape their development, join 
-the [Windows Insider Program](https://insider.windows.com/ "Become a Windows Insider").
+the [Windows Insider Program](https://insider.windows.com).
 
 > *Note* If you are using Visual Studio 2015, a previous version of this sample which doesn't require Visual Studio 2017 is 
 available in the git commit history for this repo.
