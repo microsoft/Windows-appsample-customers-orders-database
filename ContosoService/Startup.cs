@@ -47,11 +47,16 @@ namespace Contoso.Service
         /// </summary>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ContosoContext>(x => x.UseSqlServer(
-                Constants.SqlAzureConnectionString)); 
-            services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
-            services.AddScoped<IOrderRepository, SqlOrderRepository>();
-            services.AddScoped<IProductRepository, SqlProductRepository>();
+            var db = new ContosoContext(new DbContextOptionsBuilder<ContosoContext>()
+                .UseSqlServer(Constants.SqlAzureConnectionString).Options);
+
+            services.AddScoped<ICustomerRepository, SqlCustomerRepository>(x =>
+                new SqlCustomerRepository(db));
+            services.AddScoped<IOrderRepository, SqlOrderRepository>(x =>
+                new SqlOrderRepository(db));
+            services.AddScoped<IProductRepository, SqlProductRepository>(x =>
+                new SqlProductRepository(db)); 
+
             services.AddMvc();
         }
 

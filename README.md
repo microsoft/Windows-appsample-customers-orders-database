@@ -4,11 +4,12 @@
 
 # Customers Orders Database sample 
 
-A UWP sample app showcasing features useful to enterprise developers, like Azure Active Directory (AAD) authentication, 
-UI controls (including a data grid), Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. 
-The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso. 
+A UWP (Universal Windows Platform) sample app showcasing features useful to enterprise developers, like 
+Azure Active Directory (AAD) authentication, UI controls (including a data grid), Sqlite and SQL Azure database integration, 
+Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, 
+and products for the fictitious company Contoso. 
 
-This sample is for the Universal Windows Platform (UWP). 
+[Download and try it now from the Microsoft Store](https://www.microsoft.com/store/apps/9PF1WCV13501). Visual Studio not required. 
 
 ![ContosoApp screenshot 1](screenshot1.png)
 
@@ -37,17 +38,22 @@ This sample is designed to connect to an instance of Azure Active Directory for 
 To get you started right away, we've provided some demo data and a test service you can connect to. 
 However, in order to debug and explore the full functionality of the app, you'll need to deploy your own instance to Azure.
 
+> Note: This sample collects diagnostic data, like what pages you visit in the app and how long you spend looking at them. 
+We use this information to make our code samples better. No information is stored that can personally identify you. 
+To opt out, use the settings page in the app or comment out the source code. 
+You can also review Microsoft's [privacy policy](https://go.microsoft.com/fwlink/?LinkId=521839). 
+
 ### Quick start 
 
 ### Prepare your environment
 
-This sample requires Visual Studio 2017 and the latest versions of the Windows 10 Software Development Kit (SDK) and the .NET Core SDK.
+This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK), and the .NET Core 2.0 SDK.
 
 * [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
-* [Get the .NET Core SDK](https://www.microsoft.com/net/download/windows)
+* [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
 
 Additionally, to receive the latest updates to Windows and the development tools, and to help shape their development, join 
-the [Windows Insider Program](https://insider.windows.com).
+the [Windows Insider Program](https://insider.windows.com/ "Become a Windows Insider").
 
 > *Note* If you are using Visual Studio 2015, a previous version of this sample which doesn't require Visual Studio 2017 is 
 available in the git commit history for this repo.
