@@ -11,3 +11,4 @@ UI controls (including a data grid), Sqlite and SQL Azure database integration, 
   - xaml
   technologies:
   - windows
+  vssolution: Contoso.sln
