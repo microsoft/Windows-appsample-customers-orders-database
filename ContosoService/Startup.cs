@@ -35,10 +35,7 @@ namespace Contoso.Service
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -49,14 +46,9 @@ namespace Contoso.Service
         {
             var db = new ContosoContext(new DbContextOptionsBuilder<ContosoContext>()
                 .UseSqlServer(Constants.SqlAzureConnectionString).Options);
-
-            services.AddScoped<ICustomerRepository, SqlCustomerRepository>(x =>
-                new SqlCustomerRepository(db));
-            services.AddScoped<IOrderRepository, SqlOrderRepository>(x =>
-                new SqlOrderRepository(db));
-            services.AddScoped<IProductRepository, SqlProductRepository>(x =>
-                new SqlProductRepository(db)); 
-
+            services.AddScoped<ICustomerRepository, SqlCustomerRepository>(_ => new SqlCustomerRepository(db));
+            services.AddScoped<IOrderRepository, SqlOrderRepository>(_ => new SqlOrderRepository(db));
+            services.AddScoped<IProductRepository, SqlProductRepository>(_ => new SqlProductRepository(db)); 
             services.AddMvc();
         }
 

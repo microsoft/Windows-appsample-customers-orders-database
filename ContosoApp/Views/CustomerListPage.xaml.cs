@@ -22,15 +22,16 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.App.ViewModels;
+using System;
 using System.Linq;
+using Contoso.App.ViewModels;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.Foundation.Metadata;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
-using System;
-using Windows.UI.Core;
-using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace Contoso.App.Views
 {
@@ -46,15 +47,10 @@ namespace Contoso.App.Views
         {
             InitializeComponent();
             DataContext = ViewModel;
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
-            {
-                Window.Current.SizeChanged += CurrentWindow_SizeChanged;
-            }
+            Window.Current.SizeChanged += CurrentWindow_SizeChanged;
         }
 
-        public CustomerListPageViewModel ViewModel { get; set; } =
-            new CustomerListPageViewModel();
-
+        public CustomerListPageViewModel ViewModel { get; set; } = new CustomerListPageViewModel();
 
         private void CurrentWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
@@ -72,8 +68,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Navigates to a blank customer details page for the user to fill in.
         /// </summary>
-        private void CreateCustomer_Click(object sender, RoutedEventArgs e) =>
-            GoToDetailsPage(null);
+        private void CreateCustomer_Click(object sender, RoutedEventArgs e) => GoToDetailsPage(null);
 
         private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
@@ -105,17 +100,17 @@ namespace Contoso.App.Views
                     string[] parameters = sender.Text.Split(new char[] { ' ' },
                         StringSplitOptions.RemoveEmptyEntries);
                     sender.ItemsSource = ViewModel.Customers
-                        .Where(x => parameters.Any(y =>
-                            x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
-                        .OrderByDescending(x => parameters.Count(y =>
-                            x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                            x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
-                        .Select(x => $"{x.FirstName} {x.LastName}"); 
+                        .Where(customer => parameters.Any(parameter =>
+                            customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                        .OrderByDescending(customer => parameters.Count(parameter =>
+                            customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                            customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                        .Select(customer => $"{customer.FirstName} {customer.LastName}"); 
                 }
             }
         }
@@ -133,17 +128,17 @@ namespace Contoso.App.Views
                 string[] parameters = sender.Text.Split(new char[] { ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
-                var matches = ViewModel.Customers.Where(x => parameters
-                    .Any(y =>
-                        x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
-                    .OrderByDescending(x => parameters.Count(y =>
-                        x.Address.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.FirstName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.LastName.StartsWith(y, StringComparison.OrdinalIgnoreCase) ||
-                        x.Company.StartsWith(y, StringComparison.OrdinalIgnoreCase)))
+                var matches = ViewModel.Customers.Where(customer => parameters
+                    .Any(parameter =>
+                        customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                    .OrderByDescending(customer => parameters.Count(parameter =>
+                        customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
                     .ToList(); 
 
                 await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
@@ -162,34 +157,20 @@ namespace Contoso.App.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
             {
-                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-                }
-                else
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-                }
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
             }
             else
             {
-                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-                {
-                    var lastCommand = mainCommandBar.PrimaryCommands.Last();
-
-                    mainCommandBar.PrimaryCommands.Remove(lastCommand);
-                    mainCommandBar.SecondaryCommands.Add(lastCommand);
-                }
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }
         }
 
         /// <summary>
         /// Menu flyout click control for selecting a customer and displaying details.
         /// </summary>
-        private void ViewDetails_Click(object sender, RoutedEventArgs e) =>
-            GoToDetailsPage(ViewModel.SelectedCustomer);
+        private void ViewDetails_Click(object sender, RoutedEventArgs e) => GoToDetailsPage(ViewModel.SelectedCustomer);
 
         /// <summary>
         /// Opens the order detail page for the user to create an order for the selected customer.
@@ -210,8 +191,7 @@ namespace Contoso.App.Views
         /// Navigates to the customer detail page for the provided customer.
         /// </summary>
         private void GoToDetailsPage(CustomerViewModel customer) =>
-            Frame.Navigate(typeof(CustomerDetailPage), customer,
-                new DrillInNavigationTransitionInfo());
+            Frame.Navigate(typeof(CustomerDetailPage), customer, new DrillInNavigationTransitionInfo());
 
         /// <summary>
         /// Navigates to the order detail page for the provided customer.
@@ -219,5 +199,7 @@ namespace Contoso.App.Views
         private void GoToOrderPage(CustomerViewModel customer) =>
             Frame.Navigate(typeof(OrderDetailPage), customer.Model);
 
+        private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
+            (sender as DataGrid).Sort(e.Column, ViewModel.Customers.Sort);
     }
 }

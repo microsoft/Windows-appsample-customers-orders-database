@@ -20,8 +20,7 @@
 
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Contoso.App.Styles">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--
         This resource doesn't exist in Generic.xaml prior to SDK version 14393, so we copy

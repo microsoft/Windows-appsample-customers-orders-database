@@ -29,6 +29,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace Contoso.App.Views
 {
@@ -38,11 +39,6 @@ namespace Contoso.App.Views
     public sealed partial class CustomerDetailPage : Page
     {
         /// <summary>
-        /// Used to bind the UI to the data.
-        /// </summary>
-        public CustomerDetailPageViewModel ViewModel { get; set; } = new CustomerDetailPageViewModel();
-
-        /// <summary>
         /// Initializes the page.
         /// </summary>
         public CustomerDetailPage()
@@ -51,25 +47,54 @@ namespace Contoso.App.Views
             DataContext = ViewModel;
         }
 
+        private CustomerDetailPageViewModel _viewModel = new CustomerDetailPageViewModel();
+
+        /// <summary>
+        /// Used to bind the UI to the data.
+        /// </summary>
+        public CustomerDetailPageViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
+                if (_viewModel != value)
+                {
+                    _viewModel.EditsCanceled -= EditsCanceled;
+                    _viewModel = value;
+                    if (_viewModel != null)
+                    {
+                        _viewModel.EditsCanceled += EditsCanceled;
+                    }
+                }
+            }
+        }
+
+        private void EditsCanceled(object sender, System.EventArgs e)
+        {
+            if (ViewModel.IsNewCustomer && Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            };
+        }
+
         /// <summary>
         /// Displays the selected customer data.
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            CustomerViewModel customer = e.Parameter as CustomerViewModel;
-            if (customer == null)
+            if (!(e.Parameter is CustomerViewModel customer))
             {
-                ViewModel = new CustomerDetailPageViewModel();
-                ViewModel.IsNewCustomer = true; 
-                ViewModel.Customer = new CustomerViewModel(new Customer()) { Validate = false }; 
+                ViewModel = new CustomerDetailPageViewModel
+                {
+                    IsNewCustomer = true,
+                    Customer = new CustomerViewModel(new Customer())
+                };
                 Bindings.Update();
-                PageHeaderText.Text = "New customer";
+                PageTitle.Text = "New customer";
             }
             else if (ViewModel.Customer != customer)
             {
-                ViewModel = new CustomerDetailPageViewModel();
-                ViewModel.Customer = customer;
-                ViewModel.Customer.Validate = false; 
+                ViewModel = new CustomerDetailPageViewModel { Customer = customer };
                 Bindings.Update();
             }
             base.OnNavigatedTo(e);
@@ -87,9 +112,7 @@ namespace Contoso.App.Views
 
         private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
-            UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
-
-            if (searchBox != null)
+            if (sender is UserControls.CollapsibleSearchBox searchBox)
             {
                 searchBox.AutoSuggestBox.QuerySubmitted += CustomerSearchBox_QuerySubmitted;
                 searchBox.AutoSuggestBox.TextChanged += CustomerSearchBox_TextChanged;
@@ -125,8 +148,7 @@ namespace Contoso.App.Views
         private void CustomerSearchBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            Customer customer = args.ChosenSuggestion as Customer;
-            if (customer != null)
+            if (args.ChosenSuggestion is Customer customer)
             {
                 Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel(customer));
             }
@@ -137,21 +159,18 @@ namespace Contoso.App.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
             {
-                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-                }
-                else
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-                }
-
-                // Disable dynamic overflow on this page. There are only a few commands, and it causes
-                // layout problems when save and cancel commands are shown and hidden.
-                (sender as CommandBar).IsDynamicOverflowEnabled = false;
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
             }
+            else
+            {
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
+            }
+
+            // Disable dynamic overflow on this page. There are only a few commands, and it causes
+            // layout problems when save and cancel commands are shown and hidden.
+            (sender as CommandBar).IsDynamicOverflowEnabled = false;
         }
 
         /// <summary>
@@ -165,15 +184,9 @@ namespace Contoso.App.Views
         /// Adds a new order for the customer.
         /// </summary>
         private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer);  
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer);
 
-        private void CancelEditButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel.IsNewCustomer == true
-                && Frame.CanGoBack == true)
-            {
-                Frame.GoBack();
-            }
-        }
+        private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
+            (sender as DataGrid).Sort(e.Column, ViewModel.Orders.Sort);
     }
 }

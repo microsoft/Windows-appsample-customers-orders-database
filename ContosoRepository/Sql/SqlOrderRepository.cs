@@ -39,68 +39,59 @@ namespace Contoso.Repository.Sql
     {
         private readonly ContosoContext _db; 
 
-        public SqlOrderRepository(ContosoContext db)
-        {
-            _db = db;
-        }
+        public SqlOrderRepository(ContosoContext db) => _db = db;
 
-        public async Task<IEnumerable<Order>> GetAsync()
-        {
-            return await _db.Orders
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
+        public async Task<IEnumerable<Order>> GetAsync() =>
+            await _db.Orders
+                .Include(order => order.LineItems)
+                .ThenInclude(lineItem => lineItem.Product)
                 .AsNoTracking()
                 .ToListAsync();
-        }
 
-        public async Task<Order> GetAsync(Guid id)
-        {
-            return await _db.Orders
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
+        public async Task<Order> GetAsync(Guid id) =>
+            await _db.Orders
+                .Include(order => order.LineItems)
+                .ThenInclude(lineItem => lineItem.Product)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
-        }
+                .FirstOrDefaultAsync(order => order.Id == id);
 
-        public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid id)
-        {
-            return await _db.Orders
-                .Where(x => x.CustomerId == id)
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
+        public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid id) =>
+            await _db.Orders
+                .Where(order => order.CustomerId == id)
+                .Include(order => order.LineItems)
+                .ThenInclude(lineItem => lineItem.Product)
                 .AsNoTracking()
                 .ToListAsync();
-        }
 
         public async Task<IEnumerable<Order>> GetAsync(string value)
         {
             string[] parameters = value.Split(' ');
             return await _db.Orders
-                .Include(x => x.Customer)
-                .Include(x => x.LineItems)
-                .ThenInclude(x => x.Product)
-                .Where(x => parameters
-                    .Any(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
-                .OrderByDescending(x => parameters
-                    .Count(y =>
-                        x.Address.StartsWith(y) ||
-                        x.Customer.FirstName.StartsWith(y) ||
-                        x.Customer.LastName.StartsWith(y) ||
-                        x.InvoiceNumber.ToString().StartsWith(y)))
+                .Include(order => order.Customer)
+                .Include(order => order.LineItems)
+                .ThenInclude(lineItem => lineItem.Product)
+                .Where(order => parameters
+                    .Any(parameter =>
+                        order.Address.StartsWith(parameter) ||
+                        order.Customer.FirstName.StartsWith(parameter) ||
+                        order.Customer.LastName.StartsWith(parameter) ||
+                        order.InvoiceNumber.ToString().StartsWith(parameter)))
+                .OrderByDescending(order => parameters
+                    .Count(parameter =>
+                        order.Address.StartsWith(parameter) ||
+                        order.Customer.FirstName.StartsWith(parameter) ||
+                        order.Customer.LastName.StartsWith(parameter) ||
+                        order.InvoiceNumber.ToString().StartsWith(parameter)))
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<Order> UpsertAsync(Order order)
         {
-            var existing = await _db.Orders.FirstOrDefaultAsync(x => x.Id == order.Id);
+            var existing = await _db.Orders.FirstOrDefaultAsync(_order => _order.Id == order.Id);
             if (null == existing)
             {
-                order.InvoiceNumber = _db.Orders.Max(x => x.InvoiceNumber) + 1;
+                order.InvoiceNumber = _db.Orders.Max(_order => _order.InvoiceNumber) + 1;
                 _db.Orders.Add(order);
             }
             else

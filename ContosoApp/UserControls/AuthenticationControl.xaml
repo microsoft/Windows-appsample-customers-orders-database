@@ -22,31 +22,24 @@
     x:Class="Contoso.App.UserControls.AuthenticationControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="using:Contoso.App.ValueConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Contoso.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewModels="using:Contoso.App.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converter:BooleanToVisibilityConverter x:Key="boolToVisConverter" />
-
         <Style
             x:Key="SplitViewPaneButtonStyle"
             TargetType="Button">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="Transparent" />
-            <!--<Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}"/>-->
             <Setter Property="FontSize" Value="15" />
             <Setter Property="MinHeight" Value="48" />
             <Setter Property="MinWidth" Value="48" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="UseSystemFocusVisuals" Value="True" />
-            <!--<Setter Property="FocusVisualMargin" Value="0"/>-->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -65,9 +58,6 @@
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
-                                        <Storyboard>
-                                            <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
-                                        </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
@@ -78,7 +68,6 @@
                                                     KeyTime="0"
                                                     Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <!--<PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
@@ -90,7 +79,6 @@
                                                     KeyTime="0"
                                                     Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <!--<PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>-->
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
@@ -137,25 +125,18 @@
             HorizontalContentAlignment="Left"
             Click="{x:Bind ViewModel.LoginClick}"
             Style="{StaticResource SplitViewPaneButtonStyle}"
-            Visibility="{Binding ShowWelcome, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+            Visibility="{Binding ShowWelcome, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48" />
-                    <ColumnDefinition Width="8" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
                 <FontIcon
-                    Grid.RowSpan="2"
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="16"
                     Glyph="&#xE1E2;" />
                 <TextBlock
-                    Grid.RowSpan="2"
-                    Grid.Column="2"
+                    Grid.Column="1"
                     VerticalAlignment="Center"
                     Text="Sign in" />
             </Grid>
@@ -170,7 +151,7 @@
             HorizontalContentAlignment="Left"
             Click="{x:Bind ViewModel.LogoutClick}"
             Style="{StaticResource SplitViewPaneButtonStyle}"
-            Visibility="{Binding ShowData, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+            Visibility="{Binding ShowData, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48" />
@@ -203,9 +184,8 @@
             </Grid>
         </Button>
 
-
         <!--  Loading  -->
-        <Grid Visibility="{Binding ShowLoading, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+        <Grid Visibility="{Binding ShowLoading, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="8" />
@@ -228,7 +208,7 @@
         </Grid>
 
         <!--  Error  -->
-        <Grid Visibility="{Binding ShowError, Converter={StaticResource boolToVisConverter}, Mode=OneWay}">
+        <Grid Visibility="{Binding ShowError, Mode=OneWay}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="8" />
@@ -246,7 +226,8 @@
                 Grid.RowSpan="2"
                 Grid.Column="2"
                 VerticalAlignment="Center"
-                Text=":( Something went wrong." />
+                Margin="-8,0,0,0"
+                Text="Login failed" />
         </Grid>
 
     </Grid>

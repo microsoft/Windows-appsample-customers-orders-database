@@ -59,10 +59,14 @@ namespace Contoso.App.ViewModels
         /// support CallerMemberName.</param>
         /// <returns>True if the value was changed, false if the existing value matched the
         /// desired value.</returns>
-        protected bool SetProperty<T>(ref T storage, T value,
+        protected bool Set<T>(ref T storage, T value,
             [CallerMemberName] String propertyName = null)
         {
-            if (object.Equals(storage, value)) return false;
+            if (Equals(storage, value))
+            {
+                return false;
+            }
+
             storage = value;
             OnPropertyChanged(propertyName);
             return true;

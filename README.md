@@ -15,10 +15,9 @@ and products for the fictitious company Contoso.
 
 ## What's new
 
-- Local database connection using Sqlite. 
-- Use of the repository pattern for easier testing and swapping between data sources with minimal code changes. 
-- Splash screen and logo branding. 
-- Diagnostic and feedback data collection control.
+- Use of new controls like [DataGrid](https://docs.microsoft.com/windows/communitytoolkit/controls/datagrid), 
+[NavigationView](https://docs.microsoft.com/uwp/api/windows.ui.xaml.controls.navigationview), and 
+[Expander](https://docs.microsoft.com/windows/communitytoolkit/controls/expander).
 - Code quality improvements. 
 
 ## Features
@@ -26,7 +25,7 @@ and products for the fictitious company Contoso.
 This sample highlights: 
 
 - The master/details UI pattern
-- An editable DataGrid with input validation
+- An editable DataGrid control
 - Form layouts
 - Authenticating and obtaining user info using Azure Active Directory (AAD)
 - Using the repository pattern to connect to Sqlite or SQL Azure databases
@@ -38,16 +37,11 @@ This sample is designed to connect to an instance of Azure Active Directory for 
 To get you started right away, we've provided some demo data and a test service you can connect to. 
 However, in order to debug and explore the full functionality of the app, you'll need to deploy your own instance to Azure.
 
-> Note: This sample collects diagnostic data, like what pages you visit in the app and how long you spend looking at them. 
-We use this information to make our code samples better. No information is stored that can personally identify you. 
-To opt out, use the settings page in the app or comment out the source code. 
-You can also review Microsoft's [privacy policy](https://go.microsoft.com/fwlink/?LinkId=521839). 
-
 ### Quick start 
 
 ### Prepare your environment
 
-This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK), and the .NET Core 2.0 SDK.
+This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK) (version 16299 or higher), and the .NET Core 2.0 SDK.
 
 * [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
 * [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
@@ -60,7 +54,7 @@ available in the git commit history for this repo.
 
 ### Run
 
-Set your startup project as **Contoso.App**, the architecture to x86, and press F5 to run.
+Set your startup project as **Contoso.App**, the architecture to x86 or x64, and press F5 to run.
 
 ### Complete setup
 
@@ -84,8 +78,6 @@ If you're only interested in specific tasks and don't want to browse or run the 
 
 - Authentication, user info, and Microsoft Graph: [AuthenticationControl.xaml](ContosoApp/UserControls/AuthenticationControl.xaml) 
 and [AuthenticationViewModel.cs](ContosoApp/ViewModels/AuthenticationViewModel.cs)
-- App shell and navigation menu: [AppShell.xaml](ContosoApp/AppShell.xaml), [NavMenuItem.cs](ContosoApp/Navigation/NavMenuItem.cs), 
-and [NavMenuListView.cs](ContosoApp/Navigation/NavMenuListView.cs)
 - Master/details and form layouts UI: [CustomerListPage.xaml](ContosoApp/Views/CustomerListPage.xaml), 
 [CustomerListPageViewModel.cs](ContosoApp/ViewModels/CustomerListPageViewModel.cs), [CustomerDetailPage.xaml](ContosoApp/Views/CustomerDetailPage.xaml), 
 [CustomerDetailPageViewModel.cs](ContosoApp/ViewModels/CustomerDetailsPageViewModel.cs), [OrderListPage.xaml](ContosoApp/Views/OrderListPage.xaml), 
@@ -99,11 +91,11 @@ and [NavMenuListView.cs](ContosoApp/Navigation/NavMenuListView.cs)
 
 This sample demonstrates several flavors of the master/details pattern (side-by-side and stacked). 
 The Customers list screen displays a customer list and a details overlay that lets the user view and edit a subset of customer data. 
-The user can double-click to go to the full customer details screen, which shows additional data (such as the list of invoices 
+The user can click the "View details" button to go to the full customer details screen, which shows additional data (such as the list of invoices 
 associated with selected customer). 
 
 The Orders list screen displays a list of orders. It uses visual state triggers to selectively display an additional details 
-panel when the screen is large enough. To see the full details of an order or to edit it, the user double-clicks or selects "Edit" 
+panel when the screen is large enough. To see the full details of an order or to edit it, the user selects "Edit" 
 to go to the Order details screen. The Order details screen shows all the info for the order and enables editing. 
 The user can search for additional products to add to the invoice.
 
@@ -111,34 +103,17 @@ The user can search for additional products to add to the invoice.
 
 The two details screens show how to use headings, labels, and whitespace to organize controls into a form layout. Some controls used include:
 
-- Layout controls: [Grid](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Grid), 
+- Layout controls: [NavigationView](https://docs.microsoft.com/uwp/api/windows.ui.xaml.controls.navigationview), 
+[Grid](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Grid), 
 [RelativePanel](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.RelativePanel), 
-[StackPanel](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.StackPanel)
-- Data controls: [Telerik RadDataGrid](http://docs.telerik.com/devtools/universal-windows-platform/controls/raddatagrid/columns/datagrid-overview), 
+[StackPanel](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.StackPanel), 
+[Expander](https://docs.microsoft.com/windows/communitytoolkit/controls/expander)
+- Data controls: [DataGrid](https://docs.microsoft.com/windows/communitytoolkit/controls/datagrid), 
 [ListView](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.ListView), 
 [AutoSuggestBox](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.AutoSuggestBox)
 - Other controls: [Button](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.Button), 
 [HyperlinkButton](https://msdn.microsoft.com/library/windows/apps/Windows.UI.Xaml.Controls.HyperlinkButton), 
 [context menu](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/menus)
-
-### Telerik RadDataGrid with data validation
-
-This sample includes a Data Grid from Telerik's newly open-sourced UI for UWP controls library. You can find the source for these controls 
-on [GitHub](https://github.com/telerik/UI-For-UWP), as well as a package on [NuGet](https://www.nuget.org/packages/Telerik.UI.for.UniversalWindowsPlatform). 
-For help getting started, consult the [Telerik documentation](http://docs.telerik.com/devtools/universal-windows-platform/). 
-
-### Adaptive layouts
-
-This sample demonstrates how to use visual states to adapt the UI for screen sizes varying from a 5 inch phone to a large desktop display. 
-It also supports [Continuum for Phones](https://www.microsoft.com/windows/continuum), so you can use the app running on your 
-Windows 10 phone on your Windows 10 PC. The app supports all versions of Windows 10, but new features are available on the latest versions. 
-For example, the labels on command bar buttons are shown to the right of the icon on Windows 10, version 1607, but they are below 
-the icon on previous versions of Windows 10.
-
-## Known issues
-
-* Data validation for non-US international phone numbers is not working correctly; the numbers will always show as invalid. 
-This issue will be fixed in a future release.
 
 ## See also
 

@@ -55,34 +55,34 @@ namespace Contoso.Repository.Sql
         {
             return await _db.Customers
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(customer => customer.Id == id);
         }
 
         public async Task<IEnumerable<Customer>> GetAsync(string value)
         {
             string[] parameters = value.Split(' ');
             return await _db.Customers
-                .Where(x =>
-                    parameters.Any(y =>
-                        x.FirstName.StartsWith(y) ||
-                        x.LastName.StartsWith(y) ||
-                        x.Email.StartsWith(y) ||
-                        x.Phone.StartsWith(y) ||
-                        x.Address.StartsWith(y)))
-                .OrderByDescending(x =>
-                    parameters.Count(y =>
-                        x.FirstName.StartsWith(y) ||
-                        x.LastName.StartsWith(y) ||
-                        x.Email.StartsWith(y) ||
-                        x.Phone.StartsWith(y) ||
-                        x.Address.StartsWith(y)))
+                .Where(customer =>
+                    parameters.Any(parameter =>
+                        customer.FirstName.StartsWith(parameter) ||
+                        customer.LastName.StartsWith(parameter) ||
+                        customer.Email.StartsWith(parameter) ||
+                        customer.Phone.StartsWith(parameter) ||
+                        customer.Address.StartsWith(parameter)))
+                .OrderByDescending(customer =>
+                    parameters.Count(parameter =>
+                        customer.FirstName.StartsWith(parameter) ||
+                        customer.LastName.StartsWith(parameter) ||
+                        customer.Email.StartsWith(parameter) ||
+                        customer.Phone.StartsWith(parameter) ||
+                        customer.Address.StartsWith(parameter)))
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public async Task<Customer> UpsertAsync(Customer customer)
         {
-            var current = await _db.Customers.FirstOrDefaultAsync(x => x.Id == customer.Id);
+            var current = await _db.Customers.FirstOrDefaultAsync(_customer => _customer.Id == customer.Id);
             if (null == current)
             {
                 _db.Customers.Add(customer);
@@ -97,10 +97,10 @@ namespace Contoso.Repository.Sql
 
         public async Task DeleteAsync(Guid id)
         {
-            var customer = await _db.Customers.FirstOrDefaultAsync(x => x.Id == id);
+            var customer = await _db.Customers.FirstOrDefaultAsync(_customer => _customer.Id == id);
             if (null != customer)
             {
-                var orders = await _db.Orders.Where(x => x.CustomerId == id).ToListAsync();
+                var orders = await _db.Orders.Where(order => order.CustomerId == id).ToListAsync();
                 _db.Orders.RemoveRange(orders);
                 _db.Customers.Remove(customer);
                 await _db.SaveChangesAsync();

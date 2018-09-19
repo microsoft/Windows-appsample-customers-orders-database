@@ -55,19 +55,19 @@ namespace Contoso.Repository.Sql
         {
             return await _db.Products
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(product => product.Id == id);
         }
 
         public async Task<IEnumerable<Product>> GetAsync(string value)
         {
-            return await _db.Products.Where(x =>
-                x.Name.StartsWith(value) ||
-                x.Color.StartsWith(value) ||
-                x.DaysToManufacture.ToString().StartsWith(value) ||
-                x.StandardCost.ToString().StartsWith(value) ||
-                x.ListPrice.ToString().StartsWith(value) ||
-                x.Weight.ToString().StartsWith(value) ||
-                x.Description.StartsWith(value))
+            return await _db.Products.Where(product =>
+                product.Name.StartsWith(value) ||
+                product.Color.StartsWith(value) ||
+                product.DaysToManufacture.ToString().StartsWith(value) ||
+                product.StandardCost.ToString().StartsWith(value) ||
+                product.ListPrice.ToString().StartsWith(value) ||
+                product.Weight.ToString().StartsWith(value) ||
+                product.Description.StartsWith(value))
             .AsNoTracking()
             .ToListAsync();
         }

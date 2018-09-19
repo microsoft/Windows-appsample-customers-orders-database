@@ -89,13 +89,7 @@ namespace Contoso.Repository.Rest
         /// <summary>
         /// Constructs the base HTTP client, including correct authorization and API version headers.
         /// </summary>
-        private HttpClient BaseClient()
-        {
-            return new HttpClient
-            {
-                BaseAddress = new Uri(_baseUrl)
-            };
-        }
+        private HttpClient BaseClient() => new HttpClient { BaseAddress = new Uri(_baseUrl) };
 
         /// <summary>
         /// Helper class for formatting <see cref="StringContent"/> as UTF8 application/json. 

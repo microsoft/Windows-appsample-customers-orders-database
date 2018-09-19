@@ -31,6 +31,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace Contoso.App.Views
 {
@@ -42,7 +43,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// We use this object to bind the UI to our data. 
         /// </summary>
-        public OrderListPageViewModel ViewModel { get;  } = new OrderListPageViewModel();
+        public OrderListPageViewModel ViewModel { get; } = new OrderListPageViewModel();
 
         /// <summary>
         /// Creates a new OrderListPage.
@@ -51,7 +52,6 @@ namespace Contoso.App.Views
         {
             InitializeComponent();
         }
-
 
         /// <summary>
         /// Retrieve the list of orders when the user navigates to the page. 
@@ -75,7 +75,6 @@ namespace Contoso.App.Views
         /// </summary>
         private async void DeleteOrder_Click(object sender, RoutedEventArgs e)
         {
-
             try
             { 
                 var deleteOrder = ViewModel.SelectedOrder;
@@ -92,7 +91,6 @@ namespace Contoso.App.Views
                 };
                 await dialog.ShowAsync();
             }
-
         }
 
         /// <summary>
@@ -100,31 +98,25 @@ namespace Contoso.App.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
-                "Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
             {
-                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-                }
-                else
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-                }
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+            }
+            else
+            {
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }
         }
 
         private void OrderSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
-            UserControls.CollapsibleSearchBox searchBox = sender as UserControls.CollapsibleSearchBox;
-
-            if (searchBox != null)
+            if (sender is UserControls.CollapsibleSearchBox searchBox)
             {
                 searchBox.AutoSuggestBox.QuerySubmitted += OrderSearch_QuerySubmitted;
                 searchBox.AutoSuggestBox.TextChanged += OrderSearch_TextChanged;
                 searchBox.AutoSuggestBox.PlaceholderText = "Search orders...";
-                searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)this.Resources["SearchSuggestionItemTemplate"];
-                searchBox.AutoSuggestBox.ItemContainerStyle = (Style)this.Resources["SearchSuggestionItemStyle"];
+                searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)Resources["SearchSuggestionItemTemplate"];
+                searchBox.AutoSuggestBox.ItemContainerStyle = (Style)Resources["SearchSuggestionItemStyle"];
             }
         }
 
@@ -134,11 +126,13 @@ namespace Contoso.App.Views
         private async void EmailButton_Click(object sender, RoutedEventArgs e)
         {
 
-            var emailMessage = new EmailMessage();
-            emailMessage.Body = $"Dear {ViewModel.SelectedOrder.CustomerName},";
-            emailMessage.Subject = $"A message from Contoso about order " + 
-                $"#{ViewModel.SelectedOrder.InvoiceNumber} placed on " + 
-                $"{ViewModel.SelectedOrder.DatePlaced.ToString("MM/dd/yyyy")}";
+            var emailMessage = new EmailMessage
+            {
+                Body = $"Dear {ViewModel.SelectedOrder.CustomerName},",
+                Subject = "A message from Contoso about order " +
+                    $"#{ViewModel.SelectedOrder.InvoiceNumber} placed on " +
+                    $"{ViewModel.SelectedOrder.DatePlaced.ToString("MM/dd/yyyy")}"
+            };
 
             if (!string.IsNullOrEmpty(ViewModel.SelectedCustomer.Email))
             {
@@ -181,12 +175,12 @@ namespace Contoso.App.Views
         /// Navigates to the order detail page when the user
         /// double-clicks an order. 
         /// </summary>
-        private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => 
+        private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => 
             Frame.Navigate(typeof(OrderDetailPage), ((FrameworkElement)sender).DataContext as Order);
 
-        private void ListView_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void DataGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
+            if (e.Key == Windows.System.VirtualKey.Space)
             {
                 GoToDetailsPage(ViewModel.SelectedOrder);
             }
@@ -199,10 +193,7 @@ namespace Contoso.App.Views
             Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder, 
                 new DrillInNavigationTransitionInfo());
 
-        /// <summary>
-        /// Refreshes the order list.
-        /// </summary>
-        private void RefreshButton_Click(object sender, RoutedEventArgs e) => 
-            ViewModel.LoadOrders();
+        private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
+            (sender as DataGrid).Sort(e.Column, ViewModel.Orders.Sort);
     }
 }

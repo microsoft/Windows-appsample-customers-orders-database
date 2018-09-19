@@ -22,7 +22,6 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Microsoft.Graph;
 using System;
 using System.IO;
 using System.Linq.Expressions;
@@ -30,6 +29,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Graph;
 using Windows.ApplicationModel.Core;
 using Windows.Security.Authentication.Web.Core;
 using Windows.Security.Credentials;
@@ -54,7 +54,7 @@ namespace Contoso.App.ViewModels
         public string Name
         {
             get => _name;
-            set => SetProperty(ref _name, value);
+            set => Set(ref _name, value);
         }
 
         private string _email;
@@ -64,7 +64,7 @@ namespace Contoso.App.ViewModels
         public string Email
         {
             get => _email;
-            set => SetProperty(ref _email, value);
+            set => Set(ref _email, value);
         }
 
         private string _title;
@@ -74,7 +74,7 @@ namespace Contoso.App.ViewModels
         public string Title
         {
             get => _title;
-            set => SetProperty(ref _title, value); 
+            set => Set(ref _title, value); 
         }
 
         private string _domain;
@@ -84,7 +84,7 @@ namespace Contoso.App.ViewModels
         public string Domain
         {
             get => _domain;
-            set => SetProperty(ref _domain, value);
+            set => Set(ref _domain, value);
         }
 
         private BitmapImage _photo;
@@ -94,7 +94,7 @@ namespace Contoso.App.ViewModels
         public BitmapImage Photo
         {
             get => _photo;
-            set => SetProperty(ref _photo, value);
+            set => Set(ref _photo, value);
         }
 
         private string _errorText;
@@ -104,7 +104,7 @@ namespace Contoso.App.ViewModels
         public string ErrorText
         {
             get => _errorText;
-            set => SetProperty(ref _errorText, value);
+            set => Set(ref _errorText, value);
         }
 
         private bool _showWelcome;
@@ -114,7 +114,7 @@ namespace Contoso.App.ViewModels
         public bool ShowWelcome
         {
             get => _showWelcome;
-            set => SetProperty(ref _showWelcome, value);
+            set => Set(ref _showWelcome, value);
         }
 
         private bool _showLoading; 
@@ -124,7 +124,7 @@ namespace Contoso.App.ViewModels
         public bool ShowLoading
         {
             get => _showLoading;
-            set => SetProperty(ref _showLoading, value);
+            set => Set(ref _showLoading, value);
         }
 
         private bool _showData;
@@ -134,7 +134,7 @@ namespace Contoso.App.ViewModels
         public bool ShowData
         {
             get => _showData;
-            set => SetProperty(ref _showData, value); 
+            set => Set(ref _showData, value); 
         }
 
         private bool _showError; 
@@ -144,7 +144,7 @@ namespace Contoso.App.ViewModels
         public bool ShowError
         {
             get => _showError;
-            set => SetProperty(ref _showError, value);
+            set => Set(ref _showError, value);
         }
 
         /// <summary>
@@ -164,12 +164,12 @@ namespace Contoso.App.ViewModels
             if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
                 (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
             {
-                await SetVisibleAsync(x => x.ShowLoading);
+                await SetVisibleAsync(vm => vm.ShowLoading);
                 await LoginAsync();
             }
             else
             {
-                await SetVisibleAsync(x => x.ShowWelcome);
+                await SetVisibleAsync(vm => vm.ShowWelcome);
             }
         }
 
@@ -181,24 +181,24 @@ namespace Contoso.App.ViewModels
         {
             try
             {
-                await SetVisibleAsync(x => x.ShowLoading);
+                await SetVisibleAsync(vm => vm.ShowLoading);
                 string token = await GetTokenAsync();
                 if (token != null)
                 {
                     ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = true;
                     await SetUserInfoAsync(token);
                     await SetUserPhoto(token);
-                    await SetVisibleAsync(x => x.ShowData);
+                    await SetVisibleAsync(vm => vm.ShowData);
                 }
                 else
                 {
-                    await SetVisibleAsync(x => x.ShowError);
+                    await SetVisibleAsync(vm => vm.ShowError);
                 }
             }
             catch (Exception ex)
             {
                 ErrorText = ex.Message;
-                await SetVisibleAsync(x => x.ShowError);
+                await SetVisibleAsync(vm => vm.ShowError);
             }
         }
 
@@ -226,9 +226,9 @@ namespace Contoso.App.ViewModels
         private async Task SetUserInfoAsync(string token)
         {
             var users = await Windows.System.User.FindAllAsync();
-            var graph = new GraphServiceClient(new DelegateAuthenticationProvider((x) =>
+            var graph = new GraphServiceClient(new DelegateAuthenticationProvider(message =>
             {
-                x.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 return Task.CompletedTask;
             }));
 
@@ -338,8 +338,7 @@ namespace Contoso.App.ViewModels
         private async Task SetVisibleAsync(Expression<Func<AuthenticationViewModel, bool>> selector)
         {
             var prop = (PropertyInfo)((MemberExpression)selector.Body).Member;
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, () =>
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ShowWelcome = false;
                 ShowLoading = false;

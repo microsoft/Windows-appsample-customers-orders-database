@@ -11,8 +11,8 @@
     <AssemblyName>ContosoApp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.14393.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -24,10 +24,11 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -74,6 +75,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -97,22 +99,7 @@
     <Compile Include="AppShell.xaml.cs">
       <DependentUpon>AppShell.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Diagnostics\Models\Diagnostic.cs" />
-    <Compile Include="Diagnostics\DiagnosticService.cs" />
-    <Compile Include="Diagnostics\Models\Error.cs" />
-    <Compile Include="Diagnostics\Models\Interaction.cs" />
-    <Compile Include="Diagnostics\Models\Feedback.cs" />
-    <Compile Include="Diagnostics\Models\Launch.cs" />
-    <Compile Include="Diagnostics\Models\PageNavigatedFrom.cs" />
-    <Compile Include="Diagnostics\Models\PageNavigatedTo.cs" />
-    <Compile Include="Diagnostics\Models\Session.cs" />
-    <Compile Include="Navigation\NavMenuItem.cs" />
-    <Compile Include="Navigation\NavMenuListView.cs" />
-    <Compile Include="Navigation\NavMenuSecondaryButton.xaml.cs">
-      <DependentUpon>NavMenuSecondaryButton.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\Converters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateTriggers\MobileScreenTrigger.cs" />
     <Compile Include="UserControls\AuthenticationControl.xaml.cs">
@@ -121,28 +108,6 @@
     <Compile Include="UserControls\CollapsibleSearchBox.xaml.cs">
       <DependentUpon>CollapsibleSearchBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ContosoListView.cs" />
-    <Compile Include="UserControls\DetailExpander.xaml.cs">
-      <DependentUpon>DetailExpander.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Diagnostics\FeedbackFlyout.xaml.cs">
-      <DependentUpon>FeedbackFlyout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\PageHeader.xaml.cs">
-      <DependentUpon>PageHeader.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ValueConverters\BooleanInverterConverter.cs" />
-    <Compile Include="ValueConverters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="ValueConverters\DateStringFormatConverter.cs" />
-    <Compile Include="ValueConverters\DateToStringConverter.cs" />
-    <Compile Include="ValueConverters\GenericConverter.cs" />
-    <Compile Include="ValueConverters\NullToBooleanConverter.cs" />
-    <Compile Include="ValueConverters\NullToVisibilityConverter.cs" />
-    <Compile Include="ValueConverters\OrderStatusToStringConverter.cs" />
-    <Compile Include="ValueConverters\PaymentStatusToStringConverter.cs" />
-    <Compile Include="ValueConverters\StringFormatterConverter.cs" />
-    <Compile Include="ValueConverters\StringVisibilityConverter.cs" />
-    <Compile Include="ValueConverters\TermToStringConverter.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\BindableBase.cs" />
     <Compile Include="ViewModels\CustomerDetailPageViewModel.cs" />
@@ -156,6 +121,7 @@
     <Compile Include="Views\CustomerListPage.xaml.cs">
       <DependentUpon>CustomerListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DataGridHelper.cs" />
     <Compile Include="Views\OrderDetailPage.xaml.cs">
       <DependentUpon>OrderDetailPage.xaml</DependentUpon>
     </Compile>
@@ -231,9 +197,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Navigation\NavMenuSecondaryButton.xaml">
+    <Page Include="Styles\DataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Expander.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\NavStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -244,18 +214,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\CollapsibleSearchBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UserControls\DetailExpander.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Diagnostics\FeedbackFlyout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\PageHeader.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -286,22 +244,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>1.1.3</Version>
+      <Version>2.1.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Graph">
-      <Version>1.6.2</Version>
+      <Version>1.10.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>5.4.0</Version>
+      <Version>6.1.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
-      <Version>2.0.0</Version>
+      <Version>4.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>2.0.0</Version>
+      <Version>4.0.0</Version>
     </PackageReference>
-    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.0.6</Version>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
+      <Version>4.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

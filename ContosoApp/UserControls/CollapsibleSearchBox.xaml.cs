@@ -33,7 +33,7 @@ namespace Contoso.App.UserControls
 
         public CollapsibleSearchBox()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             Loaded += CollapsableSearchBox_Loaded;
             Window.Current.SizeChanged += Current_SizeChanged;
             myAutoSuggestBox = searchBox;

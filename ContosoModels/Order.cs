@@ -107,7 +107,7 @@ namespace Contoso.Models
         /// <summary>
         /// Gets the order's subtotal.
         /// </summary>
-        public decimal Subtotal => LineItems.Sum(x => x.Product.ListPrice * x.Quantity);
+        public decimal Subtotal => LineItems.Sum(lineItem => lineItem.Product.ListPrice * lineItem.Quantity);
 
         /// <summary>
         /// Gets the order's tax.
@@ -122,7 +122,7 @@ namespace Contoso.Models
         /// <summary>
         /// Returns the invoice number.
         /// </summary>
-        public override string ToString() => $"{InvoiceNumber}";
+        public override string ToString() => InvoiceNumber.ToString();
     }
 
     /// <summary>

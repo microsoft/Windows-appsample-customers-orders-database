@@ -22,22 +22,18 @@
     x:Class="Contoso.App.Views.OrderListPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Contoso.App="using:Contoso.App"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Contoso.App.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Contoso.Models"
+    xmlns:vm="using:Contoso.App.ViewModels"
+    xmlns:sys="using:System"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
-    xmlns:valueConverters="using:Contoso.App.ValueConverters"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
+
     <Page.Resources>
-        <valueConverters:DateToStringConverter x:Key="dateToStringConverter" />
-        <valueConverters:NullToBooleanConverter x:Key="nullToBoolConverter" />
-        <valueConverters:StringFormatterConverter x:Key="stringFormatterConverter" />
-        <valueConverters:NullToVisibilityConverter x:Key="nullToVisibilityConverter" />
-        <valueConverters:BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <MenuFlyout x:Key="ListViewContextMenu">
             <MenuFlyoutItem
                 Click="MenuFlyoutViewDetails_Click"
@@ -70,12 +66,12 @@
                     Margin="0,0,20,0"
                     Padding="0"
                     HorizontalAlignment="Stretch"
-                    Text="{x:Bind InvoiceNumber, Mode=OneWay}" />
+                    Text="{x:Bind InvoiceNumber}" />
                 <TextBlock
                     Grid.Column="1"
                     Margin="0,0,20,0"
                     HorizontalAlignment="Stretch"
-                    Text="{x:Bind CustomerName, Mode=OneWay}" />
+                    Text="{x:Bind CustomerName}" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -83,16 +79,10 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel>
 
-            <!--  This custom control enbles our header to work properly with the main navigation pane.  -->
-            <uc:PageHeader
+            <TextBlock
                 x:Name="PageTitle"
-                Margin="0,0,0,20">
-                <uc:PageHeader.HeaderContent>
-                    <TextBlock
-                        Style="{StaticResource PageTitleTextBlockStyle}"
-                        Text="Orders" />
-                </uc:PageHeader.HeaderContent>
-            </uc:PageHeader>
+                Style="{StaticResource PageTitleTextBlockStyle}"
+                Text="Orders" />
 
             <!--
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
@@ -109,16 +99,16 @@
                     x:Name="CommandBarEditButton"
                     Click="EditButton_Click"
                     Icon="Edit"
-                    IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                    IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                     Label="Edit" />
                 <AppBarButton
                     x:Name="CommandBarDeleteButton"
                     Click="DeleteOrder_Click"
                     Icon="Delete"
-                    IsEnabled="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToBoolConverter}, Mode=OneWay}"
+                    IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                     Label="Delete" />
                 <AppBarButton
-                    Click="RefreshButton_Click"
+                    Click="{x:Bind ViewModel.LoadOrders}"
                     Icon="Refresh"
                     Label="Refresh" />
             </CommandBar>
@@ -133,7 +123,7 @@
             <SplitView
                 x:Name="listSplitView"
                 DisplayMode="Inline"
-                IsPaneOpen="True"
+                IsPaneOpen="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                 OpenPaneLength="260"
                 PanePlacement="Right"
                 RelativePanel.AlignBottomWithPanel="True"
@@ -146,7 +136,7 @@
                     <StackPanel
                         x:Name="OrderInfoPanel"
                         Margin="24,28,24,0"
-                        Visibility="{x:Bind ViewModel.SelectedOrder, Converter={StaticResource nullToVisibilityConverter}, Mode=OneWay}">
+                        Visibility="{x:Bind vm:Converters.CollapsedIfNull(ViewModel.SelectedOrder), Mode=OneWay}">
                         <StackPanel.Resources>
                             <Style TargetType="TextBox">
                                 <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -165,7 +155,7 @@
                                 FontWeight="SemiBold"
                                 Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}" />
                         </StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}" />
+                        <TextBlock Text="{x:Bind ViewModel.SelectedOrderGrandTotalFormatted, Mode=OneWay}" />
 
                         <StackPanel Margin="0,20,0,20">
                             <TextBlock
@@ -203,125 +193,67 @@
                 </SplitView.Pane>
 
                 <SplitView.Content>
-                    <Grid HorizontalAlignment="Stretch">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="{StaticResource GridHeaderHeight}" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                    <Grid>
 
-                        <!--  The list header. We define this outside the ListView so that it doesn't scroll.  -->
-                        <Grid
-                            HorizontalAlignment="Stretch"
-                            Background="{ThemeResource AccentBackgroundColor}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.Resources>
-                                <Style
-                                    BasedOn="{StaticResource HeaderTextBlockStyle}"
-                                    TargetType="TextBlock">
-                                    <Setter Property="FontSize" Value="16" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="Padding" Value="0,4" />
-                                    <Setter Property="Margin" Value="8,0,0,0" />
-                                    <Setter Property="TextWrapping" Value="NoWrap" />
-                                </Style>
-                            </Grid.Resources>
-                            <TextBlock
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                Text="Invoice" />
-                            <TextBlock
-                                Grid.Column="1"
-                                HorizontalAlignment="Stretch"
-                                Text="Customer" />
-                            <TextBlock
-                                Grid.Column="2"
-                                HorizontalAlignment="Stretch"
-                                Text="Date" />
-                            <TextBlock
-                                Grid.Column="3"
-                                HorizontalAlignment="Stretch"
-                                Text="Total" />
-                            <TextBlock
-                                Grid.Column="4"
-                                HorizontalAlignment="Stretch"
-                                Text="Status" />
-                        </Grid>
+                        <toolkit:DataGrid
+                            BorderThickness="0"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="False"
+                            GridLinesVisibility="None"
+                            IsReadOnly="True"
+                            AutoGenerateColumns="False"
+                            Margin="0,10,0,0"
+                            ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
+                            SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
+                            KeyDown="DataGrid_KeyDown"
+                            Sorting="DataGrid_Sorting"
+                            ContextFlyout="{StaticResource ListViewContextMenu}">
+                            <toolkit:DataGrid.Columns>
+                                <toolkit:DataGridTextColumn
+                                    Header="Invoice"
+                                    Tag="InvoiceNumber"
+                                    Binding="{Binding InvoiceNumber}"/>
+                                <toolkit:DataGridTextColumn
+                                    Header="Customer"
+                                    Tag="CustomerName"
+                                    Binding="{Binding CustomerName}"/>
+                                <toolkit:DataGridTemplateColumn
+                                    Header="Date"
+                                    Tag="DatePlaced">
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Margin="12,0"
+                                                Text="{x:Bind sys:String.Format('\{0:d\}', DatePlaced)}"/>
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
+                                    Header="Total"
+                                    Tag="GrandTotal">
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock 
+                                                VerticalAlignment="Center"
+                                                Margin="12,0"
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTextColumn
+                                    Header="Status"
+                                    Binding="{Binding Status}"/>
+                            </toolkit:DataGrid.Columns>
+                        </toolkit:DataGrid>
 
-                        <!--  This progress indicator should be hidden when the data is finished loading.  -->
                         <ProgressBar
-                            Grid.Row="1"
-                            Margin="0,4"
+                            Margin="0,50,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
-                            IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, Converter={StaticResource boolToVisibilityConverter}}" />
+                            IsIndeterminate="True"
+                            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-                        <!--  The list of orders.  -->
-                        <uc:ContosoListView
-                            x:Name="OrderList"
-                            Grid.Row="1"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            ContextMenu="{StaticResource ListViewContextMenu}"
-                            ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
-                            KeyUp="ListView_KeyUp"
-                            SelectedItem="{x:Bind ViewModel.SelectedOrderAsObject, Mode=TwoWay}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="models:Order">
-                                    <Border
-                                        BorderThickness="0,0,0,0"
-                                        DoubleTapped="ListViewItem_DoubleTapped">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="2*" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.Resources>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Padding" Value="8,0,0,0" />
-                                                </Style>
-                                            </Grid.Resources>
-                                            <TextBlock
-                                                Grid.Column="0"
-                                                HorizontalAlignment="Stretch"
-                                                Text="{x:Bind InvoiceNumber, Mode=OneWay}" />
-                                            <TextBlock
-                                                Grid.Column="1"
-                                                HorizontalAlignment="Stretch"
-                                                Text="{x:Bind CustomerName, Mode=OneWay}" />
-                                            <TextBlock
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Stretch"
-                                                Text="{x:Bind DatePlaced, Mode=OneWay, Converter={StaticResource dateToStringConverter}, ConverterParameter=MM/dd/yyyy}" />
-                                            <TextBlock
-                                                Grid.Column="3"
-                                                HorizontalAlignment="Stretch"
-                                                Text="{x:Bind GrandTotal, Mode=OneWay, Converter={StaticResource stringFormatterConverter}, ConverterParameter=\{0:C2\}}" />
-                                            <TextBlock
-                                                Grid.Column="4"
-                                                HorizontalAlignment="Stretch"
-                                                Text="{x:Bind Status, Mode=OneWay}" />
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="Margin" Value="0" />
-                                    <Setter Property="Padding" Value="0" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </uc:ContosoListView>
                     </Grid>
                 </SplitView.Content>
             </SplitView>

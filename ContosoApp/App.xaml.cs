@@ -22,13 +22,11 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.App.Diagnostics;
 using Contoso.App.Views;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using System.IO;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -50,11 +48,6 @@ namespace Contoso.App
         public static IContosoRepository Repository { get; private set; }
 
         /// <summary>
-        /// Service for collecting feedback and diagnostic data.
-        /// </summary>
-        public static DiagnosticService Diagnostics { get; private set; }
-
-        /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
@@ -68,12 +61,6 @@ namespace Contoso.App
         /// </summary>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            // Start app diagnostics.
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            Diagnostics = new DiagnosticService();
-
             // Load the database.
 
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
@@ -106,7 +93,6 @@ namespace Contoso.App
             }
 
             Window.Current.Activate();
-            Diagnostics.TrackLaunch(stopwatch.Elapsed);
         }
 
         /// <summary>

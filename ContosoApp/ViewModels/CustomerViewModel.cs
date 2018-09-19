@@ -23,29 +23,40 @@
 //  ---------------------------------------------------------------------------------
 
 using Contoso.Models;
-using System.Text.RegularExpressions;
-using Telerik.Core;
 
 namespace Contoso.App.ViewModels
 {
     /// <summary>
     /// Wrapper for the Customer model in the master/details Customers page.
     /// </summary>
-    public class CustomerViewModel : ValidateViewModelBase
+    public class CustomerViewModel : BindableBase
     {
         /// <summary>
         /// Creates a new customer model.
         /// </summary>
-        public CustomerViewModel(Customer model)
-        {
-            Model = model ?? new Customer();
-        }
+        public CustomerViewModel(Customer model) => Model = model ?? new Customer();
+
+        private Customer _model;
 
         /// <summary>
         /// The underlying customer model. Internal so it is 
         /// not visible to the RadDataGrid. 
         /// </summary>
-        internal Customer Model { get; set; }
+        internal Customer Model
+        {
+            get => _model;
+            set
+            {
+                if (_model != value)
+                {
+                    _model = value;
+
+                    // Raise the PropertyChanged event for all properties.
+                    OnPropertyChanged(string.Empty);
+                    OnPropertyChanged(nameof(FirstName));
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets whether the underlying model has been modified. 
@@ -53,11 +64,6 @@ namespace Contoso.App.ViewModels
         /// and only upload the models that changed.
         /// </summary>
         internal bool IsModified { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether to validate model data. 
-        /// </summary>
-        internal bool Validate { get; set; }
 
         /// <summary>
         /// Gets or sets the customer's first name.
@@ -71,6 +77,8 @@ namespace Contoso.App.ViewModels
                 {
                     Model.FirstName = value;
                     IsModified = true;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
@@ -87,9 +95,16 @@ namespace Contoso.App.ViewModels
                 {
                     Model.LastName = value;
                     IsModified = true;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the customers full (first + last) name.
+        /// </summary>
+        public string Name => $"{FirstName} {LastName}";
 
         /// <summary>
         /// Gets or sets the customer's address.
@@ -103,6 +118,7 @@ namespace Contoso.App.ViewModels
                 {
                     Model.Address = value;
                     IsModified = true;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -119,67 +135,42 @@ namespace Contoso.App.ViewModels
                 {
                     Model.Company = value;
                     IsModified = true;
+                    OnPropertyChanged();
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the customer's phone number. If data validation is enabled, 
-        /// displays an error if an invalid number is entered. 
+        /// Gets or sets the customer's phone number. 
         /// </summary>
         public string Phone
         {
             get => Model.Phone; 
             set
             {
-                if (value == Model.Phone)
+                if (value != Model.Phone)
                 {
-                    return;
+                    Model.Phone = value;
+                    IsModified = true;
+                    OnPropertyChanged();
                 }
-                if (Validate)
-                {
-                    var validPhoneRegex = new Regex(@"^\(?([0-9]{3})\)?[-. ]?" +
-                        @"([0-9]{3})[-. ]?([0-9]{4})$");
-                    if (validPhoneRegex.IsMatch(value))
-                    {
-                        RemoveErrors(nameof(Phone));
-                    }
-                    else
-                    {
-                        AddError(nameof(Phone), "Phone number is not valid.");
-                    }
-                }
-                Model.Phone = value;
-                IsModified = true;
             }
         }
 
         /// <summary>
-        /// Gets or sets the customer's email. If data validation is enabled, 
-        /// displays an error if an invalid email is entered. 
+        /// Gets or sets the customer's email. 
         /// </summary>
         public string Email
         {
             get => Model.Email; 
             set
             {
-                if (value == Model.Email)
+                if (value != Model.Email)
                 {
-                    return;
+                    Model.Email = value;
+                    IsModified = true;
+                    OnPropertyChanged();
                 }
-                var validEmail = new Regex(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
-                    @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
-                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$");
-                if (validEmail.IsMatch(value))
-                {
-                    RemoveErrors(nameof(Email));
-                }
-                else
-                {
-                    AddError(nameof(Email), "Email is not valid.");
-                }
-                Model.Email = value;
-                IsModified = true;
             }
         }
     }

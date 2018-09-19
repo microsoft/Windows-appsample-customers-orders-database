@@ -50,15 +50,6 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Gets or sets if app diagnostics are enabled.
-        /// </summary>
-        public bool IsDiagnosticsEnabled
-        {
-            get => App.Diagnostics.IsEnabled; 
-            set => App.Diagnostics.IsEnabled = value;
-        }
-
-        /// <summary>
         /// Changes the app's data source.
         /// </summary>
         private void OnDataSourceChanged(object sender, RoutedEventArgs e)
@@ -72,7 +63,6 @@ namespace Contoso.App.Views
             }
             ApplicationData.Current.LocalSettings.Values[DataSourceKey] = radio.Tag; 
         }
-
 
         /// <summary>
         ///  Launches the privacy statement in the user's default browser.

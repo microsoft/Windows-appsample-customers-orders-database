@@ -54,13 +54,11 @@ namespace Contoso.App.Views
         /// </summary>
         private void App_Suspending(object sender, SuspendingEventArgs e)
         {
-
             if (ViewModel.HasChanges)
             {
                 // Save a temporary copy of the modified order so that the user has a chance to save it
                 // the next time the app is launched. 
             }
-
         }
 
         /// <summary>
@@ -73,10 +71,7 @@ namespace Contoso.App.Views
         /// </summary>
         public OrderDetailPageViewModel ViewModel
         {
-            get
-            {
-                return _viewModel;
-            }
+            get => _viewModel;
             set
             {
                 if (_viewModel != value)
@@ -94,16 +89,14 @@ namespace Contoso.App.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             // Determine whether a valid order was provided.
-            var order = e.Parameter as Order;
-            if (order != null)
+            if (e.Parameter is Order order)
             {
                 ViewModel = new OrderDetailPageViewModel(order);
             }
             else
             {
                 // If order is null, check to see whether a customer was provided.
-                var customer = e.Parameter as Customer;
-                if (customer != null)
+                if (e.Parameter is Customer customer)
                 {
                     // Create a new order for the specified customer. 
                     ViewModel = new ViewModels.OrderDetailPageViewModel(new Order(customer));
@@ -113,9 +106,10 @@ namespace Contoso.App.Views
                 // If we don't, create a blank new order. 
                 else if (ViewModel == null)
                 {
-                    ViewModel = new OrderDetailPageViewModel(new Order()); 
+                    ViewModel = new OrderDetailPageViewModel(new Order());
                 }
             }
+
             base.OnNavigatedTo(e);
         }
 
@@ -125,7 +119,6 @@ namespace Contoso.App.Views
         /// </summary>
         protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-
             if (ViewModel.HasChanges)
             {
                 var saveDialog = new SaveChangesDialog()
@@ -134,6 +127,7 @@ namespace Contoso.App.Views
                     Message = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
                         "has unsaved changes that will be lost. Do you want to save your changes?"
                 };
+
                 await saveDialog.ShowAsync();
                 SaveChangesDialogResult result = saveDialog.Result;
 
@@ -154,11 +148,13 @@ namespace Contoso.App.Views
                             Frame.GoBack();
                         }
                         e.Cancel = true;
+
                         // This flag gets cleared on navigation, so restore it. 
                         ViewModel.HasChanges = true; 
                         break;
                 }
             }
+
             base.OnNavigatingFrom(e);
         }
 
@@ -167,10 +163,12 @@ namespace Contoso.App.Views
         /// </summary>
         private async void emailButton_Click(object sender, RoutedEventArgs e)
         {
-            var emailMessage = new EmailMessage();
-            emailMessage.Body = $"Dear {ViewModel.CustomerName},";
-            emailMessage.Subject = $"A message from Contoso about order " + 
-                $"#{ViewModel.InvoiceNumber} placed on {ViewModel.DatePlaced.ToString("MM/dd/yyyy")} ";
+            var emailMessage = new EmailMessage
+            {
+                Body = $"Dear {ViewModel.CustomerName},",
+                Subject = "A message from Contoso about order " +
+                    $"#{ViewModel.InvoiceNumber} placed on {ViewModel.DatePlaced.ToString("MM/dd/yyyy")} "
+            };
 
             if (!string.IsNullOrEmpty(ViewModel.Customer.Email))
             {
@@ -179,7 +177,6 @@ namespace Contoso.App.Views
             }
 
             await EmailManager.ShowComposeNewEmailAsync(emailMessage);
-
         }
 
         /// <summary>
@@ -187,17 +184,13 @@ namespace Contoso.App.Views
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent(
-                "Windows.UI.Xaml.Controls.CommandBar", "DefaultLabelPosition"))
+            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
             {
-                if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-                }
-                else
-                {
-                    (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-                }
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
+            }
+            else
+            {
+                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }
         }
 
@@ -212,7 +205,6 @@ namespace Contoso.App.Views
         /// </summary>
         private async void RevertButton_Click(object sender, RoutedEventArgs e)
         {
-
             var saveDialog = new SaveChangesDialog()
             {
                 Title = $"Save changes to Invoice # {ViewModel.InvoiceNumber.ToString()}?",
@@ -235,7 +227,6 @@ namespace Contoso.App.Views
                     break;
             }         
         }
-
 
         /// <summary>
         /// Saves the current order.
