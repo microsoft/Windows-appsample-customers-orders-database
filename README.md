@@ -43,7 +43,7 @@ However, in order to debug and explore the full functionality of the app, you'll
 
 ### Prepare your environment
 
-This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK) (version 16299 or higher), and the .NET Core 2.0 SDK.
+This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK) (version 17134 or higher), and the .NET Core 2.0 SDK.
 
 * [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
 * [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
