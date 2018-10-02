@@ -30,15 +30,14 @@ using Microsoft.Toolkit.Uwp.Helpers;
 namespace Contoso.App.ViewModels
 {
     /// <summary>
-    /// Encapsulates data for the CustomerListPage. The page UI
-    /// binds to the properties defined here. 
+    /// Provides data and commands accessible to the entire app.  
     /// </summary>
-    public class CustomerListPageViewModel : BindableBase
+    public class MainViewModel : BindableBase
     {
         /// <summary>
-        /// Creates a new CustomerListPageViewModel.
+        /// Creates a new MainViewModel.
         /// </summary>
-        public CustomerListPageViewModel() => Task.Run(GetCustomerListAsync);
+        public MainViewModel() => Task.Run(GetCustomerListAsync);
 
         /// <summary>
         /// The collection of customers in the list. 
@@ -60,7 +59,7 @@ namespace Contoso.App.ViewModels
         private bool _isLoading = false;
 
         /// <summary>
-        /// Gets or sets whether to show the data loading progress indicator. 
+        /// Gets or sets a value indicating whether the Customers list is currently being updated. 
         /// </summary>
         public bool IsLoading
         {
@@ -93,7 +92,7 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Queries the database for a current list of customers.
+        /// Saves any modified customers and reloads the customer list from the database.
         /// </summary>
         public void Sync()
         {

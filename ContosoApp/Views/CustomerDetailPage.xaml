@@ -35,11 +35,11 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel>
-            
+
             <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
-                Text="{x:Bind ViewModel.Customer.Name, Mode=OneWay}" />
+                Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
 
             <!--
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
@@ -53,7 +53,7 @@
                 RelativePanel.LeftOf="CustomerSearchBox"
                 RelativePanel.RightOf="PageTitle">
                 <AppBarButton
-                    Click="{x:Bind ViewModel.Save}"
+                    Click="{x:Bind ViewModel.SaveAsync}"
                     Icon="Save"
                     Label="Save"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
@@ -93,28 +93,27 @@
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.Below="PageTitle"
                 VerticalScrollBarVisibility="Auto"
-                VerticalScrollMode="Auto"
-                Visibility="{x:Bind vm:Converters.CollapsedIfNull(ViewModel.Customer), Mode=OneWay}">
-                <StackPanel
-                    Margin="0,8,4,0"
-                    DataContext="{x:Bind ViewModel.Customer, Mode=OneWay}">
-                    
+                VerticalScrollMode="Auto">
+
+                <StackPanel 
+                    Margin="0,8,4,0">
+
                     <toolkit:Expander
                         IsExpanded="True"
                         HorizontalContentAlignment="Left">
-                        
+
                         <toolkit:Expander.Header>
                             <Grid>
                                 <TextBlock 
                                     Text="General"
                                     Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                 <TextBlock
-                                    Text="{x:Bind ViewModel.Customer.Email, Mode=OneWay}" 
+                                    Text="{x:Bind ViewModel.Email, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     HorizontalAlignment="Right"/>
                             </Grid>
                         </toolkit:Expander.Header>
-                        
+
                         <RelativePanel Margin="8,0,0,12">
                             <TextBox
                                 x:Name="FirstName"
@@ -123,7 +122,7 @@
                                 Header="First name"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.AlignLeftWithPanel="True"
-                                Text="{x:Bind ViewModel.Customer.FirstName, Mode=TwoWay}"
+                                Text="{x:Bind ViewModel.FirstName, Mode=TwoWay}"
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
                             <TextBox
                                 x:Name="LastName"
@@ -132,7 +131,7 @@
                                 Header="Last name"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.RightOf="FirstName"
-                                Text="{x:Bind ViewModel.Customer.LastName, Mode=TwoWay}"
+                                Text="{x:Bind ViewModel.LastName, Mode=TwoWay}"
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
                             <TextBox
                                 x:Name="CompanyText"
@@ -143,7 +142,7 @@
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.AlignLeftWithPanel="True"
                                 RelativePanel.Below="FirstName"
-                                Text="{x:Bind ViewModel.Customer.Company, Mode=TwoWay}" />
+                                Text="{x:Bind ViewModel.Company, Mode=TwoWay}" />
                             <TextBox
                                 x:Name="PhoneNumber"
                                 Grid.Row="1"
@@ -155,7 +154,7 @@
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.Below="FirstName"
                                 RelativePanel.RightOf="CompanyText"
-                                Text="{x:Bind ViewModel.Customer.Phone, Mode=TwoWay}" />
+                                Text="{x:Bind ViewModel.Phone, Mode=TwoWay}" />
                             <TextBox
                                 x:Name="EmailText"
                                 Grid.Column="2"
@@ -166,45 +165,45 @@
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.Below="FirstName"
                                 RelativePanel.RightOf="PhoneNumber"
-                                Text="{x:Bind ViewModel.Customer.Email, Mode=TwoWay}" />
+                                Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
                         </RelativePanel>
-                        
+
                     </toolkit:Expander>
 
                     <toolkit:Expander
                         IsExpanded="True"
                         HorizontalContentAlignment="Left">
-                        
+
                         <toolkit:Expander.Header>
                             <Grid>
                                 <TextBlock
                                     Text="Addresses"
                                     Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                 <TextBlock
-                                    Text="{x:Bind ViewModel.Customer.Address, Mode=OneWay}" 
+                                    Text="{x:Bind ViewModel.Address, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     HorizontalAlignment="Right"/>
                             </Grid>
                         </toolkit:Expander.Header>
-                        
+
                         <TextBox
                             Margin="8,8,0,12"
                             Header="Primary address"
                             IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                            Text="{x:Bind ViewModel.Customer.Address, Mode=TwoWay}" />
-                        
+                            Text="{x:Bind ViewModel.Address, Mode=TwoWay}" />
+
                     </toolkit:Expander>
 
                     <toolkit:Expander
                         IsExpanded="True"
-                        HorizontalContentAlignment="Left">                        
-                        
+                        HorizontalContentAlignment="Left">
+
                         <toolkit:Expander.Header>
                             <TextBlock
                                 Text="Orders"
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
                         </toolkit:Expander.Header>
-                        
+
                         <Grid>
 
                             <toolkit:DataGrid
@@ -216,6 +215,7 @@
                                 AutoGenerateColumns="False"
                                 Margin="0,4,0,0"
                                 ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
+                                SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
                                 Sorting="DataGrid_Sorting">
                                 <toolkit:DataGrid.Columns>
                                     <toolkit:DataGridTemplateColumn

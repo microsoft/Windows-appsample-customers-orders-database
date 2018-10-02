@@ -23,6 +23,7 @@
 //  ---------------------------------------------------------------------------------
 
 using Contoso.App.Views;
+using Contoso.App.ViewModels;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
@@ -43,6 +44,11 @@ namespace Contoso.App
     sealed partial class App : Application
     {
         /// <summary>
+        /// Gets the app-wide MainViewModel singleton instance.
+        /// </summary>
+        public static MainViewModel ViewModel { get; } = new MainViewModel();
+
+        /// <summary>
         /// Pipeline for interacting with backend service or database.
         /// </summary>
         public static IContosoRepository Repository { get; private set; }
@@ -51,10 +57,7 @@ namespace Contoso.App
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App()
-        {
-            InitializeComponent();
-        }
+        public App() => InitializeComponent();
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.
@@ -62,7 +65,6 @@ namespace Contoso.App
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Load the database.
-
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
                 "data_source", out object dataSource))
             {
@@ -78,7 +80,6 @@ namespace Contoso.App
             }
 
             // Prepare the app shell and window content.
-
             AppShell shell = Window.Current.Content as AppShell ?? new AppShell();
             shell.Language = ApplicationLanguages.Languages[0];
             Window.Current.Content = shell;
@@ -87,8 +88,7 @@ namespace Contoso.App
             {
                 // When the navigation stack isn't restored, navigate to the first page
                 // suppressing the initial entrance animation.
-
-                shell.AppFrame.Navigate(typeof(CustomerListPage), e.Arguments,
+                shell.AppFrame.Navigate(typeof(CustomerListPage), null,
                     new SuppressNavigationTransitionInfo());
             }
 
@@ -116,9 +116,7 @@ namespace Contoso.App
         /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
         /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
         /// </summary>
-        public static void UseRest()
-        {
+        public static void UseRest() =>
             Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/"); 
-        }
     }
 }

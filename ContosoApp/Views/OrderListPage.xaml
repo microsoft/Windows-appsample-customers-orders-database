@@ -34,7 +34,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <MenuFlyout x:Key="ListViewContextMenu">
+        <MenuFlyout x:Key="DataGridContextMenu">
             <MenuFlyoutItem
                 Click="MenuFlyoutViewDetails_Click"
                 Style="{StaticResource MenuFlyoutItemIconTemplate}"
@@ -207,7 +207,8 @@
                             SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
                             KeyDown="DataGrid_KeyDown"
                             Sorting="DataGrid_Sorting"
-                            ContextFlyout="{StaticResource ListViewContextMenu}">
+                            RightTapped="DataGrid_RightTapped"
+                            ContextFlyout="{StaticResource DataGridContextMenu}">
                             <toolkit:DataGrid.Columns>
                                 <toolkit:DataGridTextColumn
                                     Header="Invoice"

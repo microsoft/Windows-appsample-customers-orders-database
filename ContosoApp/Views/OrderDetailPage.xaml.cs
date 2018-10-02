@@ -26,8 +26,8 @@ using Contoso.Models;
 using Contoso.App.ViewModels;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,23 +43,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Initializes the page.
         /// </summary>
-        public OrderDetailPage()
-        {
-            InitializeComponent();
-            Application.Current.Suspending += new SuspendingEventHandler(App_Suspending);
-        }
-
-        /// <summary>
-        /// Check for unsaved changes if the app shuts down.
-        /// </summary>
-        private void App_Suspending(object sender, SuspendingEventArgs e)
-        {
-            if (ViewModel.HasChanges)
-            {
-                // Save a temporary copy of the modified order so that the user has a chance to save it
-                // the next time the app is launched. 
-            }
-        }
+        public OrderDetailPage() => InitializeComponent();
 
         /// <summary>
         /// Stores the view model. 
@@ -86,33 +70,25 @@ namespace Contoso.App.Views
         /// Loads the specified order, a cached order, or creates a new order.
         /// </summary>
         /// <param name="e">Info about the event.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            // Determine whether a valid order was provided.
-            if (e.Parameter is Order order)
+            var guid = (Guid)e.Parameter;
+            var customer = App.ViewModel.Customers.Where(cust => cust.Model.Id == guid).FirstOrDefault();
+
+            if (customer != null)
             {
-                ViewModel = new OrderDetailPageViewModel(order);
+                // Order is a new order
+                ViewModel = new OrderDetailPageViewModel(new Order(customer.Model));
             }
             else
             {
-                // If order is null, check to see whether a customer was provided.
-                if (e.Parameter is Customer customer)
-                {
-                    // Create a new order for the specified customer. 
-                    ViewModel = new ViewModels.OrderDetailPageViewModel(new Order(customer));
-                }
-                // If no order or customer was provided,
-                // check to see if we have a cached order.
-                // If we don't, create a blank new order. 
-                else if (ViewModel == null)
-                {
-                    ViewModel = new OrderDetailPageViewModel(new Order());
-                }
+                // Order is an existing order.
+                var order = await App.Repository.Orders.GetAsync(guid);
+                ViewModel = new OrderDetailPageViewModel(order);
             }
 
             base.OnNavigatedTo(e);
         }
-
 
         /// <summary>
         /// Check whether there are unsaved changes and warn the user.
@@ -134,7 +110,7 @@ namespace Contoso.App.Views
                 switch (result)
                 {
                     case SaveChangesDialogResult.Save:
-                        await ViewModel.SaveOrder();
+                        await ViewModel.SaveOrderAsync();
                         break;
                     case SaveChangesDialogResult.DontSave:
                         break;
@@ -217,7 +193,7 @@ namespace Contoso.App.Views
             switch (result)
             {
                 case SaveChangesDialogResult.Save:
-                    await ViewModel.SaveOrder();
+                    await ViewModel.SaveOrderAsync();
                     ViewModel = await OrderDetailPageViewModel.CreateFromGuid(ViewModel.Id);
                     break;
                 case SaveChangesDialogResult.DontSave:
@@ -235,7 +211,7 @@ namespace Contoso.App.Views
         {
             try
             { 
-                await ViewModel.SaveOrder();
+                await ViewModel.SaveOrderAsync();
             }
             catch (OrderSavingException ex)
             {
@@ -304,11 +280,8 @@ namespace Contoso.App.Views
         /// <summary>
         /// Removes a line item from the order.
         /// </summary>
-        private void RemoveProduct_Click(object sender, RoutedEventArgs e)
-        {
-            var lineItem = ((Button)sender).DataContext as LineItem;
-            ViewModel.LineItems.Remove(lineItem);
-        }
+        private void RemoveProduct_Click(object sender, RoutedEventArgs e) =>
+            ViewModel.LineItems.Remove((sender as FrameworkElement).DataContext as LineItem);
 
         /// <summary>
         /// Fired when a property value changes. 
@@ -318,9 +291,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Notifies listeners that a property value changed. 
         /// </summary>
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

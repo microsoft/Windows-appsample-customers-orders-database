@@ -33,6 +33,9 @@ namespace Contoso.App.Views
     /// </summary>
     public sealed partial class SaveChangesDialog : ContentDialog
     {
+        /// <summary>
+        /// Initializes a new instance of the SaveChangesDialog class.
+        /// </summary>
         public SaveChangesDialog()
         {
             InitializeComponent();

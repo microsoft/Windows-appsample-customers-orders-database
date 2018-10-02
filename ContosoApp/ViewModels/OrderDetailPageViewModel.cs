@@ -68,7 +68,6 @@ namespace Contoso.App.ViewModels
         /// Creates a OrderDetailPageViewModel from an Order ID.
         /// </summary>
         /// <param name="orderId">The ID of the order to retrieve. </param>
-        /// <returns></returns>
         public async static Task<OrderDetailPageViewModel> CreateFromGuid(Guid orderId) =>
             new OrderDetailPageViewModel(await GetOrder(orderId));
 
@@ -142,11 +141,11 @@ namespace Contoso.App.ViewModels
             }
         }
 
+        bool _hasChanges = false;
 
         /// <summary>
         /// Gets or sets a value that indicates whether the user has changed the order. 
         /// </summary>
-        bool _hasChanges = false;
         public bool HasChanges
         {
             get => _hasChanges; 
@@ -165,14 +164,23 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Gets a value that specifies whether this is an existing order.
+        /// Gets a value that indicates whether this is an existing order.
         /// </summary>
         public bool IsExistingOrder => !IsNewOrder;
 
+        /// <summary>
+        /// Gets a value that indicates whether there is a backing order.
+        /// </summary>
         public bool IsLoaded => _order != null && (IsNewOrder || _order.Customer != null);
 
+        /// <summary>
+        /// Gets a value that indicates whether there is not a backing order.
+        /// </summary>
         public bool IsNotLoaded => !IsLoaded;
 
+        /// <summary>
+        /// Gets a value that indicates whether this is a newly-created order.
+        /// </summary>
         public bool IsNewOrder => _order.InvoiceNumber == 0; 
 
         /// <summary>
@@ -227,6 +235,7 @@ namespace Contoso.App.ViewModels
         }
 
         private ObservableCollection<LineItem> _lineItems = new ObservableCollection<LineItem>();
+        
         /// <summary>
         /// Gets the line items in this invoice. 
         /// </summary>
@@ -271,6 +280,7 @@ namespace Contoso.App.ViewModels
         }
 
         private LineItemWrapper _newLineItem;
+
         /// <summary>
         /// Gets or sets the line item that the user is currently working on.
         /// </summary>
@@ -512,7 +522,7 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Saves the current order to the database. 
         /// </summary>
-        public async Task SaveOrder()
+        public async Task SaveOrderAsync()
         {
             Order result = null;
             try
@@ -563,14 +573,26 @@ namespace Contoso.App.ViewModels
         }
     }
 
+    /// <summary>
+    /// Wraps LineItem objects in order to provide change notification for data binding purposes.
+    /// </summary>
     public class LineItemWrapper : INotifyPropertyChanged
     {
         LineItem _item;
 
+        /// <summary>
+        /// Initializes a new instance of the LineItemWrapper class using a new line item.
+        /// </summary>
         public LineItemWrapper() => _item = new LineItem();
 
+        /// <summary>
+        /// Initializes a new instance of the LineItemWrapper class using the specified line item.
+        /// </summary>
         public LineItemWrapper(LineItem item) => _item = item;
 
+        /// <summary>
+        /// Gets or sets the product for the line item.
+        /// </summary>
         public Product Product
         {
             get => _item.Product;
@@ -584,6 +606,9 @@ namespace Contoso.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the product ID for the line item.
+        /// </summary>
         public Guid ProductId
         {
             get => _item.ProductId;
@@ -597,6 +622,9 @@ namespace Contoso.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the product quantity for the line item.
+        /// </summary>
         public int Quantity
         {
             get => _item.Quantity;
@@ -612,6 +640,9 @@ namespace Contoso.App.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Raises the PropertyChanged event.
+        /// </summary>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null) => 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
@@ -630,14 +661,24 @@ namespace Contoso.App.ViewModels
 
     public class OrderSavingException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the OrderSavingException class with a default error message.
+        /// </summary>
         public OrderSavingException() : base("Error saving an order.")
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the OrderSavingException class with the specified error message.
+        /// </summary>
         public OrderSavingException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the OrderSavingException class with 
+        /// the specified error message and inner exception.
+        /// </summary>
         public OrderSavingException(string message, Exception innerException) : base(message, innerException)
         {
         }

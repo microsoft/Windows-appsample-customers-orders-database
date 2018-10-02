@@ -77,7 +77,7 @@ namespace Contoso.Models
         /// <summary>
         /// Gets or sets the items in the order.
         /// </summary>
-        public virtual List<LineItem> LineItems { get; set; } = new List<LineItem>();
+        public List<LineItem> LineItems { get; set; } = new List<LineItem>();
 
         /// <summary>
         /// Gets or sets when the order was placed.

@@ -22,9 +22,10 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using System;
+using System.Linq;
 using Contoso.Models;
 using Contoso.App.ViewModels;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -44,32 +45,17 @@ namespace Contoso.App.Views
         public CustomerDetailPage()
         {
             InitializeComponent();
-            DataContext = ViewModel;
         }
-
-        private CustomerDetailPageViewModel _viewModel = new CustomerDetailPageViewModel();
 
         /// <summary>
         /// Used to bind the UI to the data.
         /// </summary>
-        public CustomerDetailPageViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                if (_viewModel != value)
-                {
-                    _viewModel.EditsCanceled -= EditsCanceled;
-                    _viewModel = value;
-                    if (_viewModel != null)
-                    {
-                        _viewModel.EditsCanceled += EditsCanceled;
-                    }
-                }
-            }
-        }
+        public CustomerViewModel ViewModel { get; set; }
 
-        private void EditsCanceled(object sender, System.EventArgs e)
+        /// <summary>
+        /// Handle edit cancelation by navigating to the previous page. 
+        /// </summary>
+        private void EditsCanceled(object sender, EventArgs e)
         {
             if (ViewModel.IsNewCustomer && Frame.CanGoBack)
             {
@@ -82,34 +68,81 @@ namespace Contoso.App.Views
         /// </summary>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (!(e.Parameter is CustomerViewModel customer))
+            if (e.Parameter == null)
             {
-                ViewModel = new CustomerDetailPageViewModel
+                ViewModel = new CustomerViewModel
                 {
                     IsNewCustomer = true,
-                    Customer = new CustomerViewModel(new Customer())
+                    IsInEdit = true
                 };
-                Bindings.Update();
-                PageTitle.Text = "New customer";
             }
-            else if (ViewModel.Customer != customer)
+            else
             {
-                ViewModel = new CustomerDetailPageViewModel { Customer = customer };
-                Bindings.Update();
+                ViewModel = App.ViewModel.Customers.Where(
+                    customer => customer.Model.Id == (Guid)e.Parameter).First();
             }
+
+            ViewModel.EditsCanceled += EditsCanceled;
             base.OnNavigatedTo(e);
         }
 
         /// <summary>
-        /// Navigates from the current page.
+        /// Check whether there are unsaved changes and warn the user.
         /// </summary>
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            ViewModel.IsInEdit = false;
+            if (ViewModel.IsModified)
+            {
+                // Cancel the navigation immediately, otherwise it will continue at the await call. 
+                e.Cancel = true;
+
+                void resumeNavigation()
+                {
+                    if (e.NavigationMode == NavigationMode.Back)
+                    {
+                        Frame.GoBack();
+                    }
+                    else
+                    {
+                        Frame.Navigate(e.SourcePageType, e.Parameter, e.NavigationTransitionInfo);
+                    }
+                }
+
+                var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+                await saveDialog.ShowAsync();
+                SaveChangesDialogResult result = saveDialog.Result;
+
+                switch (result)
+                {
+                    case SaveChangesDialogResult.Save:
+                        await ViewModel.SaveAsync();
+                        resumeNavigation();
+                        break;
+                    case SaveChangesDialogResult.DontSave:
+                        await ViewModel.RevertChangesAsync();
+                        resumeNavigation();
+                        break;
+                    case SaveChangesDialogResult.Cancel:
+                        break;
+                }
+            }
 
             base.OnNavigatingFrom(e);
         }
 
+        /// <summary>
+        /// Disconnects the EditsCanceled event handler from the ViewModel 
+        /// when the parent frame navigates to a different page.
+        /// </summary>
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            ViewModel.EditsCanceled -= EditsCanceled;
+            base.OnNavigatedFrom(e);
+        }
+
+        /// <summary>
+        /// Initializes the AutoSuggestBox portion of the search box.
+        /// </summary>
         private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
             if (sender is UserControls.CollapsibleSearchBox searchBox)
@@ -119,6 +152,7 @@ namespace Contoso.App.Views
                 searchBox.AutoSuggestBox.PlaceholderText = "Search customers...";
             }
         }
+
         /// <summary>
         /// Queries the database for a customer result matching the search text entered.
         /// </summary>
@@ -150,12 +184,12 @@ namespace Contoso.App.Views
         {
             if (args.ChosenSuggestion is Customer customer)
             {
-                Frame.Navigate(typeof(CustomerDetailPage), new CustomerViewModel(customer));
+                Frame.Navigate(typeof(CustomerDetailPage), customer.Id);
             }
         }
 
         /// <summary>
-        /// A workaround for earlier versions of Windows 10.
+        /// Adjust the command bar button label positions for optimimum viewing.
         /// </summary>
         private void CommandBar_Loaded(object sender, RoutedEventArgs e)
         {
@@ -177,15 +211,18 @@ namespace Contoso.App.Views
         /// Navigates to the order page for the customer.
         /// </summary>
         private void ViewOrderButton_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ((FrameworkElement)sender).DataContext,
+            Frame.Navigate(typeof(OrderDetailPage), ((sender as FrameworkElement).DataContext as Order).Id,
                 new DrillInNavigationTransitionInfo());
 
         /// <summary>
         /// Adds a new order for the customer.
         /// </summary>
         private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Customer);
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Model.Id);
 
+        /// <summary>
+        /// Sorts the data in the DataGrid.
+        /// </summary>
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
             (sender as DataGrid).Sort(e.Column, ViewModel.Orders.Sort);
     }

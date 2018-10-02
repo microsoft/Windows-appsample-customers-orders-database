@@ -40,6 +40,9 @@ namespace Contoso.App.ViewModels
     {
         private List<Order> _masterOrdersList { get; } = new List<Order>();
 
+        /// <summary>
+        /// Initializes a new instance of the OrderListPageViewModel class.
+        /// </summary>
         public OrderListPageViewModel() => IsLoading = false;
 
         /// <summary>
@@ -81,6 +84,9 @@ namespace Contoso.App.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets a formatted version of the selected order's grand total value.
+        /// </summary>
         public string SelectedOrderGrandTotalFormatted => (SelectedOrder?.GrandTotal ?? 0).ToString("c");
 
         private Customer _selectedCustomer;
@@ -206,12 +212,22 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class OrderDeletionException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the OrderDeletionException class with a default error message.
+        /// </summary>
         public OrderDeletionException() : base("Error deleting an order.")
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the OrderDeletionException class with the specified error message.
+        /// </summary>
         public OrderDeletionException(string message) : base(message)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the OrderDeletionException class with 
+        /// the specified error message and inner exception.
+        /// </summary>
         public OrderDeletionException(string message,
             Exception innerException) : base(message, innerException)
         { }

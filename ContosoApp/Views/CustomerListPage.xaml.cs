@@ -27,10 +27,10 @@ using System.Linq;
 using Contoso.App.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace Contoso.App.Views
@@ -46,12 +46,17 @@ namespace Contoso.App.Views
         public CustomerListPage()
         {
             InitializeComponent();
-            DataContext = ViewModel;
             Window.Current.SizeChanged += CurrentWindow_SizeChanged;
         }
 
-        public CustomerListPageViewModel ViewModel { get; set; } = new CustomerListPageViewModel();
+        /// <summary>
+        /// Gets the app-wide ViewModel instance.
+        /// </summary>
+        public MainViewModel ViewModel => App.ViewModel;
 
+        /// <summary>
+        /// Adjust the command bar label positions depending on the window width.
+        /// </summary>
         private void CurrentWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && 
@@ -66,10 +71,8 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Navigates to a blank customer details page for the user to fill in.
+        /// Initializes the AutoSuggestBox portion of the search box.
         /// </summary>
-        private void CreateCustomer_Click(object sender, RoutedEventArgs e) => GoToDetailsPage(null);
-
         private void CustomerSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
             if (CustomerSearchBox != null)
@@ -80,6 +83,9 @@ namespace Contoso.App.Views
             }
         }
 
+        /// <summary>
+        /// Updates the search box items source when the user changes the search text.
+        /// </summary>
         private async void CustomerSearchBox_TextChanged(AutoSuggestBox sender,
             AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -115,6 +121,9 @@ namespace Contoso.App.Views
             }
         }
 
+        /// <summary>
+        /// Filters the customer list based on the search text.
+        /// </summary>
         private async void CustomerSearchBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
@@ -170,35 +179,47 @@ namespace Contoso.App.Views
         /// <summary>
         /// Menu flyout click control for selecting a customer and displaying details.
         /// </summary>
-        private void ViewDetails_Click(object sender, RoutedEventArgs e) => GoToDetailsPage(ViewModel.SelectedCustomer);
+        private void ViewDetails_Click(object sender, RoutedEventArgs e) =>
+            Frame.Navigate(typeof(CustomerDetailPage), ViewModel.SelectedCustomer.Model.Id, 
+                new DrillInNavigationTransitionInfo());
 
         /// <summary>
-        /// Opens the order detail page for the user to create an order for the selected customer.
+        /// Navigates to a blank customer details page for the user to fill in.
         /// </summary>
-        private void AddOrder_Click(object sender, RoutedEventArgs e)
+        private void CreateCustomer_Click(object sender, RoutedEventArgs e) =>
+            Frame.Navigate(typeof(CustomerDetailPage), null, new DrillInNavigationTransitionInfo());
+
+        /// <summary>
+        /// Reverts all changes to the row if the row has changes but a cell is not currently in edit mode.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem)
+            if (e.Key == Windows.System.VirtualKey.Escape &&
+                ViewModel.SelectedCustomer != null &&
+                ViewModel.SelectedCustomer.IsModified &&
+                !ViewModel.SelectedCustomer.IsInEdit)
             {
-                GoToOrderPage((sender as FrameworkElement).DataContext as CustomerViewModel);
-            }
-            else
-            {
-                GoToOrderPage(ViewModel.SelectedCustomer);
+                (sender as DataGrid).CancelEdit(DataGridEditingUnit.Row);
             }
         }
 
         /// <summary>
-        /// Navigates to the customer detail page for the provided customer.
+        /// Selects the tapped customer. 
         /// </summary>
-        private void GoToDetailsPage(CustomerViewModel customer) =>
-            Frame.Navigate(typeof(CustomerDetailPage), customer, new DrillInNavigationTransitionInfo());
+        private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
+            ViewModel.SelectedCustomer = (e.OriginalSource as FrameworkElement).DataContext as CustomerViewModel;
 
         /// <summary>
-        /// Navigates to the order detail page for the provided customer.
+        /// Opens the order detail page for the user to create an order for the selected customer.
         /// </summary>
-        private void GoToOrderPage(CustomerViewModel customer) =>
-            Frame.Navigate(typeof(OrderDetailPage), customer.Model);
+        private void AddOrder_Click(object sender, RoutedEventArgs e) =>
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedCustomer.Model.Id);
 
+        /// <summary>
+        /// Sorts the data in the DataGrid.
+        /// </summary>
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
             (sender as DataGrid).Sort(e.Column, ViewModel.Customers.Sort);
     }

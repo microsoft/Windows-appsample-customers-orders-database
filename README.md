@@ -31,6 +31,8 @@ This sample highlights:
 - Using the repository pattern to connect to Sqlite or SQL Azure databases
 - Connecting to an external web API built with ASP.NET Core 2.0
 
+This sample is designed to cover the core scenarios with minimal architectural complexity. For a more complex, full-featured sample that covers many of the same scenarios using a more sophisticated architecture, see the [VanArsdel Inventory sample](https://github.com/Microsoft/InventorySample).  
+
 ## Run the sample
 
 This sample is designed to connect to an instance of Azure Active Directory for authentication and an external service for data. 

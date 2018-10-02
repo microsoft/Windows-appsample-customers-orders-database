@@ -35,6 +35,9 @@ namespace Contoso.App.Views
     {
         public const string DataSourceKey = "data_source"; 
 
+        /// <summary>
+        /// Initializes a new instance of the SettingsPage class.
+        /// </summary>
         public SettingsPage()
         {
             InitializeComponent();

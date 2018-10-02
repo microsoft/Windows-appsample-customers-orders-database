@@ -39,10 +39,6 @@ namespace Contoso.App
     /// </summary>
     public sealed partial class AppShell : Page
     {
-        //private bool _isPaddingAdded = false;
-
-        //public static AppShell Current { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the AppShell, sets the static 'Current' reference,
         /// adds callbacks for Back requests and changes in the SplitView's DisplayMode, and
@@ -55,38 +51,13 @@ namespace Contoso.App
             Loaded += (sender, args) =>
             {
                 NavView.SelectedItem = CustomerListMenuItem;
-
-                //Current = this;
-                //CheckTogglePaneButtonSizeChanged();
-
-                //var titleBar = CoreApplication.GetCurrentView().TitleBar;
-                //titleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             };
         }
 
-        // Make the Frame publically visible
-        public Frame AppFrame => frame;
-
         /// <summary>
-        /// Invoked when window title bar visibility changes, such as after loading or in tablet mode
-        /// Ensures correct padding at window top, between title bar and app content
-        /// </summary>s
-        //private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
-        //{
-        //    if (!_isPaddingAdded && sender.IsVisible)
-        //    {
-        //        //add extra padding between window title bar and app content
-        //        double extraPadding = (Double)App.Current.Resources["DesktopWindowTopPadding"];
-        //        _isPaddingAdded = true;
-
-        //        Thickness margin = NavMenuList.Margin;
-        //        NavMenuList.Margin = new Thickness(margin.Left, margin.Top + extraPadding, margin.Right, margin.Bottom);
-        //        margin = AppFrame.Margin;
-        //        AppFrame.Margin = new Thickness(margin.Left, margin.Top + extraPadding, margin.Right, margin.Bottom);
-        //        margin = TogglePaneButton.Margin;
-        //        TogglePaneButton.Margin = new Thickness(margin.Left, margin.Top + extraPadding, margin.Right, margin.Bottom);
-        //    }
-        //}
+        /// Gets the navigation frame instance.
+        /// </summary>
+        public Frame AppFrame => frame;
 
         /// <summary>
         /// Default keyboard focus movement for any unhandled keyboarding
@@ -132,33 +103,13 @@ namespace Contoso.App
             }
         }
 
-        private void SystemNavigationManager_BackRequested(object sender, BackRequestedEventArgs e)
-        {
-            bool handled = e.Handled;
-            BackRequested(ref handled);
-            e.Handled = handled;
-        }
-
-        private void BackRequested(ref bool handled)
-        {
-            // Get a hold of the current frame so that we can inspect the app back stack.
-            if (AppFrame == null)
-            {
-                return;
-            }
-            // Check to see if this is the top-most page on the app back stack.
-            if (AppFrame.CanGoBack && !handled)
-            {
-                // If not, set the event to handled and go back to the previous page in the app.
-                handled = true;
-                AppFrame.GoBack();
-            }
-        }
-
         public readonly string CustomerListLabel = "Customer list";
 
         public readonly string OrderListLabel = "Order list";
 
+        /// <summary>
+        /// Navigates to the page corresponding to the tapped item.
+        /// </summary>
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var label = args.InvokedItem as string;
@@ -198,12 +149,13 @@ namespace Contoso.App
         /// <summary>
         /// Invoked when the View Code button is clicked. Launches the repo on GitHub. 
         /// </summary>
-        private async void ViewCodeNavPaneButton_Tapped(object sender, TappedRoutedEventArgs e)
-        {
+        private async void ViewCodeNavPaneButton_Tapped(object sender, TappedRoutedEventArgs e) =>
             await Launcher.LaunchUriAsync(new Uri(
                 "https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
-        }
 
+        /// <summary>
+        /// Navigates the frame to the previous page.
+        /// </summary>
         private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             if (AppFrame.CanGoBack)

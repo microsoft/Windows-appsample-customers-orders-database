@@ -22,16 +22,16 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
+using System;
 using Contoso.Models;
 using Contoso.App.ViewModels;
-using System;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.ApplicationModel.Email;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace Contoso.App.Views
 {
@@ -68,7 +68,7 @@ namespace Contoso.App.Views
         /// Opens the order in the order details page for editing. 
         /// </summary>
         private void EditButton_Click(object sender, RoutedEventArgs e) => 
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder);
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
 
         /// <summary>
         /// Deletes the currently selected order.
@@ -108,6 +108,9 @@ namespace Contoso.App.Views
             }
         }
 
+        /// <summary>
+        /// Initializes the AutoSuggestBox portion of the search box.
+        /// </summary>
         private void OrderSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
             if (sender is UserControls.CollapsibleSearchBox searchBox)
@@ -144,12 +147,6 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        ///  Loads the specified order in the order details page. 
-        /// </summary>
-        private void GoToDetailsPage(Contoso.Models.Order order) => 
-            Frame.Navigate(typeof(OrderDetailPage), order);
-
-        /// <summary>
         /// Searchs the list of orders.
         /// </summary>
         private void OrderSearch_QuerySubmitted(AutoSuggestBox sender, 
@@ -176,23 +173,32 @@ namespace Contoso.App.Views
         /// double-clicks an order. 
         /// </summary>
         private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => 
-            Frame.Navigate(typeof(OrderDetailPage), ((FrameworkElement)sender).DataContext as Order);
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
 
+        // Navigates to the details page for the selected customer when the user presses SPACE.
         private void DataGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Space)
             {
-                GoToDetailsPage(ViewModel.SelectedOrder);
+                Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
             }
         }
 
         /// <summary>
+        /// Selects the tapped order. 
+        /// </summary>
+        private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
+            ViewModel.SelectedOrder = (e.OriginalSource as FrameworkElement).DataContext as Order;
+
+        /// <summary>
         /// Navigates to the order details page.
         /// </summary>
-        private void MenuFlyoutViewDetails_Click(object sender, RoutedEventArgs e) => 
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder, 
-                new DrillInNavigationTransitionInfo());
+        private void MenuFlyoutViewDetails_Click(object sender, RoutedEventArgs e) =>
+            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id, new DrillInNavigationTransitionInfo());
 
+        /// <summary>
+        /// Sorts the data in the DataGrid.
+        /// </summary>
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
             (sender as DataGrid).Sort(e.Column, ViewModel.Orders.Sort);
     }

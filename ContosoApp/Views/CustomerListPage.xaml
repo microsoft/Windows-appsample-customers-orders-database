@@ -32,7 +32,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <MenuFlyout x:Key="ListViewContextMenu">
+        <MenuFlyout x:Key="DataGridContextMenu">
             <MenuFlyoutItem
                 Click="ViewDetails_Click"
                 Style="{StaticResource MenuFlyoutItemIconTemplate}"
@@ -113,7 +113,10 @@
                 SelectedItem="{x:Bind ViewModel.SelectedCustomer, Mode=TwoWay}"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.Below="PageTitle">
+                RelativePanel.Below="PageTitle"
+                KeyDown="DataGrid_KeyDown"
+                RightTapped="DataGrid_RightTapped"
+                ContextFlyout="{StaticResource DataGridContextMenu}">
                 <toolkit:DataGrid.Columns>
                     <toolkit:DataGridTextColumn
                         Header="First name"
