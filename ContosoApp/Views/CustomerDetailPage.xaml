@@ -204,7 +204,8 @@
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
                         </toolkit:Expander.Header>
 
-                        <Grid>
+                        <Grid
+                            Margin="0,4,0,0">
 
                             <toolkit:DataGrid
                                 BorderThickness="0"
@@ -213,7 +214,6 @@
                                 GridLinesVisibility="None"
                                 IsReadOnly="True"
                                 AutoGenerateColumns="False"
-                                Margin="0,4,0,0"
                                 ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
                                 SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
                                 Sorting="DataGrid_Sorting">
@@ -299,7 +299,7 @@
                             </toolkit:DataGrid>
 
                             <ProgressBar
-                                Margin="0,50,0,0"
+                                Margin="0,48,0,0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 IsIndeterminate="True"

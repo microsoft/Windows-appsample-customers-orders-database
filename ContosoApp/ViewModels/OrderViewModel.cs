@@ -28,7 +28,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Contoso.Models;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -36,50 +35,45 @@ using Microsoft.Toolkit.Uwp.Helpers;
 namespace Contoso.App.ViewModels
 {
     /// <summary>
-    /// Encapsulates data for the Order detail page. 
+    /// Provides a bindable wrapper for the Order model class, encapsulating various services for access by the UI.
     /// </summary>
-    public class OrderDetailPageViewModel : BindableBase
+    public class OrderViewModel : BindableBase
     {
         /// <summary>
-        /// Creates an OrderDetailPageViewModel that wraps the specified EnterpriseModels.Order.
+        /// Initializes a new instance of the OrderViewModel class that wraps the specified Order object.
         /// </summary>
-        /// <param name="order">The order to wrap.</param>
-        public OrderDetailPageViewModel(Order order)
+        /// <param name="model">The order to wrap.</param>
+        public OrderViewModel(Order model)
         {
-            _order = order;
+            Model = model;
 
             // Create an ObservableCollection to wrap Order.LineItems so we can track
             // product additions and deletions.
-            _lineItems = order != null && order.LineItems != null ?
-                new ObservableCollection<LineItem>(_order.LineItems) :
-                new ObservableCollection<LineItem>();
+            LineItems = new ObservableCollection<LineItem>(Model.LineItems);
+            LineItems.CollectionChanged += LineItems_Changed;
 
-            _lineItems.CollectionChanged += LineItems_Changed;
+            NewLineItem = new LineItemViewModel();
 
-            NewLineItem = new LineItemWrapper();
-
-            if (order.Customer == null)
+            if (model.Customer == null)
             {
-                Task.Run(() => LoadCustomer(_order.CustomerId));
+                Task.Run(() => LoadCustomer(Model.CustomerId));
             }
         }
 
         /// <summary>
-        /// Creates a OrderDetailPageViewModel from an Order ID.
+        /// Creates an OrderViewModel that wraps an Order object created from the specified ID.
         /// </summary>
-        /// <param name="orderId">The ID of the order to retrieve. </param>
-        public async static Task<OrderDetailPageViewModel> CreateFromGuid(Guid orderId) =>
-            new OrderDetailPageViewModel(await GetOrder(orderId));
+        public async static Task<OrderViewModel> CreateFromGuid(Guid orderId) =>
+            new OrderViewModel(await GetOrder(orderId));
 
         /// <summary>
-        /// The EnterpriseModels.Order this object wraps. 
+        /// Gets the underlying Order object. 
         /// </summary>
-        private Order _order;
+        public Order Model { get; }
 
         /// <summary>
         /// Loads the customer with the specified ID. 
         /// </summary>
-        /// <param name="customerId">The ID of the customer to load.</param>
         private async void LoadCustomer(Guid customerId)
         {
             var customer = await App.Repository.Customers.GetAsync(customerId);
@@ -92,71 +86,52 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Returns the order with the specified ID.
         /// </summary>
-        /// <param name="orderId">The ID of the order to retrieve.</param>
-        /// <returns>The order, if it exists; otherwise, null. </returns>
         private static async Task<Order> GetOrder(Guid orderId) =>
             await App.Repository.Orders.GetAsync(orderId); 
 
         /// <summary>
         /// Gets a value that specifies whether the user can refresh the page.
         /// </summary>
-        public bool CanRefresh => _order != null && !HasChanges && IsExistingOrder;
+        public bool CanRefresh => Model != null && !IsModified && IsExistingOrder;
 
         /// <summary>
         /// Gets a value that specifies whether the user can revert changes. 
         /// </summary>
-        public bool CanRevert => _order != null && HasChanges && IsExistingOrder;
+        public bool CanRevert => Model != null && IsModified && IsExistingOrder;
 
         /// <summary>
         /// Gets or sets the order's ID.
         /// </summary>
         public Guid Id
         {
-            get => _order.Id; 
+            get => Model.Id; 
             set
             {
-                if (_order.Id != value)
+                if (Model.Id != value)
                 {
-                    _order.Id = value;
+                    Model.Id = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
 
-        /// <summary>
-        /// Gets or sets the ID of the order's customer.
-        /// </summary>
-        public Guid CustomerId
-        {
-            get => _order.CustomerId;
-            set
-            {
-                if (_order.CustomerId != value)
-                {
-                    _order.CustomerId = value;
-                    OnPropertyChanged();
-                    HasChanges = true;
-                }
-            }
-        }
-
-        bool _hasChanges = false;
+        bool _IsModified = false;
 
         /// <summary>
-        /// Gets or sets a value that indicates whether the user has changed the order. 
+        /// Gets or sets a value that indicates whether the underlying model has been modified. 
         /// </summary>
-        public bool HasChanges
+        public bool IsModified
         {
-            get => _hasChanges; 
+            get => _IsModified; 
             set
             {
-                if (value != _hasChanges)
+                if (value != _IsModified)
                 {
                     // Only record changes after the order has loaded. 
                     if (IsLoaded)
                     {
-                        _hasChanges = value;
+                        _IsModified = value;
                         OnPropertyChanged();
                     }
                 }
@@ -171,7 +146,7 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets a value that indicates whether there is a backing order.
         /// </summary>
-        public bool IsLoaded => _order != null && (IsNewOrder || _order.Customer != null);
+        public bool IsLoaded => Model != null && (IsNewOrder || Model.Customer != null);
 
         /// <summary>
         /// Gets a value that indicates whether there is not a backing order.
@@ -181,26 +156,26 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets a value that indicates whether this is a newly-created order.
         /// </summary>
-        public bool IsNewOrder => _order.InvoiceNumber == 0; 
+        public bool IsNewOrder => Model.InvoiceNumber == 0; 
 
         /// <summary>
         /// Gets or sets the invoice number for this order. 
         /// </summary>
         public int InvoiceNumber
         {
-            get => _order.InvoiceNumber;
+            get => Model.InvoiceNumber;
             set
             {
-                if (_order.InvoiceNumber != value)
+                if (Model.InvoiceNumber != value)
                 {
-                    _order.InvoiceNumber = value;
+                    Model.InvoiceNumber = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(IsNewOrder));
                     OnPropertyChanged(nameof(IsLoaded));
                     OnPropertyChanged(nameof(IsNotLoaded));
                     OnPropertyChanged(nameof(IsNewOrder));
                     OnPropertyChanged(nameof(IsExistingOrder));
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -212,14 +187,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public Customer Customer
         {
-            get => _order.Customer;
+            get => Model.Customer;
             set
             {
-                if (_order.Customer != value)
+                if (Model.Customer != value)
                 {
-                    var isLoadingOperation = _order.Customer == null &&
+                    var isLoadingOperation = Model.Customer == null &&
                         value != null && !IsNewOrder;
-                    _order.Customer = value;
+                    Model.Customer = value;
                     OnPropertyChanged();
                     if (isLoadingOperation)
                     {
@@ -228,18 +203,18 @@ namespace Contoso.App.ViewModels
                     }
                     else
                     {
-                        HasChanges = true;
+                        IsModified = true;
                     }
                 }
             }
         }
 
-        private ObservableCollection<LineItem> _lineItems = new ObservableCollection<LineItem>();
+        private ObservableCollection<LineItem> _lineItems;
         
         /// <summary>
         /// Gets the line items in this invoice. 
         /// </summary>
-        public virtual ObservableCollection<LineItem> LineItems
+        public ObservableCollection<LineItem> LineItems
         {
             get => _lineItems; 
             set
@@ -257,7 +232,7 @@ namespace Contoso.App.ViewModels
                     }
                     _lineItems = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -269,22 +244,22 @@ namespace Contoso.App.ViewModels
         {
             if (LineItems != null)
             {
-                _order.LineItems = LineItems.ToList<LineItem>();
+                Model.LineItems = LineItems.ToList();
             }
 
             OnPropertyChanged(nameof(LineItems));
             OnPropertyChanged(nameof(Subtotal));
             OnPropertyChanged(nameof(Tax));
             OnPropertyChanged(nameof(GrandTotal));
-            HasChanges = true;
+            IsModified = true;
         }
 
-        private LineItemWrapper _newLineItem;
+        private LineItemViewModel _newLineItem;
 
         /// <summary>
         /// Gets or sets the line item that the user is currently working on.
         /// </summary>
-        public LineItemWrapper NewLineItem
+        public LineItemViewModel NewLineItem
         {
             get => _newLineItem; 
             set
@@ -331,14 +306,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public DateTime DatePlaced
         {
-            get => _order.DatePlaced;
+            get => Model.DatePlaced;
             set
             {
-                if (_order.DatePlaced != value)
+                if (Model.DatePlaced != value)
                 {
-                    _order.DatePlaced = value;
+                    Model.DatePlaced = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -350,14 +325,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public DateTime? DateFilled
         {
-            get => _order.DateFilled;
+            get => Model.DateFilled;
             set
             {
-                if (value != _order.DateFilled)
+                if (value != Model.DateFilled)
                 {
-                    _order.DateFilled = value;
+                    Model.DateFilled = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -365,17 +340,17 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets the subtotal. This value is calculated automatically. 
         /// </summary>
-        public decimal Subtotal => _order.Subtotal;
+        public decimal Subtotal => Model.Subtotal;
 
         /// <summary>
         /// Gets the tax. This value is calculated automatically. 
         /// </summary>
-        public decimal Tax => _order.Tax;
+        public decimal Tax => Model.Tax;
 
         /// <summary>
         /// Gets the total. This value is calculated automatically. 
         /// </summary>
-        public decimal GrandTotal => _order.GrandTotal;
+        public decimal GrandTotal => Model.GrandTotal;
 
         /// <summary>
         /// Gets or sets the shipping address, which may be different
@@ -383,14 +358,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string Address
         {
-            get => _order.Address; 
+            get => Model.Address; 
             set
             {
-                if (_order.Address != value)
+                if (Model.Address != value)
                 {
-                    _order.Address = value;
+                    Model.Address = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -403,22 +378,22 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Sets the PaymentStatus property by parsing a string representation of the enum value.
         /// </summary>
-        public void SetPaymentStatus(object value) =>
-            PaymentStatus = (PaymentStatus)Enum.Parse(typeof(PaymentStatus), value as string);
+        public void SetPaymentStatus(object value) => PaymentStatus = value == null ?
+            PaymentStatus.Unpaid : (PaymentStatus)Enum.Parse(typeof(PaymentStatus), value as string);
 
         /// <summary>
         /// Gets or sets the payment status.
         /// </summary>
         public PaymentStatus PaymentStatus
         {
-            get => _order.PaymentStatus;
+            get => Model.PaymentStatus;
             set
             {
-                if (_order.PaymentStatus != value)
+                if (Model.PaymentStatus != value)
                 {
-                    _order.PaymentStatus = value;
+                    Model.PaymentStatus = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -431,21 +406,22 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Sets the Term property by parsing a string representation of the enum value.
         /// </summary>
-        public Term SetTerm(object value) => Term = (Term)Enum.Parse(typeof(Term), value as string);
+        public Term SetTerm(object value) => Term = value == null ?
+            Term.Net1 : (Term)Enum.Parse(typeof(Term), value as string);
 
         /// <summary>
         /// Gets or sets the payment term.
         /// </summary>
         public Term Term
         {
-            get => _order.Term;
+            get => Model.Term;
             set
             {
-                if (_order.Term != value)
+                if (Model.Term != value)
                 {
-                    _order.Term = value;
+                    Model.Term = value;
                     OnPropertyChanged();
-                    HasChanges = true;
+                    IsModified = true;
                 }
             }
         }
@@ -458,25 +434,25 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Sets the Status property by parsing a string representation of the enum value.
         /// </summary>
-        public OrderStatus SetStatus(object value) =>
-            Status = (OrderStatus)Enum.Parse(typeof(OrderStatus), value as string);
+        public OrderStatus SetOrderStatus(object value) => OrderStatus = value == null ? 
+            OrderStatus.Open : (OrderStatus)Enum.Parse(typeof(OrderStatus), value as string);
 
         /// <summary>
         /// Gets or sets the order status.
         /// </summary>
-        public OrderStatus Status
+        public OrderStatus OrderStatus
         {
-            get => _order.Status;
+            get => Model.Status;
             set
             {
-                if (_order.Status != value)
+                if (Model.Status != value)
                 {
-                    _order.Status = value;
+                    Model.Status = value;
                     OnPropertyChanged();
 
                     // Update the DateFilled value.
-                    DateFilled = _order.Status == OrderStatus.Filled ? (DateTime?)DateTime.Now : null;
-                    HasChanges = true;
+                    DateFilled = Model.Status == OrderStatus.Filled ? (DateTime?)DateTime.Now : null;
+                    IsModified = true;
                 }
             }
         }
@@ -486,37 +462,15 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string CustomerName
         {
-            get => _order.CustomerName;
+            get => Model.CustomerName;
             set
             {
-                if (_order.CustomerName != value)
+                if (Model.CustomerName != value)
                 {
-                    _order.CustomerName = value;
+                    Model.CustomerName = value;
                     OnPropertyChanged();
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets a string representation of the order.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString() => $"{_order.InvoiceNumber}";
-
-        /// <summary>
-        /// Converts an Order to an OrderDetailPageViewModel.
-        /// </summary>
-        /// <param name="order">The EnterpriseModels.Order to convert.</param>
-        public static implicit operator OrderDetailPageViewModel(Order order) => new OrderDetailPageViewModel(order);
-
-        /// <summary>
-        /// Converts an OrderDetailPageViewModel to an Order.
-        /// </summary>
-        /// <param name="order">The OrderDetailPageViewModel to convert.</param>
-        public static implicit operator Order(OrderDetailPageViewModel order)
-        {
-            order._order.LineItems = order.LineItems.ToList();
-            return order._order;
         }
 
         /// <summary>
@@ -527,7 +481,7 @@ namespace Contoso.App.ViewModels
             Order result = null;
             try
             {
-                result = await App.Repository.Orders.UpsertAsync(_order);
+                result = await App.Repository.Orders.UpsertAsync(Model);
             }
             catch (Exception ex)
             {
@@ -537,7 +491,7 @@ namespace Contoso.App.ViewModels
 
             if (result != null)
             {
-                await DispatcherHelper.ExecuteOnUIThreadAsync(() => HasChanges = false);
+                await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsModified = false);
             }
             else
             {
@@ -550,13 +504,11 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Stores the product suggestions. 
         /// </summary>
-        public ObservableCollection<Product> ProductSuggestions { get; } =
-            new ObservableCollection<Product>();
+        public ObservableCollection<Product> ProductSuggestions { get; } = new ObservableCollection<Product>();
 
         /// <summary>
         /// Queries the database and updates the list of new product suggestions. 
         /// </summary>
-        /// <param name="queryText">The query to submit.</param>
         public async void UpdateProductSuggestions(string queryText)
         {
             ProductSuggestions.Clear();
@@ -570,117 +522,6 @@ namespace Contoso.App.ViewModels
                     ProductSuggestions.Add(p);
                 }
             }
-        }
-    }
-
-    /// <summary>
-    /// Wraps LineItem objects in order to provide change notification for data binding purposes.
-    /// </summary>
-    public class LineItemWrapper : INotifyPropertyChanged
-    {
-        LineItem _item;
-
-        /// <summary>
-        /// Initializes a new instance of the LineItemWrapper class using a new line item.
-        /// </summary>
-        public LineItemWrapper() => _item = new LineItem();
-
-        /// <summary>
-        /// Initializes a new instance of the LineItemWrapper class using the specified line item.
-        /// </summary>
-        public LineItemWrapper(LineItem item) => _item = item;
-
-        /// <summary>
-        /// Gets or sets the product for the line item.
-        /// </summary>
-        public Product Product
-        {
-            get => _item.Product;
-            set
-            {
-                if (_item.Product != value)
-                {
-                    _item.Product = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the product ID for the line item.
-        /// </summary>
-        public Guid ProductId
-        {
-            get => _item.ProductId;
-            set
-            {
-                if (_item.ProductId != value)
-                {
-                    _item.ProductId = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the product quantity for the line item.
-        /// </summary>
-        public int Quantity
-        {
-            get => _item.Quantity;
-            set
-            {
-                if (_item.Quantity != value)
-                {
-                    _item.Quantity = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// Raises the PropertyChanged event.
-        /// </summary>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) => 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        /// <summary>
-        /// Converts an LineItem to an LineItemWrapper.
-        /// </summary>
-        /// <param name="order">The LineItem to convert.</param>
-        public static implicit operator LineItemWrapper(LineItem item) => new LineItemWrapper(item);
-
-        /// <summary>
-        /// Converts an LineItemWrapper to an LineItem.
-        /// </summary>
-        /// <param name="item">The LineItemWrapper to convert.</param>
-        public static implicit operator LineItem(LineItemWrapper item) => item._item;
-    }
-
-    public class OrderSavingException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the OrderSavingException class with a default error message.
-        /// </summary>
-        public OrderSavingException() : base("Error saving an order.")
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the OrderSavingException class with the specified error message.
-        /// </summary>
-        public OrderSavingException(string message) : base(message)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the OrderSavingException class with 
-        /// the specified error message and inner exception.
-        /// </summary>
-        public OrderSavingException(string message, Exception innerException) : base(message, innerException)
-        {
         }
     }
 }

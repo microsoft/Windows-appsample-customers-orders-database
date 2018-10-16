@@ -48,12 +48,12 @@ namespace Contoso.App.Views
         /// <summary>
         /// Stores the view model. 
         /// </summary>
-        private OrderDetailPageViewModel _viewModel;
+        private OrderViewModel _viewModel;
 
         /// <summary>
         /// We use this object to bind the UI to our data.
         /// </summary>
-        public OrderDetailPageViewModel ViewModel
+        public OrderViewModel ViewModel
         {
             get => _viewModel;
             set
@@ -78,13 +78,13 @@ namespace Contoso.App.Views
             if (customer != null)
             {
                 // Order is a new order
-                ViewModel = new OrderDetailPageViewModel(new Order(customer.Model));
+                ViewModel = new OrderViewModel(new Order(customer.Model));
             }
             else
             {
                 // Order is an existing order.
                 var order = await App.Repository.Orders.GetAsync(guid);
-                ViewModel = new OrderDetailPageViewModel(order);
+                ViewModel = new OrderViewModel(order);
             }
 
             base.OnNavigatedTo(e);
@@ -95,7 +95,7 @@ namespace Contoso.App.Views
         /// </summary>
         protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            if (ViewModel.HasChanges)
+            if (ViewModel.IsModified)
             {
                 var saveDialog = new SaveChangesDialog()
                 {
@@ -126,7 +126,7 @@ namespace Contoso.App.Views
                         e.Cancel = true;
 
                         // This flag gets cleared on navigation, so restore it. 
-                        ViewModel.HasChanges = true; 
+                        ViewModel.IsModified = true; 
                         break;
                 }
             }
@@ -174,7 +174,7 @@ namespace Contoso.App.Views
         /// Reloads the order.
         /// </summary>
         private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 
-            ViewModel = await OrderDetailPageViewModel.CreateFromGuid(ViewModel.Id);
+            ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
 
         /// <summary>
         /// Reverts the page.
@@ -194,10 +194,10 @@ namespace Contoso.App.Views
             {
                 case SaveChangesDialogResult.Save:
                     await ViewModel.SaveOrderAsync();
-                    ViewModel = await OrderDetailPageViewModel.CreateFromGuid(ViewModel.Id);
+                    ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
                     break;
                 case SaveChangesDialogResult.DontSave:
-                    ViewModel = await OrderDetailPageViewModel.CreateFromGuid(ViewModel.Id);
+                    ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
                     break;
                 case SaveChangesDialogResult.Cancel:
                     break;
@@ -256,7 +256,7 @@ namespace Contoso.App.Views
         /// </summary>
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LineItems.Add(ViewModel.NewLineItem);
+            ViewModel.LineItems.Add(ViewModel.NewLineItem.Model);
             ClearCandidateProduct();
         }
 
@@ -273,8 +273,8 @@ namespace Contoso.App.Views
         /// </summary>
         private void ClearCandidateProduct()
         {
-            ProductSearchBox.Text = String.Empty;
-            ViewModel.NewLineItem = new LineItem();
+            ProductSearchBox.Text = string.Empty;
+            ViewModel.NewLineItem = new LineItemViewModel();
         }
 
         /// <summary>

@@ -53,15 +53,9 @@ namespace Contoso.App.Views
         public CustomerViewModel ViewModel { get; set; }
 
         /// <summary>
-        /// Handle edit cancelation by navigating to the previous page. 
+        /// Navigate to the previous page when the user cancels the creation of a new customer record.
         /// </summary>
-        private void EditsCanceled(object sender, EventArgs e)
-        {
-            if (ViewModel.IsNewCustomer && Frame.CanGoBack)
-            {
-                Frame.GoBack();
-            };
-        }
+        private void AddNewCustomerCanceled(object sender, EventArgs e) => Frame.GoBack();
 
         /// <summary>
         /// Displays the selected customer data.
@@ -82,7 +76,7 @@ namespace Contoso.App.Views
                     customer => customer.Model.Id == (Guid)e.Parameter).First();
             }
 
-            ViewModel.EditsCanceled += EditsCanceled;
+            ViewModel.AddNewCustomerCanceled += AddNewCustomerCanceled;
             base.OnNavigatedTo(e);
         }
 
@@ -131,12 +125,12 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Disconnects the EditsCanceled event handler from the ViewModel 
+        /// Disconnects the AddNewCustomerCanceled event handler from the ViewModel 
         /// when the parent frame navigates to a different page.
         /// </summary>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            ViewModel.EditsCanceled -= EditsCanceled;
+            ViewModel.AddNewCustomerCanceled -= AddNewCustomerCanceled;
             base.OnNavigatedFrom(e);
         }
 

@@ -179,9 +179,14 @@ namespace Contoso.App.Views
         /// <summary>
         /// Menu flyout click control for selecting a customer and displaying details.
         /// </summary>
-        private void ViewDetails_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(CustomerDetailPage), ViewModel.SelectedCustomer.Model.Id, 
-                new DrillInNavigationTransitionInfo());
+        private void ViewDetails_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SelectedCustomer != null)
+            {
+                Frame.Navigate(typeof(CustomerDetailPage), ViewModel.SelectedCustomer.Model.Id,
+                    new DrillInNavigationTransitionInfo());
+            }
+        }
 
         /// <summary>
         /// Navigates to a blank customer details page for the user to fill in.

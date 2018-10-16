@@ -47,7 +47,17 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class AuthenticationViewModel : BindableBase
     {
+        /// <summary>
+        /// Creates a new AuthenticationViewModel for logging users in and getting their info.
+        /// </summary>
+        public AuthenticationViewModel()
+        {
+            Task.Run(PrepareAsync);
+            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPaneAsync;
+        }
+
         private string _name;
+
         /// <summary>
         /// Gets or sets the user's name.
         /// </summary>
@@ -58,6 +68,7 @@ namespace Contoso.App.ViewModels
         }
 
         private string _email;
+
         /// <summary>
         /// Gets or sets the user's email.
         /// </summary>
@@ -68,6 +79,7 @@ namespace Contoso.App.ViewModels
         }
 
         private string _title;
+
         /// <summary>
         /// Gets or sets the user's standard title.
         /// </summary>
@@ -78,6 +90,7 @@ namespace Contoso.App.ViewModels
         }
 
         private string _domain;
+
         /// <summary>
         /// Gets or sets the user's AAD domain.
         /// </summary>
@@ -88,6 +101,7 @@ namespace Contoso.App.ViewModels
         }
 
         private BitmapImage _photo;
+
         /// <summary>
         /// Gets or sets the user's photo.
         /// </summary>
@@ -98,6 +112,7 @@ namespace Contoso.App.ViewModels
         }
 
         private string _errorText;
+
         /// <summary>
         /// Gets or sets error text to show if the login operation fails.
         /// </summary>
@@ -108,6 +123,7 @@ namespace Contoso.App.ViewModels
         }
 
         private bool _showWelcome;
+
         /// <summary>
         /// Gets or sets whether to show the starting welcome UI. 
         /// </summary>
@@ -118,6 +134,7 @@ namespace Contoso.App.ViewModels
         }
 
         private bool _showLoading; 
+
         /// <summary>
         /// Gets or sets whether to show the logging in progress UI.
         /// </summary>
@@ -128,6 +145,7 @@ namespace Contoso.App.ViewModels
         }
 
         private bool _showData;
+
         /// <summary>
         /// Gets or sets whether to show user data UI.
         /// </summary>
@@ -138,6 +156,7 @@ namespace Contoso.App.ViewModels
         }
 
         private bool _showError; 
+
         /// <summary>
         /// Gets or sets whether to show the error UI.
         /// </summary>
@@ -145,15 +164,6 @@ namespace Contoso.App.ViewModels
         {
             get => _showError;
             set => Set(ref _showError, value);
-        }
-
-        /// <summary>
-        /// Creates a new AuthenticationViewModel for logging users in and getting their info.
-        /// </summary>
-        public AuthenticationViewModel()
-        {
-            Task.Run(PrepareAsync);
-            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPane;
         }
 
         /// <summary>
@@ -278,7 +288,7 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Initializes the AccountsSettingsPane with AAD login.
         /// </summary>
-        private async void BuildAccountsPane(AccountsSettingsPane sender,
+        private async void BuildAccountsPaneAsync(AccountsSettingsPane sender,
             AccountsSettingsPaneCommandsRequestedEventArgs args)
         {
             var deferral = args.GetDeferral();

@@ -5,10 +5,9 @@ sample:
 UI controls (including a data grid), Sqlite and SQL Azure database integration, Entity Framework, and cloud API services.
   image: screenshot1.png
   generateZip: true
-  author: karler
+  author: KarlErickson
   languages:
   - csharp
-  - xaml
   technologies:
   - windows
   vssolution: Contoso.sln

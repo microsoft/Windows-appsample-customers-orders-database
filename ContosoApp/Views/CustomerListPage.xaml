@@ -100,55 +100,64 @@
                 Loaded="CustomerSearchBox_Loaded"
                 RelativePanel.AlignRightWithPanel="True" />
 
-            <toolkit:DataGrid
-                x:Name="DataGrid"
-                CanUserReorderColumns="False"
-                CanUserResizeColumns="False"
-                AutoGenerateColumns="False"
-                Sorting="DataGrid_Sorting"
-                BorderThickness="0"
+            <Grid
                 Margin="0,10,0,0"
-                GridLinesVisibility="None"
-                ItemsSource="{x:Bind ViewModel.Customers}"
-                SelectedItem="{x:Bind ViewModel.SelectedCustomer, Mode=TwoWay}"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
-                RelativePanel.Below="PageTitle"
-                KeyDown="DataGrid_KeyDown"
-                RightTapped="DataGrid_RightTapped"
-                ContextFlyout="{StaticResource DataGridContextMenu}">
-                <toolkit:DataGrid.Columns>
-                    <toolkit:DataGridTextColumn
-                        Header="First name"
-                        Tag="FirstName"
-                        Binding="{Binding FirstName}"
-                        CanUserSort="False"
-                        HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                    <toolkit:DataGridTextColumn
-                        Header="Last name"
-                        Tag="LastName"
-                        Binding="{Binding LastName}"/>
-                    <toolkit:DataGridTextColumn
-                        Header="Address"
-                        Binding="{Binding Address}"
-                        CanUserSort="False"
-                        HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                    <toolkit:DataGridTextColumn
-                        Header="Company"
-                        Binding="{Binding Company}"/>
-                    <toolkit:DataGridTextColumn
-                        Header="Phone"
-                        Binding="{Binding Phone}"
-                        CanUserSort="False"
-                        HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                    <toolkit:DataGridTextColumn
-                        Header="Email"
-                        Binding="{Binding Email}"
-                        CanUserSort="False"
-                        HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                </toolkit:DataGrid.Columns>
-            </toolkit:DataGrid>
+                RelativePanel.Below="PageTitle">
+                
+                <toolkit:DataGrid
+                    CanUserReorderColumns="False"
+                    CanUserResizeColumns="False"
+                    AutoGenerateColumns="False"
+                    Sorting="DataGrid_Sorting"
+                    BorderThickness="0"
+                    GridLinesVisibility="None"
+                    ItemsSource="{x:Bind ViewModel.Customers}"
+                    SelectedItem="{x:Bind ViewModel.SelectedCustomer, Mode=TwoWay}"
+                    KeyDown="DataGrid_KeyDown"
+                    RightTapped="DataGrid_RightTapped"
+                    ContextFlyout="{StaticResource DataGridContextMenu}">
+                    <toolkit:DataGrid.Columns>
+                        <toolkit:DataGridTextColumn
+                            Header="First name"
+                            Tag="FirstName"
+                            Binding="{Binding FirstName}"
+                            CanUserSort="False"
+                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                        <toolkit:DataGridTextColumn
+                            Header="Last name"
+                            Tag="LastName"
+                            Binding="{Binding LastName}"/>
+                        <toolkit:DataGridTextColumn
+                            Header="Address"
+                            Binding="{Binding Address}"
+                            CanUserSort="False"
+                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                        <toolkit:DataGridTextColumn
+                            Header="Company"
+                            Binding="{Binding Company}"/>
+                        <toolkit:DataGridTextColumn
+                            Header="Phone"
+                            Binding="{Binding Phone}"
+                            CanUserSort="False"
+                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                        <toolkit:DataGridTextColumn
+                            Header="Email"
+                            Binding="{Binding Email}"
+                            CanUserSort="False"
+                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                    </toolkit:DataGrid.Columns>
+                </toolkit:DataGrid>
 
+                <ProgressBar
+                    Margin="0,50,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    IsIndeterminate="True"
+                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+                
+            </Grid>
         </RelativePanel>
 
         <VisualStateManager.VisualStateGroups>

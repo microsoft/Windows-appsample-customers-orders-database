@@ -164,7 +164,7 @@
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="*"
-                    Visibility="{x:Bind ViewModel.HasChanges, Mode=OneWay}" />
+                    Visibility="{x:Bind ViewModel.IsModified, Mode=OneWay}" />
             </StackPanel>
 
             <!--
@@ -182,7 +182,7 @@
                     x:Name="SaveOrderButton"
                     Click="SaveButton_Click"
                     Icon="Save"
-                    IsEnabled="{x:Bind ViewModel.HasChanges, Mode=OneWay}"
+                    IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"
                     Label="Save" />
                 <AppBarButton
                     Click="RevertButton_Click"
@@ -312,7 +312,7 @@
                             </TextBlock>
                             <ComboBox
                                 ItemsSource="{x:Bind ViewModel.OrderStatusValues}"
-                                SelectedItem="{x:Bind ViewModel.Status.ToString(), BindBack=ViewModel.SetStatus, Mode=TwoWay}" />
+                                SelectedItem="{x:Bind ViewModel.OrderStatus.ToString(), BindBack=ViewModel.SetOrderStatus, Mode=TwoWay}" />
                         </StackPanel>
                         <StackPanel
                             x:Name="PaymentTerm"

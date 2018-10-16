@@ -38,12 +38,15 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class OrderListPageViewModel : BindableBase
     {
-        private List<Order> _masterOrdersList { get; } = new List<Order>();
-
         /// <summary>
         /// Initializes a new instance of the OrderListPageViewModel class.
         /// </summary>
         public OrderListPageViewModel() => IsLoading = false;
+
+        /// <summary>
+        /// Gets the unfiltered collection of all orders. 
+        /// </summary>
+        private List<Order> MasterOrdersList { get; } = new List<Order>();
 
         /// <summary>
         /// Gets the orders to display.
@@ -101,11 +104,6 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Stores the order suggestions.
-        /// </summary>
-        public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
-
-        /// <summary>
         /// Loads the specified customer and sets the
         /// SelectedCustomer property.
         /// </summary>
@@ -128,20 +126,19 @@ namespace Contoso.App.ViewModels
             {
                 IsLoading = true;
                 Orders.Clear();
-                _masterOrdersList.Clear();
+                MasterOrdersList.Clear();
             });
 
             var orders = await Task.Run(App.Repository.Orders.GetAsync);
+
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
-                if (orders != null)
+                foreach (var order in orders)
                 {
-                    foreach (Order o in orders)
-                    {
-                        Orders.Add(o);
-                        _masterOrdersList.Add(o);
-                    }
+                    Orders.Add(order);
+                    MasterOrdersList.Add(order);
                 }
+
                 IsLoading = false;
             });
         }
@@ -149,7 +146,6 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Submits a query to the data source.
         /// </summary>
-        /// <param name="query"></param>
         public async void QueryOrders(string query)
         {
             IsLoading = true;
@@ -169,9 +165,19 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
+        /// Deletes the specified order from the database.
+        /// </summary>
+        public async Task DeleteOrder(Order orderToDelete) =>
+            await App.Repository.Orders.DeleteAsync(orderToDelete.Id);
+
+        /// <summary>
+        /// Stores the order suggestions.
+        /// </summary>
+        public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
+
+        /// <summary>
         /// Queries the database and updates the list of new order suggestions.
         /// </summary>
-        /// <param name="queryText">The query to submit.</param>
         public void UpdateOrderSuggestions(string queryText)
         {
             OrderSuggestions.Clear();
@@ -180,7 +186,7 @@ namespace Contoso.App.ViewModels
                 string[] parameters = queryText.Split(new char[] { ' ' },
                     StringSplitOptions.RemoveEmptyEntries);
 
-                var resultList = _masterOrdersList
+                var resultList = MasterOrdersList
                     .Where(order => parameters
                         .Any(parameter =>
                             order.Address.StartsWith(parameter) ||
@@ -198,38 +204,5 @@ namespace Contoso.App.ViewModels
                 }
             }
         }
-
-        /// <summary>
-        /// Deletes the specified order from the database.
-        /// </summary>
-        /// <param name="orderToDelete">The order to delete.</param>
-        public async Task DeleteOrder(Order orderToDelete) =>
-            await App.Repository.Orders.DeleteAsync(orderToDelete.Id);
-    }
-
-    /// <summary>
-    /// Occurs when there's an error deleting an order.
-    /// </summary>
-    public class OrderDeletionException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the OrderDeletionException class with a default error message.
-        /// </summary>
-        public OrderDeletionException() : base("Error deleting an order.")
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the OrderDeletionException class with the specified error message.
-        /// </summary>
-        public OrderDeletionException(string message) : base(message)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the OrderDeletionException class with 
-        /// the specified error message and inner exception.
-        /// </summary>
-        public OrderDeletionException(string message,
-            Exception innerException) : base(message, innerException)
-        { }
     }
 }

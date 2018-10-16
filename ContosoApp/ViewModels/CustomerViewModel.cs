@@ -32,19 +32,19 @@ using Microsoft.Toolkit.Uwp.Helpers;
 namespace Contoso.App.ViewModels
 {
     /// <summary>
-    /// Wrapper for the Customer model in the master/details Customers page.
+    /// Provides a bindable wrapper for the Customer model class, encapsulating various services for access by the UI.
     /// </summary>
     public class CustomerViewModel : BindableBase, IEditableObject
     {
         /// <summary>
-        /// Creates a new customer model.
+        /// Initializes a new instance of the CustomerViewModel class that wraps a Customer object.
         /// </summary>
         public CustomerViewModel(Customer model = null) => Model = model ?? new Customer();
 
         private Customer _model;
 
         /// <summary>
-        /// The underlying customer model.  
+        /// Gets or sets the underlying Customer object.
         /// </summary>
         public Customer Model
         {
@@ -67,7 +67,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string FirstName
         {
-            get => Model.FirstName; 
+            get => Model.FirstName;
             set
             {
                 if (value != Model.FirstName)
@@ -85,7 +85,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string LastName
         {
-            get => Model.LastName; 
+            get => Model.LastName;
             set
             {
                 if (value != Model.LastName)
@@ -101,7 +101,7 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets the customers full (first + last) name.
         /// </summary>
-        public string Name => IsNewCustomer && string.IsNullOrEmpty(FirstName) 
+        public string Name => IsNewCustomer && string.IsNullOrEmpty(FirstName)
             && string.IsNullOrEmpty(LastName) ? "New customer" : $"{FirstName} {LastName}";
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string Company
         {
-            get => Model.Company; 
+            get => Model.Company;
             set
             {
                 if (value != Model.Company)
@@ -143,7 +143,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string Phone
         {
-            get => Model.Phone; 
+            get => Model.Phone;
             set
             {
                 if (value != Model.Phone)
@@ -160,7 +160,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public string Email
         {
-            get => Model.Email; 
+            get => Model.Email;
             set
             {
                 if (value != Model.Email)
@@ -173,22 +173,17 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets whether the underlying model has been modified. 
-        /// This is used when sync'ing with the server to reduce load
-        /// and only upload the models that changed.
+        /// Gets or sets a value that indicates whether the underlying model has been modified. 
         /// </summary>
+        /// <remarks>
+        /// Used when sync'ing with the server to reduce load and only upload the models that have changed.
+        /// </remarks>
         public bool IsModified { get; set; }
 
-        private ObservableCollection<Order> _orders = new ObservableCollection<Order>();
-
         /// <summary>
-        /// The collection of the customer's orders.
+        /// Gets the collection of the customer's orders.
         /// </summary>
-        public ObservableCollection<Order> Orders
-        {
-            get => _orders;
-            set => Set(ref _orders, value);
-        }
+        public ObservableCollection<Order> Orders { get; } = new ObservableCollection<Order>();
 
         private Order _selectedOrder;
 
@@ -204,7 +199,7 @@ namespace Contoso.App.ViewModels
         private bool _isLoading;
 
         /// <summary>
-        /// Indicates whether to show the loading icon. 
+        /// Gets or sets a value that indicates whether to show a progress bar. 
         /// </summary>
         public bool IsLoading
         {
@@ -215,7 +210,7 @@ namespace Contoso.App.ViewModels
         private bool _isNewCustomer;
 
         /// <summary>
-        /// Indicates whether this is a new customer.
+        /// Gets or sets a value that indicates whether this is a new customer.
         /// </summary>
         public bool IsNewCustomer
         {
@@ -233,11 +228,6 @@ namespace Contoso.App.ViewModels
             get => _isInEdit;
             set => Set(ref _isInEdit, value);
         }
-
-        /// <summary>
-        /// Gets a value that indicates whether the customer data is not being edited.
-        /// </summary>
-        public bool IsNotInEdit => !IsInEdit;
 
         /// <summary>
         /// Saves customer data that has been edited.
@@ -258,19 +248,21 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Raised when the user cancels the changes they've made to the customer data.
         /// </summary>
-        public event EventHandler EditsCanceled;
+        public event EventHandler AddNewCustomerCanceled;
 
         /// <summary>
         /// Cancels any in progress edits.
         /// </summary>
         public async Task CancelEditsAsync()
         {
-            if (!IsNewCustomer)
+            if (IsNewCustomer)
+            {
+                AddNewCustomerCanceled?.Invoke(this, EventArgs.Empty);
+            }
+            else
             {
                 await RevertChangesAsync();
             }
-
-            EditsCanceled?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -310,14 +302,19 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task LoadOrdersAsync()
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
+            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            {
+                IsLoading = true;
+            });
+
             var orders = await App.Repository.Orders.GetForCustomerAsync(Model.Id);
+
             await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
             {
                 Orders.Clear();
-                foreach (var o in orders)
+                foreach (var order in orders)
                 {
-                    Orders.Add(o);
+                    Orders.Add(order);
                 }
 
                 IsLoading = false;
