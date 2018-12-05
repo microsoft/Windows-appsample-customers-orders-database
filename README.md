@@ -1,7 +1,3 @@
-<!---
-  category: ControlsLayoutAndText Data IdentitySecurityAndEncryption Navigation NetworkingAndWebServices
--->
-
 ---
 topic: sample
 languages:
