@@ -2,6 +2,17 @@
   category: ControlsLayoutAndText Data IdentitySecurityAndEncryption Navigation NetworkingAndWebServices
 -->
 
+---
+topic: sample
+languages:
+- csharp
+products:
+- windows
+- uwp
+statusNotificationTargets:
+- codefirst
+---
+
 # Customers Orders Database sample 
 
 A UWP (Universal Windows Platform) sample app showcasing features useful to enterprise developers, like 
