@@ -52,24 +52,24 @@ However, in order to debug and explore the full functionality of the app, you'll
 
 ### Quick start 
 
-### Prepare your environment
+#### Prepare your environment
 
-This sample requires Visual Studio 2017, the Windows 10 Software Development Kit (SDK) (version 17134 or higher), and the .NET Core 2.0 SDK.
+- Windows 10. Minimum: Windows 10, version 1809 (10.0; Build 17763), also known as the Windows 10 October 2018 Update.
+- [Windows 10 SDK](https://developer.microsoft.com/windows/downloads/windows-10-sdk). Minimum: Windows SDK version 10.0.17763.0 (Windows 10, version 1809).
+- [The .NET Core 2.0 SDK](https://www.microsoft.com/net/core).
+- [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) (or Visual Studio 2017). You can use the free Visual Studio Community Edition to build and run Windows Universal Platform (UWP) apps.
 
-* [Get a free copy of Visual Studio 2017 with support for building Universal Windows apps](http://go.microsoft.com/fwlink/?LinkID=280676)
-* [Get the .NET Core 2.0 SDK](https://www.microsoft.com/net/core)
+To get the latest updates to Windows and the development tools, and to help shape their development, join 
+the [Windows Insider Program](https://insider.windows.com).
 
-Additionally, to receive the latest updates to Windows and the development tools, and to help shape their development, join 
-the [Windows Insider Program](https://insider.windows.com/ "Become a Windows Insider").
-
-> *Note* If you are using Visual Studio 2015, a previous version of this sample which doesn't require Visual Studio 2017 is 
+> *Note* If you are using Visual Studio 2015, then a previous version of this sample (which doesn't require Visual Studio 2019 nor Visual Studio 2017) is 
 available in the git commit history for this repo.
 
-### Run
+#### Run
 
 Set your startup project as **Contoso.App**, the architecture to x86 or x64, and press F5 to run.
 
-### Complete setup
+#### Complete setup
 
 To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Values you need to fill 
 are in [Constants.cs](ContosoRepository/Constants.cs). 
