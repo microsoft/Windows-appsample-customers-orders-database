@@ -1,12 +1,13 @@
 ---
-topic: sample
+page_type: sample
 languages:
 - csharp
 products:
 - windows
 - windows-uwp
 statusNotificationTargets:
-- codefirst
+- codefirst@microsoft.com
+description: "A UWP (Universal Windows Platform) sample app showcasing features useful to enterprise developers."
 ---
 
 <!---
