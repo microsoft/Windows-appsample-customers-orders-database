@@ -108,8 +108,8 @@ namespace Contoso.App
                 File.Copy(demoDatabasePath, databasePath);
             }
             var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
-                "Data Source=" + databasePath);
-            Repository = new SqlContosoRepository(dbOptions);
+                "Data Source=" + databasePath).Options;
+            Repository = new SqlContosoRepository(new ContosoContext(dbOptions));
         }
 
         /// <summary>
