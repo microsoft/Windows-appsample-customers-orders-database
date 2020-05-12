@@ -20,7 +20,7 @@ Azure Active Directory (AAD) authentication, UI controls (including a data grid)
 Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, 
 and products for the fictitious company Contoso. 
 
-> Note - This sample is targeted and tested for Windows 10, version 1903 (10.0; Build 18362), and Visual Studio 2019. If you prefer, you can use project properties to retarget the project(s) to Windows 10, version 1809 (10.0; Build 17763), and/or open the sample with Visual Studio 2017.
+> Note - This sample is targeted and tested for Windows 10, version 2004 (10.0; Build 19569), and Visual Studio 2019. If you prefer, you can use project properties to retarget the project(s) to Windows 10, version 1903 (10.0; Build 18362).
 
 [Download and try it now from the Microsoft Store](https://www.microsoft.com/store/apps/9PF1WCV13501). Visual Studio not required. 
 
