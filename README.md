@@ -4,7 +4,7 @@ languages:
 - csharp
 products:
 - windows
-- windows-api-win32
+- windows-uwp
 statusNotificationTargets:
 - codefirst@microsoft.com
 ---
@@ -138,4 +138,3 @@ The two details screens show how to use headings, labels, and whitespace to orga
 - [Screen sizes and breakpoints](https://msdn.microsoft.com/windows/uwp/layout/screen-sizes-and-breakpoints-for-responsive-design)
 - [Define layouts with XAML](https://msdn.microsoft.com/windows/uwp/layout/layouts-with-xaml)
 - [Master/details pattern](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/master-details)
-
