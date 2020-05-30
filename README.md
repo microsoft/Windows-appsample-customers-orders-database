@@ -4,7 +4,7 @@ languages:
 - csharp
 products:
 - windows
-- windows-uwp
+- windows-api-win32
 statusNotificationTargets:
 - codefirst@microsoft.com
 ---
