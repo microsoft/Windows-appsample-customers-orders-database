@@ -139,4 +139,3 @@ The two details screens show how to use headings, labels, and whitespace to orga
 - [Define layouts with XAML](https://msdn.microsoft.com/windows/uwp/layout/layouts-with-xaml)
 - [Master/details pattern](https://msdn.microsoft.com/windows/uwp/controls-and-patterns/master-details)
 
-Last updated May 29 2020, 18:47 Pacific Time (PT)
