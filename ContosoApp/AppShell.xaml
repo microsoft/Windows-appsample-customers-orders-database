@@ -25,6 +25,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="using:Contoso.App.UserControls"
+    xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
     KeyDown="AppShell_KeyDown"
     TabNavigation="Cycle"
     mc:Ignorable="d">
@@ -33,41 +34,41 @@
         x:Name="LayoutRoot"
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <NavigationView
+        <MUXC:NavigationView
             x:Name="NavView"
             OpenPaneLength="160"
             AlwaysShowHeader="False"
             IsSettingsVisible="True"
             ItemInvoked="NavigationView_ItemInvoked"
-            BackRequested="NavView_BackRequested"
+            BackRequested="NavigationView_BackRequested"
             IsBackEnabled="{x:Bind AppFrame.CanGoBack, Mode=OneWay}">
-            
-            <NavigationView.MenuItems>
-                <NavigationViewItem
+
+            <MUXC:NavigationView.MenuItems>
+                <MUXC:NavigationViewItem
                     x:Name="CustomerListMenuItem"
                     Content="{x:Bind CustomerListLabel}" 
                     ToolTipService.ToolTip="{x:Bind CustomerListLabel}"
                     Icon="ContactInfo"/>
-                <NavigationViewItem
+                <MUXC:NavigationViewItem
                     x:Name="OrderListMenuItem"
                     Content="{x:Bind OrderListLabel}" 
                     ToolTipService.ToolTip="{x:Bind OrderListLabel}"
                     Icon="Shop"/>
-            </NavigationView.MenuItems>
+            </MUXC:NavigationView.MenuItems>
 
-            <NavigationView.PaneFooter>
+            <MUXC:NavigationView.PaneFooter>
                 <StackPanel>
-                    <NavigationViewItem
+                    <MUXC:NavigationViewItem
                         Content="View code"
                         ToolTipService.ToolTip="View code"
                         Tapped="ViewCodeNavPaneButton_Tapped">
-                        <NavigationViewItem.Icon>
+                        <MUXC:NavigationViewItem.Icon>
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE943;"/>
-                        </NavigationViewItem.Icon>
-                    </NavigationViewItem>
+                        </MUXC:NavigationViewItem.Icon>
+                    </MUXC:NavigationViewItem>
                     <uc:AuthenticationControl/>
                 </StackPanel>
-            </NavigationView.PaneFooter>
+            </MUXC:NavigationView.PaneFooter>
 
             <!-- In OnNavigatingToPage, we synchronize the selected item in the NavigationView with the current page. -->
             <Frame
@@ -85,7 +86,7 @@
                 </Frame.ContentTransitions>
             </Frame>
 
-        </NavigationView>
+        </MUXC:NavigationView>
     </Grid>
 </Page>
 

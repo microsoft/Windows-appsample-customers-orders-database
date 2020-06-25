@@ -24,6 +24,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel>
@@ -32,21 +33,11 @@
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="Settings" />
 
-            <TextBlock
-                Margin="0,25,0,5"
-                Text="Data source" />
-            <RadioButton
-                x:Name="SqliteRadio"
-                Checked="OnDataSourceChanged"
-                Content="Sqlite (Local)"
-                GroupName="DataSource"
-                Tag="Sqlite" />
-            <RadioButton
-                x:Name="RestRadio"
-                Checked="OnDataSourceChanged"
-                Content="REST (Azure)"
-                GroupName="DataSource"
-                Tag="Rest" />
+            <MUXC:RadioButtons Header="Data source" SelectedIndex="2">
+                <RadioButton Checked="OnDataSourceChanged" x:Name="SqliteRadio" Tag="Sqlite">Sqlite (Local)</RadioButton>
+                <RadioButton Checked="OnDataSourceChanged" x:Name="RestRadio" Tag="Rest">REST (Azure)</RadioButton>
+            </MUXC:RadioButtons>
+            
             <TextBlock Text="Data is read-only while using REST unless you deploy your own service. See the GitHub repository for details." />
 
             <HyperlinkButton

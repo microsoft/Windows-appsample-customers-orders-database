@@ -26,6 +26,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="/Styles/DataGrid.xaml" />
                 <ResourceDictionary Source="/Styles/Expander.xaml" />
                 <ResourceDictionary Source="/Styles/NavStyles.xaml" />
