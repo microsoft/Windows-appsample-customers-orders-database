@@ -133,6 +133,7 @@ namespace Contoso.App.ViewModels
                     {
                         _IsModified = value;
                         OnPropertyChanged();
+                        OnPropertyChanged(nameof(CanRevert));
                     }
                 }
             }
