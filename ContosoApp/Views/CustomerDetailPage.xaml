@@ -31,7 +31,7 @@
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
     xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
-    NavigationCacheMode="Enabled"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
