@@ -454,7 +454,7 @@
                                 x:Name="ProductSearchBox"
                                 Grid.Column="0"
                                 MinWidth="200"
-                                ItemsSource="{x:Bind ViewModel.ProductSuggestions}"
+                                ItemsSource="{x:Bind ViewModel.ProductSuggestions, Mode=OneWay}"
                                 PlaceholderText="Enter a product..."
                                 SuggestionChosen="ProductSearchBox_SuggestionChosen"
                                 TextChanged="ProductSearchBox_TextChanged">
