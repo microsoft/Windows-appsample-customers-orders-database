@@ -14,6 +14,7 @@
             x:Name="searchButton"
             Width="32"
             Height="32"
+            Padding="0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Checked="SearchButton_Checked"
