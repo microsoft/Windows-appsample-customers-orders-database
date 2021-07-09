@@ -30,6 +30,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Contoso.App
 {
@@ -110,7 +111,7 @@ namespace Contoso.App
         /// <summary>
         /// Navigates to the page corresponding to the tapped item.
         /// </summary>
-        private void NavigationView_ItemInvoked(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs args)
+        private void NavigationView_ItemInvoked(muxc.NavigationView sender, muxc.NavigationViewItemInvokedEventArgs args)
         {
             var label = args.InvokedItem as string;
             var pageType =
@@ -156,7 +157,7 @@ namespace Contoso.App
         /// <summary>
         /// Navigates the frame to the previous page.
         /// </summary>
-        private void NavigationView_BackRequested(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewBackRequestedEventArgs args)
+        private void NavigationView_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)
         {
             if (AppFrame.CanGoBack)
             {

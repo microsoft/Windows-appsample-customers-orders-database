@@ -28,7 +28,7 @@
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:uc="using:Contoso.App.UserControls"
-    xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
@@ -61,7 +61,7 @@
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar IsOpen="False"
+            <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
@@ -80,7 +80,7 @@
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedCustomer), Mode=OneWay}"
                     Label="Add order"
                     ToolTipService.ToolTip="Add order" />
-                <AppBarSeparator MaxHeight="40"></AppBarSeparator>
+                <AppBarSeparator/>
                 <AppBarButton
                     Click="CreateCustomer_Click"
                     Icon="Add"
@@ -151,7 +151,7 @@
                     </toolkit:DataGrid.Columns>
                 </toolkit:DataGrid>
 
-                <MUXC:ProgressBar
+                <muxc:ProgressBar
                     Margin="0,50,0,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"

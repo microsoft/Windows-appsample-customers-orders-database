@@ -30,7 +30,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
-    xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
@@ -63,7 +63,7 @@
                     Icon="Cancel"
                     Label="Cancel"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" MaxHeight="40" />
+                <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
                 <AppBarButton
                     Click="{x:Bind ViewModel.StartEdit}"
                     Icon="Edit"
@@ -299,7 +299,7 @@
                                 </toolkit:DataGrid.Columns>
                             </toolkit:DataGrid>
 
-                            <MUXC:ProgressBar
+                            <muxc:ProgressBar
                                 Margin="0,48,0,0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"

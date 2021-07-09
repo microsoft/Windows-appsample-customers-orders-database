@@ -30,7 +30,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
-    xmlns:MUXC="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
@@ -249,7 +249,7 @@
                             </toolkit:DataGrid.Columns>
                         </toolkit:DataGrid>
 
-                        <MUXC:ProgressBar
+                        <muxc:ProgressBar
                             Margin="0,50,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
