@@ -328,6 +328,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
                         <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True" />
                         <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText" />
                         <Setter Target="DetailPanel.Margin" Value="12,0,0,0" />

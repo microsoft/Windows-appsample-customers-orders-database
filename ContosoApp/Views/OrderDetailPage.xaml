@@ -144,7 +144,8 @@
             <!--  Page title section  -->
             <StackPanel
                 x:Name="PageTitle"
-                Orientation="Horizontal">
+                Orientation="Horizontal"
+                Margin="0,4,0,0">
                 <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
@@ -656,6 +657,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
                         <Setter Target="sp1.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="StatusPanel.(Grid.Row)" Value="1" />
                         <Setter Target="StatusPanel.(Grid.RowSpan)" Value="1" />
