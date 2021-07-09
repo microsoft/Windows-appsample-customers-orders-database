@@ -47,53 +47,49 @@
         </MenuFlyout>
     </Page.Resources>
 
-    <Grid
-        x:Name="LayoutRoot"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel>
-            
-            <TextBlock
+    <RelativePanel x:Name="LayoutRoot">
+        <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="Customers"/>
 
-            <!--
+        <!--
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar
+        <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Loaded="CommandBar_Loaded"
                 RelativePanel.LeftOf="CustomerSearchBox"
                 RelativePanel.RightOf="PageTitle">
-                <AppBarButton
+            <AppBarButton
                     Click="ViewDetails_Click"
                     Icon="Contact"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedCustomer), Mode=OneWay}"
                     Label="View details"
                     ToolTipService.ToolTip="View details" />
-                <AppBarButton
+            <AppBarButton
                     Click="AddOrder_Click"
                     Icon="Shop"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedCustomer), Mode=OneWay}"
                     Label="Add order"
                     ToolTipService.ToolTip="Add order" />
-                <AppBarSeparator/>
-                <AppBarButton
+            <AppBarSeparator/>
+            <AppBarButton
                     Click="CreateCustomer_Click"
                     Icon="Add"
                     Label="New"
                     ToolTipService.ToolTip="New customer" />
-                <AppBarButton
+            <AppBarButton
                     Click="{x:Bind ViewModel.Sync}"
                     Icon="Refresh"
                     Label="Sync"
                     ToolTipService.ToolTip="Sync with server" />
-            </CommandBar>
+        </CommandBar>
 
-            <uc:CollapsibleSearchBox
+        <uc:CollapsibleSearchBox
                 x:Name="CustomerSearchBox"
                 Width="240"
                 Margin="12,8,12,0"
@@ -101,13 +97,13 @@
                 Loaded="CustomerSearchBox_Loaded"
                 RelativePanel.AlignRightWithPanel="True"/>
 
-            <Grid
+        <Grid
                 Margin="0,10,0,0"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.Below="PageTitle">
-                
-                <toolkit:DataGrid
+
+            <toolkit:DataGrid
                     CanUserReorderColumns="False"
                     CanUserResizeColumns="False"
                     AutoGenerateColumns="False"
@@ -119,47 +115,46 @@
                     KeyDown="DataGrid_KeyDown"
                     RightTapped="DataGrid_RightTapped"
                     ContextFlyout="{StaticResource DataGridContextMenu}">
-                    <toolkit:DataGrid.Columns>
-                        <toolkit:DataGridTextColumn
+                <toolkit:DataGrid.Columns>
+                    <toolkit:DataGridTextColumn
                             Header="First name"
                             Tag="FirstName"
                             Binding="{Binding FirstName}"
                             CanUserSort="False"
                             HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                        <toolkit:DataGridTextColumn
+                    <toolkit:DataGridTextColumn
                             Header="Last name"
                             Tag="LastName"
                             Binding="{Binding LastName}"/>
-                        <toolkit:DataGridTextColumn
+                    <toolkit:DataGridTextColumn
                             Header="Address"
                             Binding="{Binding Address}"
                             CanUserSort="False"
                             HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                        <toolkit:DataGridTextColumn
+                    <toolkit:DataGridTextColumn
                             Header="Company"
                             Binding="{Binding Company}"/>
-                        <toolkit:DataGridTextColumn
+                    <toolkit:DataGridTextColumn
                             Header="Phone"
                             Binding="{Binding Phone}"
                             CanUserSort="False"
                             HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                        <toolkit:DataGridTextColumn
+                    <toolkit:DataGridTextColumn
                             Header="Email"
                             Binding="{Binding Email}"
                             CanUserSort="False"
                             HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
-                    </toolkit:DataGrid.Columns>
-                </toolkit:DataGrid>
+                </toolkit:DataGrid.Columns>
+            </toolkit:DataGrid>
 
-                <muxc:ProgressBar
+            <muxc:ProgressBar
                     Margin="0,50,0,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     IsIndeterminate="True"
                     Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-                
-            </Grid>
-        </RelativePanel>
+        </Grid>
+
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -195,5 +190,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </RelativePanel>
 </Page>

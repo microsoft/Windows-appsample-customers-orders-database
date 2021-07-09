@@ -34,53 +34,51 @@
     NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel>
-
-            <TextBlock
+    <RelativePanel>
+        <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
 
-            <!--
+        <!--
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar
+        <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Loaded="CommandBar_Loaded"
                 RelativePanel.LeftOf="CustomerSearchBox"
                 RelativePanel.RightOf="PageTitle">
-                <AppBarButton
+            <AppBarButton
                     Click="{x:Bind ViewModel.SaveAsync}"
                     Icon="Save"
                     Label="Save"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                <AppBarButton
+            <AppBarButton
                     Click="{x:Bind ViewModel.CancelEditsAsync}"
                     Icon="Cancel"
                     Label="Cancel"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
-                <AppBarButton
+            <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+            <AppBarButton
                     Click="{x:Bind ViewModel.StartEdit}"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                     Label="Edit" />
-                <AppBarButton
+            <AppBarButton
                     Click="AddOrder_Click"
                     Icon="Shop"
                     Label="Add order"
                     Visibility="{x:Bind ViewModel.IsNewCustomer, Mode=OneWay}" />
-                <AppBarButton
+            <AppBarButton
                     Click="{x:Bind ViewModel.RefreshOrders}"
                     Icon="Refresh"
                     Label="Refresh orders" />
-            </CommandBar>
+        </CommandBar>
 
-            <uc:CollapsibleSearchBox
+        <uc:CollapsibleSearchBox
                 x:Name="CustomerSearchBox"
                 Width="240"
                 Margin="12,8,12,0"
@@ -88,7 +86,7 @@
                 Loaded="CustomerSearchBox_Loaded"
                 RelativePanel.AlignRightWithPanel="True" />
 
-            <ScrollViewer
+        <ScrollViewer
                 x:Name="DetailPanel"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
@@ -96,30 +94,30 @@
                 VerticalScrollBarVisibility="Auto"
                 VerticalScrollMode="Auto">
 
-                <StackPanel 
+            <StackPanel 
                     Margin="0,8,4,0">
-                    <StackPanel.Resources>
-                        <Style TargetType="muxc:Expander">
-                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                        </Style>
-                     </StackPanel.Resources>
+                <StackPanel.Resources>
+                    <Style TargetType="muxc:Expander">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                    </Style>
+                </StackPanel.Resources>
 
-                    <muxc:Expander>
-                        <muxc:Expander.Header>
-                            <Grid>
-                                <TextBlock 
+                <muxc:Expander>
+                    <muxc:Expander.Header>
+                        <Grid>
+                            <TextBlock 
                                     Text="General"
                                     Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                <TextBlock
+                            <TextBlock
                                     Text="{x:Bind ViewModel.Email, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-                        </muxc:Expander.Header>
+                        </Grid>
+                    </muxc:Expander.Header>
 
-                        <RelativePanel Margin="8,0,0,12">
-                            <TextBox
+                    <RelativePanel Margin="8,0,0,12">
+                        <TextBox
                                 x:Name="FirstName"
                                 MinWidth="120"
                                 Margin="0,8,16,8"
@@ -128,7 +126,7 @@
                                 RelativePanel.AlignLeftWithPanel="True"
                                 Text="{x:Bind ViewModel.FirstName, Mode=TwoWay}"
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                            <TextBox
+                        <TextBox
                                 x:Name="LastName"
                                 MinWidth="120"
                                 Margin="0,8,16,8"
@@ -137,7 +135,7 @@
                                 RelativePanel.RightOf="FirstName"
                                 Text="{x:Bind ViewModel.LastName, Mode=TwoWay}"
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                            <TextBox
+                        <TextBox
                                 x:Name="CompanyText"
                                 Grid.Row="1"
                                 MinWidth="120"
@@ -147,7 +145,7 @@
                                 RelativePanel.AlignLeftWithPanel="True"
                                 RelativePanel.Below="FirstName"
                                 Text="{x:Bind ViewModel.Company, Mode=TwoWay}" />
-                            <TextBox
+                        <TextBox
                                 x:Name="PhoneNumber"
                                 Grid.Row="1"
                                 Grid.Column="1"
@@ -159,7 +157,7 @@
                                 RelativePanel.Below="FirstName"
                                 RelativePanel.RightOf="CompanyText"
                                 Text="{x:Bind ViewModel.Phone, Mode=TwoWay}" />
-                            <TextBox
+                        <TextBox
                                 x:Name="EmailText"
                                 Grid.Column="2"
                                 MinWidth="160"
@@ -170,44 +168,44 @@
                                 RelativePanel.Below="FirstName"
                                 RelativePanel.RightOf="PhoneNumber"
                                 Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
-                        </RelativePanel>
+                    </RelativePanel>
 
-                    </muxc:Expander>
+                </muxc:Expander>
 
-                    <muxc:Expander>
-                        <muxc:Expander.Header>
-                            <Grid>
-                                <TextBlock
+                <muxc:Expander>
+                    <muxc:Expander.Header>
+                        <Grid>
+                            <TextBlock
                                     Text="Addresses"
                                     Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                <TextBlock
+                            <TextBlock
                                     Text="{x:Bind ViewModel.Address, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                            </Grid>
-                        </muxc:Expander.Header>
+                        </Grid>
+                    </muxc:Expander.Header>
 
-                        <TextBox
+                    <TextBox
                             Margin="8,8,0,12"
                             Header="Primary address"
                             IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                             Text="{x:Bind ViewModel.Address, Mode=TwoWay}" />
 
-                    </muxc:Expander>
+                </muxc:Expander>
 
-                    <muxc:Expander
+                <muxc:Expander
                         IsExpanded="True">
 
-                        <muxc:Expander.Header>
-                            <TextBlock
+                    <muxc:Expander.Header>
+                        <TextBlock
                                 Text="Orders"
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        </muxc:Expander.Header>
+                    </muxc:Expander.Header>
 
-                        <Grid
+                    <Grid
                             Margin="0,4,0,0">
 
-                            <toolkit:DataGrid
+                        <toolkit:DataGrid
                                 BorderThickness="0"
                                 CanUserReorderColumns="False"
                                 CanUserResizeColumns="False"
@@ -217,99 +215,99 @@
                                 ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
                                 SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
                                 Sorting="DataGrid_Sorting">
-                                <toolkit:DataGrid.Columns>
-                                    <toolkit:DataGridTemplateColumn
+                            <toolkit:DataGrid.Columns>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Invoice"
                                         Tag="InvoiceNumber">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <HyperlinkButton
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <HyperlinkButton
                                                     Content="{x:Bind InvoiceNumber}"
                                                     Margin="12,0"
                                                     Click="ViewOrderButton_Click"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Placed"
                                         Tag="DatePlaced">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <TextBlock
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock
                                                     VerticalAlignment="Center"
                                                     Margin="12,0"
                                                     Text="{x:Bind sys:String.Format('\{0:d\}', DatePlaced)}"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Filled"
                                         Tag="DateFilled">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <TextBlock
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock
                                                     VerticalAlignment="Center"
                                                     Margin="12,0"
                                                     Text="{x:Bind sys:String.Format('\{0:d\}', DateFilled)}"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Subtotal">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <TextBlock 
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock 
                                                     VerticalAlignment="Center"
                                                     Margin="12,0"
                                                     Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Tax">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <TextBlock 
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock 
                                                     VerticalAlignment="Center"
                                                     Margin="12,0"
                                                     Text="{x:Bind sys:String.Format('\{0:c\}', Tax)}"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTemplateColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTemplateColumn
                                         Header="Total"
                                         Tag="GrandTotal">
-                                        <toolkit:DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate x:DataType="models:Order">
-                                                <TextBlock 
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate x:DataType="models:Order">
+                                            <TextBlock 
                                                     VerticalAlignment="Center"
                                                     Margin="12,0"
                                                     Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
-                                            </DataTemplate>
-                                        </toolkit:DataGridTemplateColumn.CellTemplate>
-                                    </toolkit:DataGridTemplateColumn>
-                                    <toolkit:DataGridTextColumn
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
+                                <toolkit:DataGridTextColumn
                                         Header="Status"
                                         Tag="PaymentStatus"
                                         Binding="{Binding PaymentStatus}"/>
-                                    <toolkit:DataGridTextColumn
+                                <toolkit:DataGridTextColumn
                                         Header="Term"
                                         Binding="{Binding Term}"/>
-                                </toolkit:DataGrid.Columns>
-                            </toolkit:DataGrid>
+                            </toolkit:DataGrid.Columns>
+                        </toolkit:DataGrid>
 
-                            <muxc:ProgressBar
+                        <muxc:ProgressBar
                                 Margin="0,48,0,0"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Top"
                                 IsIndeterminate="True"
                                 Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-                        </Grid>
-                    </muxc:Expander>
-                </StackPanel>
-            </ScrollViewer>
-        </RelativePanel>
+                    </Grid>
+                </muxc:Expander>
+            </StackPanel>
+        </ScrollViewer>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -349,5 +347,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </RelativePanel>
 </Page>

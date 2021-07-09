@@ -77,43 +77,41 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel>
-
-            <TextBlock
+    <RelativePanel>
+        <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="Orders" />
 
-            <!--
+        <!--
                 On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
                 See CommandBar_Loaded event handler.
             -->
-            <CommandBar
+        <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 Loaded="CommandBar_Loaded"
                 RelativePanel.LeftOf="OrderSearchBox"
                 RelativePanel.RightOf="PageTitle">
-                <AppBarButton
+            <AppBarButton
                     x:Name="CommandBarEditButton"
                     Click="EditButton_Click"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                     Label="Edit" />
-                <AppBarButton
+            <AppBarButton
                     x:Name="CommandBarDeleteButton"
                     Click="DeleteOrder_Click"
                     Icon="Delete"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                     Label="Delete" />
-                <AppBarButton
+            <AppBarButton
                     Click="{x:Bind ViewModel.LoadOrders}"
                     Icon="Refresh"
                     Label="Refresh" />
-            </CommandBar>
-            <uc:CollapsibleSearchBox
+        </CommandBar>
+        <uc:CollapsibleSearchBox
                 x:Name="OrderSearchBox"
                 Width="240"
                 Margin="12,8,12,0"
@@ -121,7 +119,7 @@
                 Loaded="OrderSearchBox_Loaded"
                 RelativePanel.AlignRightWithPanel="True" />
 
-            <SplitView
+        <SplitView
                 x:Name="listSplitView"
                 DisplayMode="Inline"
                 IsPaneOpen="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
@@ -132,71 +130,71 @@
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.Below="PageTitle">
 
-                <!--  Displays details about the currently selected order.  -->
-                <SplitView.Pane>
-                    <StackPanel
+            <!--  Displays details about the currently selected order.  -->
+            <SplitView.Pane>
+                <StackPanel
                         x:Name="OrderInfoPanel"
                         Margin="24,28,24,0"
                         Visibility="{x:Bind vm:Converters.CollapsedIfNull(ViewModel.SelectedOrder), Mode=OneWay}">
-                        <StackPanel.Resources>
-                            <Style TargetType="TextBox">
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="TextWrapping" Value="Wrap" />
-                            </Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                                <Setter Property="TextWrapping" Value="Wrap" />
-                            </Style>
-                        </StackPanel.Resources>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock
+                    <StackPanel.Resources>
+                        <Style TargetType="TextBox">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                        </Style>
+                    </StackPanel.Resources>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
                                 FontWeight="SemiBold"
                                 Text="Invoice #" />
-                            <TextBlock
+                        <TextBlock
                                 FontWeight="SemiBold"
                                 Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}" />
-                        </StackPanel>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrderGrandTotalFormatted, Mode=OneWay}" />
+                    </StackPanel>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOrderGrandTotalFormatted, Mode=OneWay}" />
 
-                        <StackPanel Margin="0,20,0,20">
-                            <TextBlock
+                    <StackPanel Margin="0,20,0,20">
+                        <TextBlock
                                 FontWeight="SemiBold"
                                 IsTextSelectionEnabled="True"
                                 Text="{x:Bind ViewModel.SelectedOrder.CustomerName, Mode=OneWay}" />
-                            <TextBlock
+                        <TextBlock
                                 IsTextSelectionEnabled="True"
                                 Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}" />
-                            <HyperlinkButton
+                        <HyperlinkButton
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
                                 Click="EmailButton_Click"
                                 Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}" />
-                        </StackPanel>
+                    </StackPanel>
 
-                        <TextBlock FontWeight="SemiBold">Shipping address</TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Address, Mode=OneWay}" />
+                    <TextBlock FontWeight="SemiBold">Shipping address</TextBlock>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Address, Mode=OneWay}" />
 
-                        <TextBlock
+                    <TextBlock
                             Margin="0,20,0,0"
                             FontWeight="SemiBold">
                             Order status
-                        </TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Status, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Status, Mode=OneWay}" />
 
-                        <TextBlock
+                    <TextBlock
                             Margin="0,20,0,0"
                             FontWeight="SemiBold">
                             Payment status
-                        </TextBlock>
-                        <TextBlock Text="{x:Bind ViewModel.SelectedOrder.PaymentStatus, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.PaymentStatus, Mode=OneWay}" />
 
-                    </StackPanel>
-                </SplitView.Pane>
+                </StackPanel>
+            </SplitView.Pane>
 
-                <SplitView.Content>
-                    <Grid>
+            <SplitView.Content>
+                <Grid>
 
-                        <toolkit:DataGrid
+                    <toolkit:DataGrid
                             BorderThickness="0"
                             CanUserReorderColumns="False"
                             CanUserResizeColumns="False"
@@ -210,56 +208,55 @@
                             Sorting="DataGrid_Sorting"
                             RightTapped="DataGrid_RightTapped"
                             ContextFlyout="{StaticResource DataGridContextMenu}">
-                            <toolkit:DataGrid.Columns>
-                                <toolkit:DataGridTextColumn
+                        <toolkit:DataGrid.Columns>
+                            <toolkit:DataGridTextColumn
                                     Header="Invoice"
                                     Tag="InvoiceNumber"
                                     Binding="{Binding InvoiceNumber}"/>
-                                <toolkit:DataGridTextColumn
+                            <toolkit:DataGridTextColumn
                                     Header="Customer"
                                     Tag="CustomerName"
                                     Binding="{Binding CustomerName}"/>
-                                <toolkit:DataGridTemplateColumn
+                            <toolkit:DataGridTemplateColumn
                                     Header="Date"
                                     Tag="DatePlaced">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock
+                                <toolkit:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:Order">
+                                        <TextBlock
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
                                                 Text="{x:Bind sys:String.Format('\{0:d\}', DatePlaced)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
+                                    </DataTemplate>
+                                </toolkit:DataGridTemplateColumn.CellTemplate>
+                            </toolkit:DataGridTemplateColumn>
+                            <toolkit:DataGridTemplateColumn
                                     Header="Total"
                                     Tag="GrandTotal">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock 
+                                <toolkit:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:Order">
+                                        <TextBlock 
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
                                                 Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTextColumn
+                                    </DataTemplate>
+                                </toolkit:DataGridTemplateColumn.CellTemplate>
+                            </toolkit:DataGridTemplateColumn>
+                            <toolkit:DataGridTextColumn
                                     Header="Status"
                                     Binding="{Binding Status}"/>
-                            </toolkit:DataGrid.Columns>
-                        </toolkit:DataGrid>
+                        </toolkit:DataGrid.Columns>
+                    </toolkit:DataGrid>
 
-                        <muxc:ProgressBar
+                    <muxc:ProgressBar
                             Margin="0,50,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Top"
                             IsIndeterminate="True"
                             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-                    </Grid>
-                </SplitView.Content>
-            </SplitView>
-        </RelativePanel>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
@@ -299,5 +296,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </RelativePanel>
 </Page>

@@ -139,7 +139,6 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel>
             <!--  Page title section  -->
             <StackPanel
@@ -643,8 +642,7 @@
                 RelativePanel.AlignHorizontalCenterWithPanel="True"
                 RelativePanel.AlignVerticalCenterWithPanel="True"
                 Visibility="{x:Bind ViewModel.IsNotLoaded, Mode=OneWay}" />
-        </RelativePanel>
-
+        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -709,5 +707,5 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-    </Grid>
+    </RelativePanel>
 </Page>
