@@ -100,7 +100,7 @@ namespace Contoso.App.Views
                 var saveDialog = new SaveChangesDialog()
                 {
                     Title = $"Save changes to Invoice # {ViewModel.InvoiceNumber.ToString()}?",
-                    Message = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
+                    Content = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
                         "has unsaved changes that will be lost. Do you want to save your changes?"
                 };
 
@@ -184,7 +184,7 @@ namespace Contoso.App.Views
             var saveDialog = new SaveChangesDialog()
             {
                 Title = $"Save changes to Invoice # {ViewModel.InvoiceNumber.ToString()}?",
-                Message = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
+                Content = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
                     "has unsaved changes that will be lost. Do you want to save your changes?"
             };
             await saveDialog.ShowAsync();

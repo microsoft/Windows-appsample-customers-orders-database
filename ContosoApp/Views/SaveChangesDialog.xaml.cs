@@ -44,36 +44,30 @@ namespace Contoso.App.Views
         /// <summary>
         /// Gets or sets the user's choice. 
         /// </summary>
-        public SaveChangesDialogResult Result { get; set; } = SaveChangesDialogResult.Cancel;
+        public SaveChangesDialogResult Result { get; private set; } = SaveChangesDialogResult.Cancel;
 
         /// <summary>
-        /// Gets or sets the display message.
+        /// Occurs when the user chooses to save. 
         /// </summary>
-        public string Message { get; set; } = "You have unsaved changes that will be lost. " + 
-            "Would you like to save your changes?"; 
-
-        /// <summary>
-        /// Fired when the user chooses to save. 
-        /// </summary>
-        private void yesButton_Click(object sender, RoutedEventArgs e)
+        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Result = SaveChangesDialogResult.Save;
             Hide();
         }
 
         /// <summary>
-        /// Fired when the user chooses to discard changes.
+        /// Occurs when the user chooses to discard changes.
         /// </summary>
-        private void noButton_Click(object sender, RoutedEventArgs e)
+        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Result = SaveChangesDialogResult.DontSave;
             Hide();
         }
 
         /// <summary>
-        /// Fired when the user chooses to cancel the operation that triggered the event.
+        /// Occurs when the user chooses to cancel the operation that triggered the event.
         /// </summary>
-        private void cancelButton_Click(object sender, RoutedEventArgs e)
+        private void ContentDialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Result = SaveChangesDialogResult.Cancel;
             Hide();
