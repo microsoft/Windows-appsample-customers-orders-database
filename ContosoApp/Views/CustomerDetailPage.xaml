@@ -98,12 +98,15 @@
 
                 <StackPanel 
                     Margin="0,8,4,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="muxc:Expander">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                     </StackPanel.Resources>
 
-                    <toolkit:Expander
-                        IsExpanded="True"
-                        HorizontalContentAlignment="Left">
-
-                        <toolkit:Expander.Header>
+                    <muxc:Expander>
+                        <muxc:Expander.Header>
                             <Grid>
                                 <TextBlock 
                                     Text="General"
@@ -111,9 +114,9 @@
                                 <TextBlock
                                     Text="{x:Bind ViewModel.Email, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
-                                    HorizontalAlignment="Right"/>
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
-                        </toolkit:Expander.Header>
+                        </muxc:Expander.Header>
 
                         <RelativePanel Margin="8,0,0,12">
                             <TextBox
@@ -169,13 +172,10 @@
                                 Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
                         </RelativePanel>
 
-                    </toolkit:Expander>
+                    </muxc:Expander>
 
-                    <toolkit:Expander
-                        IsExpanded="True"
-                        HorizontalContentAlignment="Left">
-
-                        <toolkit:Expander.Header>
+                    <muxc:Expander>
+                        <muxc:Expander.Header>
                             <Grid>
                                 <TextBlock
                                     Text="Addresses"
@@ -183,9 +183,9 @@
                                 <TextBlock
                                     Text="{x:Bind ViewModel.Address, Mode=OneWay}" 
                                     Style="{StaticResource CaptionTextBlockStyle}"
-                                    HorizontalAlignment="Right"/>
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
-                        </toolkit:Expander.Header>
+                        </muxc:Expander.Header>
 
                         <TextBox
                             Margin="8,8,0,12"
@@ -193,17 +193,16 @@
                             IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                             Text="{x:Bind ViewModel.Address, Mode=TwoWay}" />
 
-                    </toolkit:Expander>
+                    </muxc:Expander>
 
-                    <toolkit:Expander
-                        IsExpanded="True"
-                        HorizontalContentAlignment="Left">
+                    <muxc:Expander
+                        IsExpanded="True">
 
-                        <toolkit:Expander.Header>
+                        <muxc:Expander.Header>
                             <TextBlock
                                 Text="Orders"
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        </toolkit:Expander.Header>
+                        </muxc:Expander.Header>
 
                         <Grid
                             Margin="0,4,0,0">
@@ -307,7 +306,7 @@
                                 Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
                         </Grid>
-                    </toolkit:Expander>
+                    </muxc:Expander>
                 </StackPanel>
             </ScrollViewer>
         </RelativePanel>

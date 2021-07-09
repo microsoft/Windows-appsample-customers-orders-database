@@ -29,7 +29,6 @@
                 <!-- Other app resources here -->
 
                 <ResourceDictionary Source="/Styles/DataGrid.xaml" />
-                <ResourceDictionary Source="/Styles/Expander.xaml" />
                 <ResourceDictionary Source="/Styles/NavStyles.xaml" />
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
