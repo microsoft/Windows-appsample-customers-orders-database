@@ -24,211 +24,88 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="300"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    d:DesignHeight="60"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <Style
-            x:Key="SplitViewPaneButtonStyle"
-            TargetType="Button">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="MinHeight" Value="48" />
-            <Setter Property="MinWidth" Value="48" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="UseSystemFocusVisuals" Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid
-                            x:Name="RootGrid"
-                            Background="{TemplateBinding Background}">
-                            <ContentPresenter
-                                x:Name="ContentPresenter"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                AutomationProperties.AccessibilityView="Raw"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                ContentTransitions="{TemplateBinding ContentTransitions}" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal">
-                                    </VisualState>
-                                    <VisualState x:Name="PointerOver">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames
-                                                Storyboard.TargetName="RootGrid"
-                                                Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame
-                                                    KeyTime="0"
-                                                    Value="{ThemeResource SystemControlHighlightListLowBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames
-                                                Storyboard.TargetName="RootGrid"
-                                                Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame
-                                                    KeyTime="0"
-                                                    Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled">
-                                        <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames
-                                                Storyboard.TargetName="RootGrid"
-                                                Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame
-                                                    KeyTime="0"
-                                                    Value="{ThemeResource SystemControlBackgroundBaseLowBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames
-                                                Storyboard.TargetName="ContentPresenter"
-                                                Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame
-                                                    KeyTime="0"
-                                                    Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames
-                                                Storyboard.TargetName="ContentPresenter"
-                                                Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame
-                                                    KeyTime="0"
-                                                    Value="{ThemeResource SystemControlDisabledTransparentBrush}" />
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-
     <Grid Height="48">
-
         <!--  Start  -->
-        <Button
-            Padding="0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            Click="{x:Bind ViewModel.LoginClick}"
-            Style="{StaticResource SplitViewPaneButtonStyle}"
+        <muxc:NavigationViewItem 
+            Content="Sign in"
+            Tapped="{x:Bind ViewModel.LoginClick}"
             Visibility="{Binding ShowWelcome, Mode=OneWay}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <muxc:NavigationViewItem.Icon>
                 <FontIcon
-                    FontFamily="Segoe MDL2 Assets"
                     FontSize="16"
                     Glyph="&#xE1E2;" />
-                <TextBlock
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Text="Sign in" />
-            </Grid>
-        </Button>
-
+            </muxc:NavigationViewItem.Icon>
+        </muxc:NavigationViewItem>
 
         <!--  User info  -->
-        <Button
-            Padding="0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Left"
-            Click="{x:Bind ViewModel.LogoutClick}"
-            Style="{StaticResource SplitViewPaneButtonStyle}"
+        <muxc:NavigationViewItem 
+            Tapped="{x:Bind ViewModel.LogoutClick}"
             Visibility="{Binding ShowData, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48" />
-                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="32"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Ellipse
-                    x:Name="Ellipse"
+                <muxc:PersonPicture
+                    ProfilePicture="{Binding Photo, Mode=OneWay}"
                     Grid.RowSpan="2"
                     Width="24"
-                    Height="24">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Photo, Mode=OneWay}" />
-                    </Ellipse.Fill>
-                </Ellipse>
+                    Height="24"
+                    Margin="-4,0,0,0"
+                    HorizontalAlignment="Left">
+                </muxc:PersonPicture>
                 <TextBlock
                     Grid.Column="2"
-                    HorizontalAlignment="Center"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Email}" />
+                    Text="{Binding Email}"/>
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="2"
                     VerticalAlignment="Center"
                     Text="Sign out" />
             </Grid>
-        </Button>
+        </muxc:NavigationViewItem>
 
         <!--  Loading  -->
-        <Grid Visibility="{Binding ShowLoading, Mode=OneWay}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <ProgressRing
-                Grid.RowSpan="2"
-                Width="36"
-                Height="36"
-                IsActive="True" />
-            <TextBlock
-                Grid.RowSpan="2"
-                Grid.Column="2"
-                VerticalAlignment="Center"
-                Text="Signing in..." />
-        </Grid>
+        <muxc:NavigationViewItem 
+            Visibility="{Binding ShowLoading, Mode=OneWay}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <muxc:ProgressRing HorizontalAlignment="Left"
+                                   Width="24"
+                                   Height="24"
+                                   IsActive="True"
+                                   Margin="-4,0,0,0"/>
+                <TextBlock Grid.Column="1"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Text="Signing in..." />
+            </Grid>
+        </muxc:NavigationViewItem>
 
         <!--  Error  -->
-        <Grid Visibility="{Binding ShowError, Mode=OneWay}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <FontIcon
-                Grid.RowSpan="2"
-                FontFamily="Segoe MDL2 Assets"
-                Glyph="&#xE1E0;" />
-            <TextBlock
-                Grid.RowSpan="2"
-                Grid.Column="2"
-                VerticalAlignment="Center"
-                Margin="-8,0,0,0"
-                Text="Login failed" />
-        </Grid>
-
+        <muxc:NavigationViewItem 
+            Content="Login failed"
+            Tapped="{x:Bind ViewModel.LoginClick}"
+            Visibility="{Binding ShowError, Mode=OneWay}" 
+            ToolTipService.ToolTip="Click to try again.">
+            <muxc:NavigationViewItem.Icon>
+                <FontIcon
+                    FontSize="16"
+                    Glyph="&#xE1E0;" />
+            </muxc:NavigationViewItem.Icon>
+        </muxc:NavigationViewItem>
     </Grid>
 </UserControl>
