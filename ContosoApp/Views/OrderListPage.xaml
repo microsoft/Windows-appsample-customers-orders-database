@@ -203,6 +203,7 @@
                             Margin="0,10,0,0"
                             ItemsSource="{x:Bind ViewModel.Orders, Mode=OneWay}"
                             SelectedItem="{x:Bind ViewModel.SelectedOrder, Mode=TwoWay}"
+                            SelectionMode="Single"
                             KeyDown="DataGrid_KeyDown"
                             Sorting="DataGrid_Sorting"
                             RightTapped="DataGrid_RightTapped"

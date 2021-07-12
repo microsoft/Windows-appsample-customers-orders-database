@@ -112,6 +112,7 @@
                     GridLinesVisibility="None"
                     ItemsSource="{x:Bind ViewModel.Customers}"
                     SelectedItem="{x:Bind ViewModel.SelectedCustomer, Mode=TwoWay}"
+                    SelectionMode="Single"
                     KeyDown="DataGrid_KeyDown"
                     RightTapped="DataGrid_RightTapped"
                     ContextFlyout="{StaticResource DataGridContextMenu}">
