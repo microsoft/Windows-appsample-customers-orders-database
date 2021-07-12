@@ -212,6 +212,7 @@ namespace Contoso.App.Views
             try
             { 
                 await ViewModel.SaveOrderAsync();
+                Bindings.Update();
             }
             catch (OrderSavingException ex)
             {
