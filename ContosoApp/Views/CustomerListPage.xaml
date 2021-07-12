@@ -36,14 +36,14 @@
         <MenuFlyout x:Key="DataGridContextMenu">
             <MenuFlyoutItem
                 Click="ViewDetails_Click"
-                Style="{StaticResource MenuFlyoutItemIconTemplate}"
-                Tag="&#xE1A5;"
-                Text="View details" />
+                Text="View details"
+                Icon="OpenFile">
+            </MenuFlyoutItem>
             <MenuFlyoutItem
                 Click="AddOrder_Click"
-                Style="{StaticResource MenuFlyoutItemIconTemplate}"
-                Tag="&#xE14D;"
-                Text="Add order" />
+                Text="Add order"
+                Icon="Shop">
+            </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
 

@@ -38,8 +38,7 @@
         <MenuFlyout x:Key="DataGridContextMenu">
             <MenuFlyoutItem
                 Click="MenuFlyoutViewDetails_Click"
-                Style="{StaticResource MenuFlyoutItemIconTemplate}"
-                Tag="&#xE1A5;"
+                Icon="OpenFile"
                 Text="View details" />
         </MenuFlyout>
 
