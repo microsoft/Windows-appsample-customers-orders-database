@@ -46,6 +46,7 @@ namespace Contoso.Models
         {
             Customer = customer;
             CustomerName = $"{customer.FirstName} {customer.LastName}";
+            CustomerId = customer.Id;
             Address = customer.Address;
         }
 
