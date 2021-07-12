@@ -32,7 +32,7 @@
 
     <Page.Resources>
 
-        <Style TargetType="ComboBox">
+        <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
             <Setter Property="MinWidth" Value="150" />
         </Style>
 
