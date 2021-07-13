@@ -24,6 +24,8 @@
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Contoso.App.UserControls
 {
@@ -35,6 +37,7 @@ namespace Contoso.App.UserControls
         {
             InitializeComponent();
             Loaded += CollapsableSearchBox_Loaded;
+            Unloaded += CollapsibleSearchBox_Unloaded;
             Window.Current.SizeChanged += Current_SizeChanged;
             myAutoSuggestBox = searchBox;
         }
@@ -58,8 +61,21 @@ namespace Contoso.App.UserControls
 
         private void CollapsableSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
+            searchButton.AddHandler(PointerPressedEvent,
+                new PointerEventHandler(ToggleButton_PointerPressed), true);
+            searchButton.AddHandler(UIElement.PointerReleasedEvent,
+                new PointerEventHandler(ToggleButton_PointerReleased), true);
+
             RequestedWidth = Width;
             SetState(Window.Current.Bounds.Width);
+        }
+
+        private void CollapsibleSearchBox_Unloaded(object sender, RoutedEventArgs e)
+        {
+            searchButton.RemoveHandler(UIElement.PointerPressedEvent,
+                (PointerEventHandler)ToggleButton_PointerPressed);
+            searchButton.RemoveHandler(UIElement.PointerReleasedEvent,
+                (PointerEventHandler)ToggleButton_PointerReleased);
         }
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
@@ -95,6 +111,27 @@ namespace Contoso.App.UserControls
             {
                 searchBox.Focus(FocusState.Programmatic);
             }
+        }
+
+        // Set states for animated icon in toggle button.
+        private void ToggleButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            muxc.AnimatedIcon.SetState((UIElement)sender, "PointerOver");
+        }
+
+        private void ToggleButton_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            muxc.AnimatedIcon.SetState((UIElement)sender, "Pressed");
+        }
+
+        private void ToggleButton_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            muxc.AnimatedIcon.SetState((UIElement)sender, "Normal");
+        }
+
+        private void ToggleButton_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            muxc.AnimatedIcon.SetState((UIElement)sender, "Normal");
         }
     }
 }

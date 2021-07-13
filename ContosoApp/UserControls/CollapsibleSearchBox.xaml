@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Contoso.App.UserControls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -14,23 +16,42 @@
             x:Name="searchButton"
             Width="32"
             Height="32"
-            Padding="0"
+            Padding="6"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             Checked="SearchButton_Checked"
-            Visibility="Collapsed">
-            <FontIcon
-                FontFamily="Segoe MDL2 Assets"
-                FontSize="12"
-                Glyph="&#xE11A;" />
+            Visibility="Collapsed"
+            muxc:AnimatedIcon.State="Normal"
+            PointerEntered="ToggleButton_PointerEntered"
+            PointerExited="ToggleButton_PointerExited">
+            <muxc:AnimatedIcon>
+                <animatedvisuals:AnimatedFindVisualSource/>
+            <!-- FallbackIconSource uses FontIconSource because the FontSize needs to be
+                 set to a size that fits into the same space allowed for the animated icon. -->
+                <muxc:AnimatedIcon.FallbackIconSource>
+                    <muxc:FontIconSource
+                        FontSize="16"
+                        Glyph="&#xE11A;"/>
+                </muxc:AnimatedIcon.FallbackIconSource>
+            </muxc:AnimatedIcon>
         </ToggleButton>
 
         <AutoSuggestBox
             x:Name="searchBox"
             LostFocus="SearchBox_LostFocus"
             PlaceholderText="Search..."
-            QueryIcon="Find"
-            Visibility="Visible" />
+            Visibility="Visible">
+            <AutoSuggestBox.QueryIcon>
+                <muxc:AnimatedIcon>
+                    <animatedvisuals:AnimatedFindVisualSource/>
+                    <muxc:AnimatedIcon.FallbackIconSource>
+                        <muxc:FontIconSource
+                            FontSize="16"
+                            Glyph="&#xE11A;"/>
+                    </muxc:AnimatedIcon.FallbackIconSource>
+                </muxc:AnimatedIcon>
+            </AutoSuggestBox.QueryIcon>
+        </AutoSuggestBox>
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="OpenState" />
