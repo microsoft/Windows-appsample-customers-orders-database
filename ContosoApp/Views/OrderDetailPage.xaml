@@ -25,6 +25,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Contoso.Models"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
     xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     NavigationCacheMode="Required"
@@ -495,27 +496,23 @@
                             </AutoSuggestBox>
                             <Grid
                                 x:Name="ItemQtyPanel"
-                                Grid.Column="2">
+                                Grid.Column="2"
+                                Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80" />
                                     <ColumnDefinition Width="80" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
-                                    Grid.Column="0"
-                                    Margin="8,0,0,0"
-                                    Padding="0,0,0,0"
                                     HorizontalAlignment="Right"
-                                    Text="{x:Bind ViewModel.NewLineItemProductListPriceFormatted, Mode=OneWay}"
-                                    Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}" />
-                                <TextBox
+                                    VerticalAlignment="Center"
+                                    Text="{x:Bind ViewModel.NewLineItemProductListPriceFormatted, Mode=OneWay}"/>
+                                <muxc:NumberBox
                                     Grid.Column="1"
-                                    Margin="8,0,-4,0"
-                                    Padding="0,0,4,0"
                                     HorizontalAlignment="Right"
-                                    HorizontalContentAlignment="Right"
-                                    InputScope="Number"
-                                    Text="{x:Bind ViewModel.NewLineItem.Quantity, Mode=TwoWay}"
-                                    TextAlignment="Right" />
+                                    Minimum="1"
+                                    LargeChange="5"
+                                    SpinButtonPlacementMode="Compact"
+                                    Text="{x:Bind ViewModel.NewLineItem.Quantity, Mode=TwoWay}"/>
                             </Grid>
                             <Grid
                                 x:Name="ItemAddPanel"
