@@ -44,7 +44,8 @@
 
         <Style
             x:Key="SearchSuggestionItemStyle"
-            TargetType="ListViewItem">
+            TargetType="ListViewItem"
+            BasedOn="{StaticResource DefaultListViewItemStyle}">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         </Style>
 
@@ -57,7 +58,8 @@
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <Style TargetType="TextBlock">
+                    <Style TargetType="TextBlock"
+                           BasedOn="{StaticResource BodyTextBlockStyle}">
                         <Setter Property="Margin" Value="8,0,0,0" />
                     </Style>
                 </Grid.Resources>
@@ -136,11 +138,8 @@
                         Margin="24,28,24,0"
                         Visibility="{x:Bind vm:Converters.CollapsedIfNull(ViewModel.SelectedOrder), Mode=OneWay}">
                     <StackPanel.Resources>
-                        <Style TargetType="TextBox">
-                            <Setter Property="HorizontalAlignment" Value="Stretch" />
-                            <Setter Property="TextWrapping" Value="Wrap" />
-                        </Style>
-                        <Style TargetType="TextBlock">
+                        <Style TargetType="TextBlock"
+                               BasedOn="{StaticResource BodyTextBlockStyle}">
                             <Setter Property="HorizontalAlignment" Value="Stretch" />
                             <Setter Property="TextWrapping" Value="Wrap" />
                         </Style>

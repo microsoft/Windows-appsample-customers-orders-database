@@ -427,7 +427,8 @@
                             ItemTemplate="{StaticResource DefaultLineItemTemplate}"
                             ItemsSource="{x:Bind ViewModel.LineItems, Mode=OneWay}">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
+                                <Style TargetType="ListViewItem"
+                                       BasedOn="{StaticResource DefaultListViewItemStyle}">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     <Setter Property="Margin" Value="0,0,0,0" />
                                     <Setter Property="Padding" Value="0,0,0,0" />
@@ -489,7 +490,8 @@
                                     </DataTemplate>
                                 </AutoSuggestBox.ItemTemplate>
                                 <AutoSuggestBox.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
+                                <Style TargetType="ListViewItem"
+                                       BasedOn="{StaticResource DefaultListViewItemStyle}">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     </Style>
                                 </AutoSuggestBox.ItemContainerStyle>
