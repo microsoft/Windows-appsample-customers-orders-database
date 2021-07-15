@@ -120,6 +120,7 @@ namespace Contoso.App.Views
                 searchBox.AutoSuggestBox.PlaceholderText = "Search orders...";
                 searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)Resources["SearchSuggestionItemTemplate"];
                 searchBox.AutoSuggestBox.ItemContainerStyle = (Style)Resources["SearchSuggestionItemStyle"];
+                searchBox.AutoSuggestBox.ItemsSource = ViewModel.OrderSuggestions;
             }
         }
 
@@ -147,7 +148,7 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Searchs the list of orders.
+        /// Searches the list of orders.
         /// </summary>
         private void OrderSearch_QuerySubmitted(AutoSuggestBox sender, 
             AutoSuggestBoxQuerySubmittedEventArgs args) => 
