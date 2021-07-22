@@ -63,7 +63,7 @@
                         ToolTipService.ToolTip="View code"
                         Tapped="ViewCodeNavPaneButton_Tapped">
                         <muxc:NavigationViewItem.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE943;"/>
+                            <FontIcon Glyph="&#xE943;"/>
                         </muxc:NavigationViewItem.Icon>
                     </muxc:NavigationViewItem>
                     <uc:AuthenticationControl/>

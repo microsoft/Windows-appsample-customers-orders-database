@@ -80,7 +80,7 @@
                     BorderThickness="0"
                     Click="RemoveProduct_Click"
                     Content="&#xE711;"
-                    FontFamily="Segoe MDL2 Assets"
+                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
                     Foreground="Red" />
             </Grid>
         </DataTemplate>
@@ -444,7 +444,7 @@
                                     BorderThickness="0"
                                     Click="AddProductButton_Click"
                                     Content="&#xE73E;"
-                                    FontFamily="Segoe MDL2 Assets"
+                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                     Foreground="Green"
                                     Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}" />
                                 <Button
@@ -458,7 +458,7 @@
                                     BorderThickness="0"
                                     Click="CancelProductButton_Click"
                                     Content="&#xE711;"
-                                    FontFamily="Segoe MDL2 Assets"
+                                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
                                     Foreground="Red"
                                     Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}" />
                             </Grid>
