@@ -156,21 +156,6 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// A workaround for earlier versions of Windows 10.
-        /// </summary>
-        private void CommandBar_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-            }
-            else
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-            }
-        }
-
-        /// <summary>
         /// Reloads the order.
         /// </summary>
         private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 

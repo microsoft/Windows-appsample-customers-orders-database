@@ -183,25 +183,6 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Adjust the command bar button label positions for optimimum viewing.
-        /// </summary>
-        private void CommandBar_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-            }
-            else
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-            }
-
-            // Disable dynamic overflow on this page. There are only a few commands, and it causes
-            // layout problems when save and cancel commands are shown and hidden.
-            (sender as CommandBar).IsDynamicOverflowEnabled = false;
-        }
-
-        /// <summary>
         /// Navigates to the order page for the customer.
         /// </summary>
         private void ViewOrderButton_Click(object sender, RoutedEventArgs e) =>

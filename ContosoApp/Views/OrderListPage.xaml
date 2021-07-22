@@ -28,7 +28,6 @@
     xmlns:vm="using:Contoso.App.ViewModels"
     xmlns:sys="using:System"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Required"
@@ -84,15 +83,11 @@
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="Orders" />
 
-        <!--
-                On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
-                See CommandBar_Loaded event handler.
-            -->
         <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
-                Loaded="CommandBar_Loaded"
+                DefaultLabelPosition="Right"
                 RelativePanel.LeftOf="OrderSearchBox"
                 RelativePanel.RightOf="PageTitle">
             <AppBarButton
@@ -276,20 +271,6 @@
                     <VisualState.Setters>
                         <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
                         <Setter Target="listSplitView.DisplayMode" Value="Overlay" />
-                        <Setter Target="listSplitView.IsPaneOpen" Value="False" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="listSplitView.(RelativePanel.Above)" Value="mainCommandBar" />
-                        <Setter Target="listSplitView.(RelativePanel.AlignBottomWithPanel)" Value="False" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
-                        <Setter Target="OrderSearchBox.Width" Value="300" />
                         <Setter Target="listSplitView.IsPaneOpen" Value="False" />
                     </VisualState.Setters>
                 </VisualState>

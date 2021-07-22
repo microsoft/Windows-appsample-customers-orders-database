@@ -27,7 +27,6 @@
     xmlns:models="using:Contoso.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
-    xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
@@ -85,59 +84,6 @@
                     Foreground="Red" />
             </Grid>
         </DataTemplate>
-
-        <DataTemplate
-            x:Key="NarrowLineItemTemplate"
-            x:DataType="models:LineItem">
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="240" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.ColumnSpan="3"
-                    Margin="0,0,0,0"
-                    Padding="0,0,0,0"
-                    Text="{x:Bind Product.Name}" />
-                <Border
-                    Grid.Row="1"
-                    Grid.ColumnSpan="3"
-                    BorderBrush="LightGray"
-                    BorderThickness="0,0,0,1" />
-                <TextBlock
-                    Grid.Row="1"
-                    Margin="8,0,0,0"
-                    Padding="0,0,0,0"
-                    HorizontalAlignment="Left">
-                    <Run>(</Run><Run Text="{x:Bind Quantity}" /><Run>)</Run>
-                </TextBlock>
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="0,0,0,0"
-                    Padding="0,0,0,0"
-                    HorizontalAlignment="Left"
-                    Text="{x:Bind sys:String.Format('\{0:c\}', Product.ListPrice)}" />
-                <Button
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Margin="4,0,0,0"
-                    Padding="4"
-                    HorizontalAlignment="Right"
-                    AutomationProperties.Name="Cancel the addition"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Click="RemoveProduct_Click"
-                    Content="&#xE711;"
-                    FontFamily="Segoe MDL2 Assets"
-                    Foreground="Red" />
-            </Grid>
-        </DataTemplate>
     </Page.Resources>
 
         <RelativePanel>
@@ -168,15 +114,11 @@
                     Visibility="{x:Bind ViewModel.IsModified, Mode=OneWay}" />
             </StackPanel>
 
-            <!--
-                On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
-                See CommandBar_Loaded event handler.
-            -->
             <CommandBar
                 x:Name="mainCommandBar"
                 Margin="0,0,0,0"
                 Background="Transparent"
-                Loaded="CommandBar_Loaded"
+                DefaultLabelPosition="Right"
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.RightOf="PageTitle">
                 <AppBarButton
@@ -390,37 +332,6 @@
                                 Text="Quantity" />
                         </Grid>
 
-                        <Grid
-                            x:Name="NarrowLineItemsHeader"
-                            Margin="0,20,0,20"
-                            x:DeferLoadStrategy="Lazy"
-                            BorderBrush="LightGray"
-                            BorderThickness="0,0,0,1"
-                            Visibility="Collapsed">
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                FontWeight="SemiBold"
-                                Text="Product" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Margin="48,0,0,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"
-                                FontWeight="SemiBold"
-                                Text="Price" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Margin="8,0,0,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"
-                                FontWeight="SemiBold"
-                                Text="(Qty)" />
-                        </Grid>
                         <!--  Line item list  -->
                         <ListView
                             x:Name="LineItemListView"
@@ -668,40 +579,6 @@
                         <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0" />
                         <Setter Target="StatusPanel.Margin" Value="12,0,0,0" />
                         <Setter Target="sp1.Margin" Value="12,40,0,0" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="orderBody.(RelativePanel.Above)" Value="mainCommandBar" />
-                        <Setter Target="orderBody.(RelativePanel.AlignBottomWithPanel)" Value="False" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
-                        <Setter Target="sp1.(Grid.ColumnSpan)" Value="1" />
-                        <Setter Target="StatusPanel.(Grid.Row)" Value="1" />
-                        <Setter Target="StatusPanel.(Grid.RowSpan)" Value="1" />
-                        <Setter Target="StatusPanel.(Grid.Column)" Value="0" />
-                        <Setter Target="StatusPanel.HorizontalAlignment" Value="Left" />
-                        <Setter Target="OrderStatus.HorizontalAlignment" Value="Left" />
-                        <Setter Target="PaymentTerm.HorizontalAlignment" Value="Left" />
-                        <Setter Target="PaymentStatus.HorizontalAlignment" Value="Left" />
-                        <Setter Target="SpacerColumn.Width" Value="0" />
-                        <Setter Target="LineItemListView.ItemTemplate" Value="{StaticResource NarrowLineItemTemplate}" />
-                        <Setter Target="DefaultLineItemsHeader.Visibility" Value="Collapsed" />
-                        <Setter Target="NarrowLineItemsHeader.Visibility" Value="Visible" />
-                        <Setter Target="ItemQtyPanel.(Grid.Row)" Value="1" />
-                        <Setter Target="ItemQtyPanel.(Grid.Column)" Value="0" />
-                        <Setter Target="ItemQtyPanel.HorizontalAlignment" Value="Right" />
-                        <Setter Target="ItemQtyPanel.Margin" Value="0,8,4,0" />
-                        <Setter Target="ItemAddPanel.(Grid.Row)" Value="1" />
-                        <Setter Target="ItemAddPanel.(Grid.Column)" Value="1" />
-                        <Setter Target="totalsPanel.Margin" Value="0,20,0,0" />
-                        <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0" />
-                        <Setter Target="sp1.Margin" Value="12,40,0,0" />
-                        <Setter Target="StatusPanel.Margin" Value="12,0,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -94,21 +94,6 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Workaround to support earlier versions of Windows. 
-        /// </summary>
-        private void CommandBar_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile")
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-            }
-            else
-            {
-                (sender as CommandBar).DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-            }
-        }
-
-        /// <summary>
         /// Initializes the AutoSuggestBox portion of the search box.
         /// </summary>
         private void OrderSearchBox_Loaded(object sender, RoutedEventArgs e)

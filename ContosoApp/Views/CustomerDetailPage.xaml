@@ -28,7 +28,6 @@
     xmlns:vm="using:Contoso.App.ViewModels"
     xmlns:sys="using:System"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:stateTriggers="using:Contoso.App.StateTriggers"
     xmlns:uc="using:Contoso.App.UserControls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Disabled"
@@ -40,15 +39,12 @@
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
 
-        <!--
-                On Windows 10, version 1607 or later, set DefaultLabelPosition to Right in code.
-                See CommandBar_Loaded event handler.
-            -->
         <CommandBar
                 x:Name="mainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
-                Loaded="CommandBar_Loaded"
+                DefaultLabelPosition="Right"
+                IsDynamicOverflowEnabled="False"
                 RelativePanel.LeftOf="CustomerSearchBox"
                 RelativePanel.RightOf="PageTitle">
             <AppBarButton
@@ -329,20 +325,6 @@
                         <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True" />
                         <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText" />
                         <Setter Target="DetailPanel.Margin" Value="12,0,0,0" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <stateTriggers:MobileScreenTrigger InteractionMode="Touch" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="DetailPanel.(RelativePanel.Above)" Value="mainCommandBar" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignBottomWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignLeftWithPanel)" Value="True" />
-                        <Setter Target="mainCommandBar.(RelativePanel.AlignRightWithPanel)" Value="True" />
-                        <Setter Target="CustomerSearchBox.Width" Value="300" />
-                        <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True" />
-                        <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
