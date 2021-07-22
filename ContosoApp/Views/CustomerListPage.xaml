@@ -116,8 +116,7 @@
                             Header="First name"
                             Tag="FirstName"
                             Binding="{Binding FirstName}"
-                            CanUserSort="False"
-                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                            CanUserSort="False"/>
                     <toolkit:DataGridTextColumn
                             Header="Last name"
                             Tag="LastName"
@@ -125,21 +124,18 @@
                     <toolkit:DataGridTextColumn
                             Header="Address"
                             Binding="{Binding Address}"
-                            CanUserSort="False"
-                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                            CanUserSort="False"/>
                     <toolkit:DataGridTextColumn
                             Header="Company"
                             Binding="{Binding Company}"/>
                     <toolkit:DataGridTextColumn
                             Header="Phone"
                             Binding="{Binding Phone}"
-                            CanUserSort="False"
-                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                            CanUserSort="False"/>
                     <toolkit:DataGridTextColumn
                             Header="Email"
                             Binding="{Binding Email}"
-                            CanUserSort="False"
-                            HeaderStyle="{StaticResource DataGridNonSortableColumnHeaderStyle}"/>
+                            CanUserSort="False"/>
                 </toolkit:DataGrid.Columns>
             </toolkit:DataGrid>
 

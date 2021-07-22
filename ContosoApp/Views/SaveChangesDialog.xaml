@@ -37,39 +37,4 @@
     <ContentDialog.Resources>
         <Style TargetType="local:SaveChangesDialog" BasedOn="{StaticResource DefaultContentDialogStyle}"/>
     </ContentDialog.Resources>
-
-    <!--<StackPanel
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch">
-        <TextBlock
-            Text="{x:Bind Message}"
-            TextWrapping="Wrap" />
-        <Grid Margin="0,24,0,12">
-            <Grid.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Margin" Value="8" />
-                    <Setter Property="HorizontalAlignment" Value="Stretch" />
-                </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Button
-                Grid.Column="0"
-                Click="yesButton_Click"
-                Content="Save" />
-            <Button
-                Grid.Column="1"
-                Click="noButton_Click"
-                Content="Don't save" />
-            <Button
-                Grid.Column="2"
-                Click="cancelButton_Click"
-                Content="Cancel" />
-        </Grid>
-    </StackPanel>-->
-
 </ContentDialog>

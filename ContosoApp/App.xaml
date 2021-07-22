@@ -27,9 +27,6 @@
         <controls:XamlControlsResources>
             <controls:XamlControlsResources.MergedDictionaries>
                 <!-- Other app resources here -->
-
-                <ResourceDictionary Source="/Styles/DataGrid.xaml" />
-                <ResourceDictionary Source="/Styles/NavStyles.xaml" />
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Light">
@@ -47,6 +44,22 @@
                 <ResourceDictionary>
                     <x:Double x:Key="HeaderHeight">32</x:Double>
                     <GridLength x:Key="GridHeaderHeight">32</GridLength>
+
+                    <!--  window width adaptive snap points  -->
+                    <x:Double x:Key="MinWindowSnapPoint">0</x:Double>
+                    <x:Double x:Key="MediumWindowSnapPoint">641</x:Double>
+                    <x:Double x:Key="LargeWindowSnapPoint">1008</x:Double>
+
+                    <Style
+                        x:Key="PageTitleTextBlockStyle"
+                        BasedOn="{StaticResource TitleTextBlockStyle}"
+                        TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="28" />
+                        <Setter Property="TextWrapping" Value="NoWrap" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="VerticalAlignment" Value="Top" />
+                        <Setter Property="Margin" Value="0,4,0,0" />
+                    </Style>
 
                 </ResourceDictionary>
             </controls:XamlControlsResources.MergedDictionaries>
