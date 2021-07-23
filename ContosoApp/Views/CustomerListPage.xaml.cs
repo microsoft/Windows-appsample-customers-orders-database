@@ -49,29 +49,12 @@ namespace Contoso.App.Views
         public CustomerListPage()
         {
             InitializeComponent();
-            Window.Current.SizeChanged += CurrentWindow_SizeChanged;
         }
 
         /// <summary>
         /// Gets the app-wide ViewModel instance.
         /// </summary>
         public MainViewModel ViewModel => App.ViewModel;
-
-        /// <summary>
-        /// Adjust the command bar label positions depending on the window width.
-        /// </summary>
-        private void CurrentWindow_SizeChanged(object sender, WindowSizeChangedEventArgs e)
-        {
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily != "Windows.Mobile" && 
-                e.Size.Width >= (double)App.Current.Resources["MediumWindowSnapPoint"])
-            {
-                mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-            }
-            else
-            {
-                mainCommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Bottom;
-            }
-        }
 
         /// <summary>
         /// Initializes the AutoSuggestBox portion of the search box.

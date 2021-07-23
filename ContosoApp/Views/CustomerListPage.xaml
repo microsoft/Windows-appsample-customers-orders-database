@@ -53,7 +53,7 @@
                 Text="Customers"/>
 
         <CommandBar
-                x:Name="mainCommandBar"
+                x:Name="MainCommandBar"
                 HorizontalAlignment="Stretch"
                 Background="Transparent"
                 DefaultLabelPosition="Right"
@@ -166,6 +166,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
+                        <Setter Target="MainCommandBar.DefaultLabelPosition" Value="Bottom"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -115,7 +115,7 @@
             </StackPanel>
 
             <CommandBar
-                x:Name="mainCommandBar"
+                x:Name="MainCommandBar"
                 Margin="0,0,0,0"
                 Background="Transparent"
                 DefaultLabelPosition="Right"
@@ -579,6 +579,7 @@
                         <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0" />
                         <Setter Target="StatusPanel.Margin" Value="12,0,0,0" />
                         <Setter Target="sp1.Margin" Value="12,40,0,0" />
+                        <Setter Target="MainCommandBar.DefaultLabelPosition" Value="Bottom"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
