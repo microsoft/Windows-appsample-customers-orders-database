@@ -28,7 +28,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Contoso.Models;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp;
+using Windows.System;
 
 namespace Contoso.App.ViewModels
 {
@@ -38,6 +39,8 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class OrderListPageViewModel : BindableBase
     {
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
         /// <summary>
         /// Initializes a new instance of the OrderListPageViewModel class.
         /// </summary>
@@ -111,7 +114,7 @@ namespace Contoso.App.ViewModels
         private async void LoadCustomer(Guid customerId)
         {
             var customer = await App.Repository.Customers.GetAsync(customerId);
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 SelectedCustomer = customer;
             });
@@ -122,7 +125,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async void LoadOrders()
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 IsLoading = true;
                 Orders.Clear();
@@ -131,7 +134,7 @@ namespace Contoso.App.ViewModels
 
             var orders = await Task.Run(App.Repository.Orders.GetAsync);
 
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 foreach (var order in orders)
                 {
@@ -153,7 +156,7 @@ namespace Contoso.App.ViewModels
             if (!string.IsNullOrEmpty(query))
             {
                 var results = await App.Repository.Orders.GetAsync(query);
-                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                await dispatcherQueue.EnqueueAsync(() =>
                 {
                     foreach (Order o in results)
                     {

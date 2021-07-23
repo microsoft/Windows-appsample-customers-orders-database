@@ -30,7 +30,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Contoso.Models;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp;
+using Windows.System;
 
 namespace Contoso.App.ViewModels
 {
@@ -39,6 +40,8 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class OrderViewModel : BindableBase
     {
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
         /// <summary>
         /// Initializes a new instance of the OrderViewModel class that wraps the specified Order object.
         /// </summary>
@@ -77,7 +80,7 @@ namespace Contoso.App.ViewModels
         private async void LoadCustomer(Guid customerId)
         {
             var customer = await App.Repository.Customers.GetAsync(customerId);
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 Customer = customer;
             });
@@ -492,11 +495,11 @@ namespace Contoso.App.ViewModels
 
             if (result != null)
             {
-                await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsModified = false);
+                await dispatcherQueue.EnqueueAsync(() => IsModified = false);
             }
             else
             {
-                await DispatcherHelper.ExecuteOnUIThreadAsync(() => new OrderSavingException(
+                await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
                     "Unable to save. There might have been a problem " +
                     "connecting to the database. Please try again."));
             }

@@ -25,7 +25,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp;
+using Windows.System;
 
 namespace Contoso.App.ViewModels
 {
@@ -34,6 +35,8 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class MainViewModel : BindableBase
     {
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
         /// <summary>
         /// Creates a new MainViewModel.
         /// </summary>
@@ -72,7 +75,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task GetCustomerListAsync()
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() => IsLoading = true);
+            await dispatcherQueue.EnqueueAsync(() => IsLoading = true);
 
             var customers = await App.Repository.Customers.GetAsync();
             if (customers == null)
@@ -80,7 +83,7 @@ namespace Contoso.App.ViewModels
                 return;
             }
 
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 Customers.Clear();
                 foreach (var c in customers)

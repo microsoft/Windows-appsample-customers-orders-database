@@ -27,7 +27,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Contoso.Models;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp;
+using Windows.System;
 
 namespace Contoso.App.ViewModels
 {
@@ -36,6 +37,8 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class CustomerViewModel : BindableBase, IEditableObject
     {
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
         /// <summary>
         /// Initializes a new instance of the CustomerViewModel class that wraps a Customer object.
         /// </summary>
@@ -302,14 +305,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task LoadOrdersAsync()
         {
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 IsLoading = true;
             });
 
             var orders = await App.Repository.Orders.GetForCustomerAsync(Model.Id);
 
-            await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 Orders.Clear();
                 foreach (var order in orders)

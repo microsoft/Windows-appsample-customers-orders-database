@@ -25,8 +25,9 @@
 using System;
 using System.Linq;
 using Contoso.App.ViewModels;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,6 +41,8 @@ namespace Contoso.App.Views
     /// </summary>
     public sealed partial class CustomerListPage : Page
     {
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
         /// <summary>
         /// Initializes the page.
         /// </summary>
@@ -97,7 +100,7 @@ namespace Contoso.App.Views
                 // If no search query is entered, refresh the complete list.
                 if (String.IsNullOrEmpty(sender.Text))
                 {
-                    await DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
+                    await dispatcherQueue.EnqueueAsync(async () =>
                         await ViewModel.GetCustomerListAsync());
                     sender.ItemsSource = null;
                 }
@@ -129,7 +132,7 @@ namespace Contoso.App.Views
         {
             if (String.IsNullOrEmpty(args.QueryText))
             {
-                await DispatcherHelper.ExecuteOnUIThreadAsync(async () => 
+                await dispatcherQueue.EnqueueAsync(async () => 
                     await ViewModel.GetCustomerListAsync());
             }
             else
@@ -150,7 +153,7 @@ namespace Contoso.App.Views
                         customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
                     .ToList(); 
 
-                await DispatcherHelper.ExecuteOnUIThreadAsync(() =>
+                await dispatcherQueue.EnqueueAsync(() =>
                 {
                     ViewModel.Customers.Clear(); 
                     foreach (var match in matches)
