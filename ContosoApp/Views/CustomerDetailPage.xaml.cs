@@ -69,6 +69,7 @@ namespace Contoso.App.Views
                     IsNewCustomer = true,
                     IsInEdit = true
                 };
+                VisualStateManager.GoToState(this, "NewCustomer", false);
             }
             else
             {

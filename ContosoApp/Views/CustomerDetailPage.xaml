@@ -99,7 +99,7 @@
                     </Style>
                 </StackPanel.Resources>
 
-                <muxc:Expander>
+                <muxc:Expander x:Name="GeneralExpander">
                     <muxc:Expander.Header>
                         <Grid>
                             <TextBlock 
@@ -168,7 +168,7 @@
 
                 </muxc:Expander>
 
-                <muxc:Expander>
+                <muxc:Expander x:Name="AddressExpander">
                     <muxc:Expander.Header>
                         <Grid>
                             <TextBlock
@@ -189,7 +189,7 @@
 
                 </muxc:Expander>
 
-                <muxc:Expander
+                <muxc:Expander x:Name="OrdersExpander"
                         IsExpanded="True">
 
                     <muxc:Expander.Header>
@@ -325,6 +325,15 @@
                         <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True" />
                         <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText" />
                         <Setter Target="DetailPanel.Margin" Value="12,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup>
+                <VisualState x:Name="NewCustomer">
+                    <VisualState.Setters>
+                        <Setter Target="GeneralExpander.IsExpanded" Value="True"/>
+                        <Setter Target="AddressExpander.IsExpanded" Value="True"/>
+                        <Setter Target="OrdersExpander.IsExpanded" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
