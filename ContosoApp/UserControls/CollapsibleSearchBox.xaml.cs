@@ -31,15 +31,13 @@ namespace Contoso.App.UserControls
 {
     public sealed partial class CollapsibleSearchBox : UserControl
     {
-        private double RequestedWidth = 32;
-
         public CollapsibleSearchBox()
         {
             InitializeComponent();
             Loaded += CollapsableSearchBox_Loaded;
             Unloaded += CollapsibleSearchBox_Unloaded;
             Window.Current.SizeChanged += Current_SizeChanged;
-            myAutoSuggestBox = searchBox;
+            myAutoSuggestBox = SearchBox;
         }
 
         public double CollapseWidth
@@ -61,20 +59,19 @@ namespace Contoso.App.UserControls
 
         private void CollapsableSearchBox_Loaded(object sender, RoutedEventArgs e)
         {
-            searchButton.AddHandler(PointerPressedEvent,
+            SearchButton.AddHandler(PointerPressedEvent,
                 new PointerEventHandler(ToggleButton_PointerPressed), true);
-            searchButton.AddHandler(UIElement.PointerReleasedEvent,
+            SearchButton.AddHandler(UIElement.PointerReleasedEvent,
                 new PointerEventHandler(ToggleButton_PointerReleased), true);
 
-            RequestedWidth = Width;
             SetState(Window.Current.Bounds.Width);
         }
 
         private void CollapsibleSearchBox_Unloaded(object sender, RoutedEventArgs e)
         {
-            searchButton.RemoveHandler(UIElement.PointerPressedEvent,
+            SearchButton.RemoveHandler(UIElement.PointerPressedEvent,
                 (PointerEventHandler)ToggleButton_PointerPressed);
-            searchButton.RemoveHandler(UIElement.PointerReleasedEvent,
+            SearchButton.RemoveHandler(UIElement.PointerReleasedEvent,
                 (PointerEventHandler)ToggleButton_PointerReleased);
         }
 
@@ -86,30 +83,27 @@ namespace Contoso.App.UserControls
         private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
         {
             SetState(Window.Current.Bounds.Width);
-            searchButton.IsChecked = false;
+            SearchButton.IsChecked = false;
         }
 
         private void SetState(double width)
         {
             if (width <= CollapseWidth)
             {
-                VisualStateManager.GoToState(this, "CollapsedState", false);
-                Width = 32;
+                VisualStateManager.GoToState(this, "CollapsedState", true);
             }
             else
             {
-                VisualStateManager.GoToState(this, "OpenState", false);
-                Width = RequestedWidth;
+                VisualStateManager.GoToState(this, "OpenState", true);
             }
         }
 
         private void SearchButton_Checked(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "OpenState", false);
-            Width = RequestedWidth;
-            if (searchBox != null)
+            VisualStateManager.GoToState(this, "OpenState", true);
+            if (SearchBox != null)
             {
-                searchBox.Focus(FocusState.Programmatic);
+                SearchBox.Focus(FocusState.Programmatic);
             }
         }
 
@@ -132,6 +126,18 @@ namespace Contoso.App.UserControls
         private void ToggleButton_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             muxc.AnimatedIcon.SetState((UIElement)sender, "Normal");
+        }
+
+        private void SearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrWhiteSpace(sender.Text))
+            {
+                VisualStateManager.GoToState(this, "NonFilteredState", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "FilteredState", true);
+            }
         }
     }
 }
