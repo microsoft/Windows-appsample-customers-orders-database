@@ -264,7 +264,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="listSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
+                        <Setter Target="ListSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
@@ -272,7 +272,7 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="listSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
+                        <Setter Target="ListSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState>
