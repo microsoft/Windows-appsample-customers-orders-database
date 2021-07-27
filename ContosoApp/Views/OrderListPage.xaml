@@ -116,11 +116,12 @@
                 RelativePanel.AlignRightWithPanel="True" />
 
         <SplitView
-                x:Name="listSplitView"
+                x:Name="ListSplitView"
                 DisplayMode="Inline"
                 IsPaneOpen="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                 OpenPaneLength="260"
                 PanePlacement="Right"
+                PaneBackground="Transparent"
                 RelativePanel.AlignBottomWithPanel="True"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
@@ -130,8 +131,12 @@
             <SplitView.Pane>
                 <StackPanel
                         x:Name="OrderInfoPanel"
-                        Margin="24,28,24,0"
-                        Visibility="{x:Bind vm:Converters.CollapsedIfNull(ViewModel.SelectedOrder), Mode=OneWay}">
+                        Margin="8,8,0,8"                       
+                        Padding="8,28,0,0"
+                        Background="{ThemeResource LayerFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        CornerRadius="8,0,0,8"
+                        BorderThickness="1,1,0,1">
                     <StackPanel.Resources>
                         <Style TargetType="TextBlock"
                                BasedOn="{StaticResource BodyTextBlockStyle}">
@@ -258,11 +263,17 @@
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="listSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
                     </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="listSplitView.IsPaneOpen" Value="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"/>
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState>
                     <VisualState.StateTriggers>
@@ -270,8 +281,9 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
-                        <Setter Target="listSplitView.DisplayMode" Value="Overlay" />
-                        <Setter Target="listSplitView.IsPaneOpen" Value="False" />
+                        <Setter Target="ListSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="OrderInfoPanel.Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
+                        <Setter Target="OrderInfoPanel.Margin" Value="8,44,0,8"/>
                         <Setter Target="MainCommandBar.DefaultLabelPosition" Value="Bottom"/>
                     </VisualState.Setters>
                 </VisualState>
