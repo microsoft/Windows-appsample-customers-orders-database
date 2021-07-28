@@ -22,10 +22,12 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using System;
 using Contoso.App.Views;
+using System;
+using Windows.ApplicationModel.Core;
 using Windows.System;
-using Windows.UI.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -53,6 +55,18 @@ namespace Contoso.App
             {
                 NavView.SelectedItem = CustomerListMenuItem;
             };
+
+            // Set up custom title bar.
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            // Set XAML element as a draggable region.
+            Window.Current.SetTitleBar(AppTitleBar);
+
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            titleBar.ButtonForegroundColor = Colors.Black;
+            AppTitle.Text = Windows.ApplicationModel.Package.Current.DisplayName;
         }
 
         /// <summary>

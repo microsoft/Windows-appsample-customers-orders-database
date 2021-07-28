@@ -30,10 +30,32 @@
     TabNavigation="Cycle"
     mc:Ignorable="d"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True">
-
+    <Page.Resources>
+        <!--This top margin is the height of the custom TitleBar-->
+        <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
+    </Page.Resources>
     <Grid
         x:Name="LayoutRoot">
-
+        <Border x:Name="AppTitleBar"
+                IsHitTestVisible="True"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Height="48"
+                Canvas.ZIndex="1" 
+                Margin="48,0,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Border Background="{ThemeResource SystemAccentColor}" 
+                        HorizontalAlignment="Left" 
+                        Width="20" Height="20" >
+                    <Image Source="Assets/Square44x44Logo.png"/>
+                </Border>
+                <TextBlock x:Name="AppTitle"
+                    VerticalAlignment="Center"
+                    Margin="12,0,0,0"
+                    Style="{StaticResource CaptionTextBlockStyle}" />
+            </StackPanel>
+        </Border>
+        
         <muxc:NavigationView
             x:Name="NavView"
             OpenPaneLength="160"
@@ -41,7 +63,8 @@
             IsSettingsVisible="True"
             ItemInvoked="NavigationView_ItemInvoked"
             BackRequested="NavigationView_BackRequested"
-            IsBackEnabled="{x:Bind AppFrame.CanGoBack, Mode=OneWay}">
+            IsBackEnabled="{x:Bind AppFrame.CanGoBack, Mode=OneWay}"
+            IsTitleBarAutoPaddingEnabled="False">
 
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
@@ -85,8 +108,30 @@
                     </TransitionCollection>
                 </Frame.ContentTransitions>
             </Frame>
-
         </muxc:NavigationView>
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleBar.Margin" Value="88,0,0,0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
 

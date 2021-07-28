@@ -280,7 +280,6 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="PageTitle.Margin" Value="64,4,0,0"/>
                         <Setter Target="ListSplitView.DisplayMode" Value="Overlay"/>
                         <Setter Target="OrderInfoPanel.Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"/>
                         <Setter Target="OrderInfoPanel.Margin" Value="8,44,0,8"/>
