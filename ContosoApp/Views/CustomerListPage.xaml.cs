@@ -195,6 +195,10 @@ namespace Contoso.App.Views
             }
         }
 
+        private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) =>
+            Frame.Navigate(typeof(CustomerDetailPage), ViewModel.SelectedCustomer.Model.Id,
+                    new DrillInNavigationTransitionInfo());
+
         /// <summary>
         /// Navigates to a blank customer details page for the user to fill in.
         /// </summary>

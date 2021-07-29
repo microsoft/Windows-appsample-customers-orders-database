@@ -206,6 +206,7 @@
                             KeyDown="DataGrid_KeyDown"
                             Sorting="DataGrid_Sorting"
                             RightTapped="DataGrid_RightTapped"
+                            DoubleTapped="DataGrid_DoubleTapped"
                             ContextFlyout="{StaticResource DataGridContextMenu}">
                         <toolkit:DataGrid.Columns>
                             <toolkit:DataGridTextColumn

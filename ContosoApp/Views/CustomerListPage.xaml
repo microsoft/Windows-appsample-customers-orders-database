@@ -110,6 +110,7 @@
                     SelectionMode="Single"
                     KeyDown="DataGrid_KeyDown"
                     RightTapped="DataGrid_RightTapped"
+                    DoubleTapped="DataGrid_DoubleTapped"
                     ContextFlyout="{StaticResource DataGridContextMenu}">
                 <toolkit:DataGrid.Columns>
                     <toolkit:DataGridTextColumn
