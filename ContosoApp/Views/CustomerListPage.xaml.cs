@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Contoso.App.ViewModels;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI.Controls;
@@ -33,6 +34,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 namespace Contoso.App.Views
 {
@@ -98,52 +100,86 @@ namespace Contoso.App.Views
                             customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
                             customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
                         .OrderByDescending(customer => parameters.Count(parameter =>
-                            customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                            customer.Address.StartsWith(parameter) ||
+                            customer.FirstName.StartsWith(parameter) ||
+                            customer.LastName.StartsWith(parameter) ||
+                            customer.Company.StartsWith(parameter)))
                         .Select(customer => $"{customer.FirstName} {customer.LastName}"); 
                 }
             }
         }
 
-        /// <summary>
-        /// Filters the customer list based on the search text.
+        /// Filters or resets the customer list based on the search text.
         /// </summary>
         private async void CustomerSearchBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (String.IsNullOrEmpty(args.QueryText))
             {
-                await dispatcherQueue.EnqueueAsync(async () => 
-                    await ViewModel.GetCustomerListAsync());
+                await ResetCustomerList();
             }
             else
             {
-                string[] parameters = sender.Text.Split(new char[] { ' ' },
-                    StringSplitOptions.RemoveEmptyEntries);
+                await FilterCustomerList(args.QueryText);
+            }
+        }
 
-                var matches = ViewModel.Customers.Where(customer => parameters
-                    .Any(parameter =>
-                        customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
-                    .OrderByDescending(customer => parameters.Count(parameter =>
-                        customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                        customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
-                    .ToList(); 
+        /// <summary>
+        /// Resets the customer list.
+        /// </summary>
+        private async Task ResetCustomerList()
+        {
+            await dispatcherQueue.EnqueueAsync(async () =>
+                await ViewModel.GetCustomerListAsync());
+        }
 
-                await dispatcherQueue.EnqueueAsync(() =>
+        /// <summary>
+        /// Filters the customer list based on the search text.
+        /// </summary>
+        private async Task FilterCustomerList(string text)
+        {
+            string[] parameters = text.Split(new char[] { ' ' },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            var matches = ViewModel.Customers.Where(customer => parameters
+                .Any(parameter =>
+                    customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                    customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                    customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                    customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                .OrderByDescending(customer => parameters.Count(parameter =>
+                    customer.Address.StartsWith(parameter) ||
+                    customer.FirstName.StartsWith(parameter) ||
+                    customer.LastName.StartsWith(parameter) ||
+                    customer.Company.StartsWith(parameter)))
+                .ToList();
+
+            await dispatcherQueue.EnqueueAsync(() =>
+            {
+                ViewModel.Customers.Clear();
+                foreach (var match in matches)
                 {
-                    ViewModel.Customers.Clear(); 
-                    foreach (var match in matches)
-                    {
-                        ViewModel.Customers.Add(match); 
-                    }
-                });
+                    ViewModel.Customers.Add(match);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Resets the customer list when leaving the page.
+        /// </summary>
+        protected async override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            await ResetCustomerList();
+        }
+
+        /// <summary>
+        /// Applies any existing filter when navigating to the page.
+        /// </summary>
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(CustomerSearchBox.AutoSuggestBox.Text))
+            {
+                await FilterCustomerList(CustomerSearchBox.AutoSuggestBox.Text);
             }
         }
 

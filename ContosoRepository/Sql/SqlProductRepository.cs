@@ -61,13 +61,13 @@ namespace Contoso.Repository.Sql
         public async Task<IEnumerable<Product>> GetAsync(string value)
         {
             return await _db.Products.Where(product =>
-                product.Name.StartsWith(value) ||
-                product.Color.StartsWith(value) ||
+                product.Name.StartsWith(value, StringComparison.OrdinalIgnoreCase) ||
+                product.Color.StartsWith(value, StringComparison.OrdinalIgnoreCase) ||
                 product.DaysToManufacture.ToString().StartsWith(value) ||
                 product.StandardCost.ToString().StartsWith(value) ||
                 product.ListPrice.ToString().StartsWith(value) ||
                 product.Weight.ToString().StartsWith(value) ||
-                product.Description.StartsWith(value))
+                product.Description.StartsWith(value, StringComparison.OrdinalIgnoreCase))
             .AsNoTracking()
             .ToListAsync();
         }

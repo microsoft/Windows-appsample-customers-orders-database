@@ -64,11 +64,11 @@ namespace Contoso.Repository.Sql
             return await _db.Customers
                 .Where(customer =>
                     parameters.Any(parameter =>
-                        customer.FirstName.StartsWith(parameter) ||
-                        customer.LastName.StartsWith(parameter) ||
-                        customer.Email.StartsWith(parameter) ||
+                        customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
+                        customer.Email.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
                         customer.Phone.StartsWith(parameter) ||
-                        customer.Address.StartsWith(parameter)))
+                        customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
                 .OrderByDescending(customer =>
                     parameters.Count(parameter =>
                         customer.FirstName.StartsWith(parameter) ||
