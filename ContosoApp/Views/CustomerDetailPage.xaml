@@ -50,7 +50,7 @@
                     Click="{x:Bind ViewModel.SaveAsync}"
                     Icon="Save"
                     Label="Save"
-                    Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+                    Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
             <AppBarButton
                     Click="{x:Bind ViewModel.CancelEditsAsync}"
                     Icon="Cancel"
@@ -61,16 +61,18 @@
                     Click="{x:Bind ViewModel.StartEdit}"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                    Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewCustomer), Mode=OneWay}"
                     Label="Edit" />
             <AppBarButton
                     Click="AddOrder_Click"
                     Icon="Shop"
                     Label="Add order"
-                    Visibility="{x:Bind ViewModel.IsNewCustomer, Mode=OneWay}" />
+                    Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewCustomer), Mode=OneWay}"/>
             <AppBarButton
                     Click="{x:Bind ViewModel.RefreshOrders}"
                     Icon="Refresh"
-                    Label="Refresh orders" />
+                    Label="Refresh orders"
+                    Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewCustomer), Mode=OneWay}"/>
         </CommandBar>
 
         <uc:CollapsibleSearchBox
@@ -181,10 +183,11 @@
                     </muxc:Expander.Header>
 
                     <TextBox
-                            Margin="8,8,0,12"
-                            Header="Primary address"
-                            IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                            Text="{x:Bind ViewModel.Address, Mode=TwoWay}" />
+                        x:Name="PrimaryAddress"
+                        Margin="8,8,0,12"
+                        Header="Primary address"
+                        IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                        Text="{x:Bind ViewModel.Address, Mode=TwoWay}" />
 
                 </muxc:Expander>
 
