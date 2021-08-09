@@ -80,8 +80,26 @@
                     BorderThickness="0"
                     Click="RemoveProduct_Click"
                     Content="&#xE711;"
-                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                    Foreground="Red" />
+                    FontFamily="{ThemeResource SymbolThemeFontFamily}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Default">
+                                    <SolidColorBrush x:Key="ButtonForeground"
+                                        Color="Red"/>
+                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver"
+                                        Color="#88FF0000"/>
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Dark">
+                                    <SolidColorBrush x:Key="ButtonForeground"
+                                        Color="#AAFF0000"/>
+                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver"
+                                        Color="Red"/>
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -336,7 +354,8 @@
                         <ListView
                             x:Name="LineItemListView"
                             ItemTemplate="{StaticResource DefaultLineItemTemplate}"
-                            ItemsSource="{x:Bind ViewModel.LineItems, Mode=OneWay}">
+                            ItemsSource="{x:Bind ViewModel.LineItems, Mode=OneWay}"
+                            SelectionMode="None">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem"
                                        BasedOn="{StaticResource DefaultListViewItemStyle}">
