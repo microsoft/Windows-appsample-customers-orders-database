@@ -151,10 +151,10 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async void QueryOrders(string query)
         {
-            IsLoading = true;
-            Orders.Clear();
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrWhiteSpace(query))
             {
+                IsLoading = true;
+                Orders.Clear();
                 var results = await App.Repository.Orders.GetAsync(query);
                 await dispatcherQueue.EnqueueAsync(() =>
                 {
@@ -162,8 +162,8 @@ namespace Contoso.App.ViewModels
                     {
                         Orders.Add(o);
                     }
-                    IsLoading = false;
                 });
+                IsLoading = false;
             }
         }
 
