@@ -58,7 +58,6 @@
         
         <muxc:NavigationView
             x:Name="NavView"
-            OpenPaneLength="160"
             AlwaysShowHeader="False"
             IsSettingsVisible="True"
             ItemInvoked="NavigationView_ItemInvoked"
