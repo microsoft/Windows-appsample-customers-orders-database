@@ -19,7 +19,7 @@ A Universal Windows Platform (UWP) sample app that showcases UI controls (includ
 
 > Note - This sample is targeted and tested for Windows 11 Insider Preview using the Insider Preview SDK Build 22000, and Visual Studio 2019. If you are developing on Windows 10, retarget the Contoso.App project to Windows 10, version 2004 (10.0; Build 19041).
 
-![ContosoApp screenshot 1](customer-list.png)
+![ContosoApp screenshot 1](images/customer-list.png)
 
 ## August 2021 update
 
@@ -31,6 +31,8 @@ This update includes:
   * Replace Toolkit Expander control with [WinUI Expander](https://docs.microsoft.com/windows/apps/design/controls/expander) control, remove Toolkit UI Controls package
 * Update UI to follow the latest [Windows 11 design principles](https://docs.microsoft.com/windows/apps/design/signature-experiences/design-principles).
 * Bug fixes and enhancements
+
+To see how we updated the UI to look at home on Windows 11, see [Updating the Customers Orders Database sample UI to Windows 11](windows-11-update.md).
 
 ## Previous updates
 
