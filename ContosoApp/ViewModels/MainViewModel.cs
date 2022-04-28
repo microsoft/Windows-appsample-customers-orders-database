@@ -25,8 +25,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp;
-using Windows.System;
+using CommunityToolkit.WinUI;
+using Microsoft.UI.Dispatching;
 
 namespace Contoso.App.ViewModels
 {

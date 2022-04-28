@@ -1,4 +1,4 @@
-//  ---------------------------------------------------------------------------------
+﻿//  ---------------------------------------------------------------------------------
 //  Copyright (c) Microsoft Corporation.  All rights reserved.
 // 
 //  The MIT License (MIT)
@@ -30,19 +30,24 @@ using Contoso.Repository.Sql;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
 using Windows.Globalization;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 
 namespace Contoso.App
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    public partial class App : Application
     {
+        /// <summary>
+        /// Gets main App Window
+        /// </summary>
+        public static Window Window { get { return m_window; } }
+        private static Window m_window;
+
         /// <summary>
         /// Gets the app-wide MainViewModel singleton instance.
         /// </summary>
@@ -64,6 +69,7 @@ namespace Contoso.App
         /// </summary>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            m_window = new MainWindow();
             // Load the database.
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
                 "data_source", out object dataSource))
@@ -71,7 +77,7 @@ namespace Contoso.App
                 switch (dataSource.ToString())
                 {
                     case "Rest": UseRest(); break;
-                    default: UseSqlite(); break; 
+                    default: UseSqlite(); break;
                 }
             }
             else
@@ -80,9 +86,9 @@ namespace Contoso.App
             }
 
             // Prepare the app shell and window content.
-            AppShell shell = Window.Current.Content as AppShell ?? new AppShell();
+            AppShell shell = m_window.Content as AppShell ?? new AppShell();
             shell.Language = ApplicationLanguages.Languages[0];
-            Window.Current.Content = shell;
+            m_window.Content = shell;
 
             if (shell.AppFrame.Content == null)
             {
@@ -92,7 +98,7 @@ namespace Contoso.App
                     new SuppressNavigationTransitionInfo());
             }
 
-            Window.Current.Activate();
+            m_window.Activate();
         }
 
         /// <summary>
@@ -117,6 +123,6 @@ namespace Contoso.App
         /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
         /// </summary>
         public static void UseRest() =>
-            Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/"); 
+            Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/");
     }
 }

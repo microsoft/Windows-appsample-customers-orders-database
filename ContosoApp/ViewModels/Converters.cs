@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Windows.UI.Xaml;
+using Microsoft.UI.Xaml;
 
 namespace Contoso.App.ViewModels
 {

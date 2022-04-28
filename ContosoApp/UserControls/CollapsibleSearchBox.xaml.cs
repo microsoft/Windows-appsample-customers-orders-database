@@ -22,9 +22,9 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Contoso.App.UserControls
@@ -36,7 +36,8 @@ namespace Contoso.App.UserControls
             InitializeComponent();
             Loaded += CollapsableSearchBox_Loaded;
             Unloaded += CollapsibleSearchBox_Unloaded;
-            Window.Current.SizeChanged += Current_SizeChanged;
+            // TODO: fix the following compilation issue
+            //App.Window.SizeChanged+= Current_SizeChanged;
             myAutoSuggestBox = SearchBox;
         }
 
@@ -64,7 +65,7 @@ namespace Contoso.App.UserControls
             SearchButton.AddHandler(UIElement.PointerReleasedEvent,
                 new PointerEventHandler(ToggleButton_PointerReleased), true);
 
-            SetState(Window.Current.Bounds.Width);
+            SetState(App.Window.Bounds.Width);
         }
 
         private void CollapsibleSearchBox_Unloaded(object sender, RoutedEventArgs e)
@@ -82,7 +83,7 @@ namespace Contoso.App.UserControls
 
         private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            SetState(Window.Current.Bounds.Width);
+            SetState(App.Window.Bounds.Width);
             SearchButton.IsChecked = false;
         }
 

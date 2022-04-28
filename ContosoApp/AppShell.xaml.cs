@@ -23,15 +23,15 @@
 //  ---------------------------------------------------------------------------------
 
 using Contoso.App.Views;
+using Microsoft.UI;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Contoso.App
@@ -57,15 +57,17 @@ namespace Contoso.App
             };
 
             // Set up custom title bar.
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
+            // TODO: fix COM exception below
+            //var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            //coreTitleBar.ExtendViewIntoTitleBar = true;
             // Set XAML element as a draggable region.
-            Window.Current.SetTitleBar(AppTitleBar);
+            App.Window.SetTitleBar(AppTitleBar);
 
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ButtonForegroundColor = Colors.Black;
+            // TODO: fix COM exception below
+            //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            //titleBar.ButtonBackgroundColor = Colors.Transparent;
+            //titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            //titleBar.ButtonForegroundColor = Colors.Black;
             AppTitle.Text = Windows.ApplicationModel.Package.Current.DisplayName;
         }
 

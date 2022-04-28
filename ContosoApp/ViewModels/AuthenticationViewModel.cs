@@ -37,8 +37,8 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Contoso.App.ViewModels
 {
@@ -53,7 +53,8 @@ namespace Contoso.App.ViewModels
         public AuthenticationViewModel()
         {
             Task.Run(PrepareAsync);
-            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPaneAsync;
+            // TODO: Fix COM issue in here.
+            //AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPaneAsync;
         }
 
         private string _name;
