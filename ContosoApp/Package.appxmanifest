@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Contoso.App"
+        DisplayName="Enterprise Database (Developer Sample)"
         Description="Contoso.App"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
