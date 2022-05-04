@@ -53,8 +53,9 @@ namespace Contoso.App.ViewModels
         public AuthenticationViewModel()
         {
             Task.Run(PrepareAsync);
-            // TODO: Fix COM issue in here.
-            //AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPaneAsync;
+            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
+            var accountsSettingsPane = AccountsSettingsPaneInterop.GetForWindow(hWnd);
+            accountsSettingsPane.AccountCommandsRequested += BuildAccountsPaneAsync;
         }
 
         private string _name;
