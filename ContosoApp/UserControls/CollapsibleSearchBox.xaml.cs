@@ -36,8 +36,7 @@ namespace Contoso.App.UserControls
             InitializeComponent();
             Loaded += CollapsableSearchBox_Loaded;
             Unloaded += CollapsibleSearchBox_Unloaded;
-            // TODO: fix the following compilation issue
-            //App.Window.SizeChanged+= Current_SizeChanged;
+            App.Window.SizeChanged+= Current_SizeChanged;
             myAutoSuggestBox = SearchBox;
         }
 
@@ -76,7 +75,7 @@ namespace Contoso.App.UserControls
                 (PointerEventHandler)ToggleButton_PointerReleased);
         }
 
-        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        private void Current_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             SetState(e.Size.Width);
         }
