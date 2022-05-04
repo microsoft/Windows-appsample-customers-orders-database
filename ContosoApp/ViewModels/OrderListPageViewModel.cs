@@ -28,8 +28,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
-using Contoso.Models;
 using CommunityToolkit.WinUI;
+using Contoso.Models;
 
 namespace Contoso.App.ViewModels
 {

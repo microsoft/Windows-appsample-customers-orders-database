@@ -29,9 +29,9 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Email;
+using CommunityToolkit.WinUI.UI.Controls;
 using Contoso.Models;
 using Contoso.App.ViewModels;
-using CommunityToolkit.WinUI.UI.Controls;
 
 namespace Contoso.App.Views
 {

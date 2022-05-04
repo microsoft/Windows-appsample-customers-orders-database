@@ -22,16 +22,16 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.Models;
-using Contoso.App.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Windows.ApplicationModel.Email;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Email;
+using Contoso.Models;
+using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
 {

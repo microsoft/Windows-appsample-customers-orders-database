@@ -22,18 +22,18 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.App.Views;
-using Contoso.App.ViewModels;
-using Contoso.Repository;
-using Contoso.Repository.Rest;
-using Contoso.Repository.Sql;
-using Microsoft.EntityFrameworkCore;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Animation;
 using Windows.ApplicationModel;
 using Windows.Globalization;
 using Windows.Storage;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Animation;
+using Contoso.App.ViewModels;
+using Contoso.App.Views;
+using Contoso.Repository;
+using Contoso.Repository.Rest;
+using Contoso.Repository.Sql;
 
 namespace Contoso.App
 {

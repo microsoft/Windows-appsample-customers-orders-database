@@ -22,12 +22,12 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.Repository.Sql;
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Windows.System;
+using Contoso.Repository.Sql;
 
 namespace Contoso.App.Views
 {

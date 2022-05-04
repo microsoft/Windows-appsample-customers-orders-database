@@ -32,8 +32,8 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.WinUI;
-using Contoso.App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
+using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
 {

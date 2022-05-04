@@ -22,17 +22,14 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.App.Views;
-using Microsoft.UI;
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using System;
-using Windows.ApplicationModel.Core;
-using Windows.System;
-using Windows.UI.ViewManagement;
 using muxc = Microsoft.UI.Xaml.Controls;
+using Windows.System;
+using Contoso.App.Views;
 
 namespace Contoso.App
 {

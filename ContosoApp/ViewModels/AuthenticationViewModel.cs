@@ -30,6 +30,8 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Graph;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.Core;
 using Windows.Security.Authentication.Web.Core;
 using Windows.Security.Credentials;
@@ -37,8 +39,6 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Core;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Contoso.App.ViewModels
 {
