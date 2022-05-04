@@ -57,17 +57,10 @@ namespace Contoso.App
             };
 
             // Set up custom title bar.
-            // TODO: fix COM exception below
-            //var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            //coreTitleBar.ExtendViewIntoTitleBar = true;
+            App.Window.ExtendsContentIntoTitleBar = true;
             // Set XAML element as a draggable region.
             App.Window.SetTitleBar(AppTitleBar);
-
-            // TODO: fix COM exception below
-            //var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            //titleBar.ButtonBackgroundColor = Colors.Transparent;
-            //titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            //titleBar.ButtonForegroundColor = Colors.Black;
+            
             AppTitle.Text = Windows.ApplicationModel.Package.Current.DisplayName;
         }
 
