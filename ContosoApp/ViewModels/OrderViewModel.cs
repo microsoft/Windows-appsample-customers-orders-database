@@ -52,7 +52,6 @@ namespace Contoso.App.ViewModels
 
             // Create an ObservableCollection to wrap Order.LineItems so we can track
             // product additions and deletions.
-            // TOOD: fix the following System.NullReferenceException: 'Object reference not set to an instance of an object.' when double click an item from Order List
             LineItems = new ObservableCollection<LineItem>(Model.LineItems);
             LineItems.CollectionChanged += LineItems_Changed;
 
