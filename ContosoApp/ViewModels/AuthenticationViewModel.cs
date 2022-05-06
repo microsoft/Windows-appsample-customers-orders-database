@@ -30,15 +30,13 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Graph;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.ApplicationModel.Core;
 using Windows.Security.Authentication.Web.Core;
 using Windows.Security.Credentials;
 using Windows.Storage;
-using Windows.System;
 using Windows.UI.ApplicationSettings;
-using Windows.UI.Core;
 
 namespace Contoso.App.ViewModels
 {
@@ -53,9 +51,8 @@ namespace Contoso.App.ViewModels
         public AuthenticationViewModel()
         {
             Task.Run(PrepareAsync);
-            var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(App.Window);
-            var accountsSettingsPane = AccountsSettingsPaneInterop.GetForWindow(hWnd);
-            accountsSettingsPane.AccountCommandsRequested += BuildAccountsPaneAsync;
+            var accountSettingsPane = AccountsSettingsPaneInterop.GetForWindow(App.HWnd);
+            accountSettingsPane.AccountCommandsRequested += BuildAccountsPaneAsync;
         }
 
         private string _name;
@@ -226,7 +223,7 @@ namespace Contoso.App.ViewModels
             var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
             if (result.ResponseStatus != WebTokenRequestStatus.Success)
             {
-                result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
+                result = await WebAuthenticationCoreManagerInterop.RequestTokenForWindowAsync(App.HWnd, request);
             }
             return result.ResponseStatus == WebTokenRequestStatus.Success ?
                 result.ResponseData[0].Token : null;
@@ -246,14 +243,14 @@ namespace Contoso.App.ViewModels
 
             var me = await graph.Me.Request().GetAsync();
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, async () =>
+            await Task.Run(() => App.Window.DispatcherQueue.TryEnqueue(
+                DispatcherQueuePriority.Normal, async () =>
             {
                 Name = me.DisplayName;
                 Email = me.Mail;
                 Title = me.JobTitle;
-                Domain = (string)await users[0].GetPropertyAsync(KnownUserProperties.DomainName);
-            });
+                Domain = (string)await users[0].GetPropertyAsync(Windows.System.KnownUserProperties.DomainName);
+            }));
         }
 
         /// <summary>
@@ -276,12 +273,12 @@ namespace Contoso.App.ViewModels
                     {
                         await stream.CopyToAsync(memoryStream);
                         memoryStream.Position = 0;
-                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                            CoreDispatcherPriority.Normal, async () =>
+                        await Task.Run(() => App.Window.DispatcherQueue.TryEnqueue(
+                            DispatcherQueuePriority.Normal, async () =>
                         {
                             Photo = new BitmapImage();
                             await Photo.SetSourceAsync(memoryStream.AsRandomAccessStream());
-                        });
+                        }));
                     }
                 }
             }
@@ -320,7 +317,7 @@ namespace Contoso.App.ViewModels
             }
             else
             {
-                AccountsSettingsPane.Show();
+                await AccountsSettingsPaneInterop.ShowAddAccountForWindowAsync(App.HWnd);
             }
         }
 
@@ -350,14 +347,16 @@ namespace Contoso.App.ViewModels
         private async Task SetVisibleAsync(Expression<Func<AuthenticationViewModel, bool>> selector)
         {
             var prop = (PropertyInfo)((MemberExpression)selector.Body).Member;
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            
+            await Task.Run(() => App.Window.DispatcherQueue.TryEnqueue(
+                DispatcherQueuePriority.High, () =>
             {
                 ShowWelcome = false;
                 ShowLoading = false;
                 ShowData = false;
                 ShowError = false;
                 prop.SetValue(this, true);
-            });
+            }));
         }
     }
 }

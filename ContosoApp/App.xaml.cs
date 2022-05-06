@@ -34,6 +34,7 @@ using Contoso.App.Views;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
+using System;
 
 namespace Contoso.App
 {
@@ -42,6 +43,9 @@ namespace Contoso.App
     /// </summary>
     public partial class App : Application
     {
+        public static IntPtr HWnd { get { return _hWnd; } }
+        private static IntPtr _hWnd;
+
         /// <summary>
         /// Gets main App Window
         /// </summary>
@@ -70,6 +74,9 @@ namespace Contoso.App
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             m_window = new MainWindow();
+            // interoperability with WinRT 
+            _hWnd = WinRT.Interop.WindowNative.GetWindowHandle(m_window);
+
             // Load the database.
             if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
                 "data_source", out object dataSource))
