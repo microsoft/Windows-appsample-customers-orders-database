@@ -21,6 +21,31 @@ A Universal Windows Platform (UWP) sample app that showcases UI controls (includ
 
 ![ContosoApp screenshot 1](images/customer-list.png)
 
+## May 2022 update
+
+This update includes:
+
+* Updated Plaform
+  * [WinUI](https://docs.microsoft.com/windows/apps/winui) 2.6.1 to 3.
+
+* Updated Target framework
+  * .NET 6
+
+* Added new NuGet packages and/or libraries
+  * Entity Framework Core Sqlite 6.0.4
+
+* Updated NuGet packages
+  * [Windows Community Toolkit](https://devblogs.microsoft.com/ifdef-windows/windows-community-toolkit-for-project-reunion-0-5/) 7.0.2 to 7.1.2 that supports the 1.0 version of the Windows App SDK which is required for WinUI 3.
+
+* Data migration
+  * [SQLite] migrate existing Contoso db [Guid values from BINARY BLOB to TEXT BLOB](https://docs.microsoft.com/ef/core/what-is-new/ef-core-3.x/breaking-changes#guid-values-are-now-stored-as-text-on-sqlite)
+
+* Improvements: 
+  * Remove the native Universal Windows Platform (UWP) [AccountsSettingsPane](https://docs.micrsosoft.com/windows/uwp/security/web-account-manager) in favor of start using Microsoft Identity Client directly.
+  * Implements Signout flow.
+
+## Previous updates
+
 ## August 2021 update
 
 This update includes:
@@ -33,8 +58,6 @@ This update includes:
 * Bug fixes and enhancements
 
 To see how we updated the UI to look at home on Windows 11, see [Updating the Customers Orders Database sample UI to Windows 11](windows-11-update.md).
-
-## Previous updates
 
 ### June 2020 update
 
