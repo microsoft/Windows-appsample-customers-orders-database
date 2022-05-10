@@ -180,12 +180,12 @@ namespace Contoso.App.ViewModels
             if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
                 (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
             {
-                SetVisibleAsync(vm => vm.ShowLoading);
+                SetVisible(vm => vm.ShowLoading);
                 await LoginAsync();
             }
             else
             {
-                SetVisibleAsync(vm => vm.ShowWelcome);
+                SetVisible(vm => vm.ShowWelcome);
             }
         }
 
@@ -197,24 +197,24 @@ namespace Contoso.App.ViewModels
         {
             try
             {
-                SetVisibleAsync(vm => vm.ShowLoading);
+                SetVisible(vm => vm.ShowLoading);
                 string token = await GetTokenAsync();
                 if (token != null)
                 {
                     ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = true;
                     await SetUserInfoAsync(token);
                     await SetUserPhoto(token);
-                    SetVisibleAsync(vm => vm.ShowData);
+                    SetVisible(vm => vm.ShowData);
                 }
                 else
                 {
-                    SetVisibleAsync(vm => vm.ShowError);
+                    SetVisible(vm => vm.ShowError);
                 }
             }
             catch (Exception ex)
             {
                 ErrorText = ex.Message;
-                SetVisibleAsync(vm => vm.ShowError);
+                SetVisible(vm => vm.ShowError);
             }
         }
 
@@ -337,14 +337,14 @@ namespace Contoso.App.ViewModels
                     await _msalPublicClientApp.RemoveAsync(account);
                 }
                 ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = false;
-                SetVisibleAsync(vm => vm.ShowWelcome);
+                SetVisible(vm => vm.ShowWelcome);
             }
         }
 
         /// <summary>
         /// Shows one part of the login UI sequence and hides all the others.
         /// </summary>
-        private void SetVisibleAsync(Expression<Func<AuthenticationViewModel, bool>> selector)
+        private void SetVisible(Expression<Func<AuthenticationViewModel, bool>> selector)
         {
             var prop = (PropertyInfo)((MemberExpression)selector.Body).Member;
 
