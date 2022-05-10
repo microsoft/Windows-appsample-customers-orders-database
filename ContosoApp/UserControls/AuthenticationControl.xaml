@@ -80,18 +80,20 @@
             Visibility="{Binding ShowLoading, Mode=OneWay}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="32" />
-                    <ColumnDefinition />
+                    <ColumnDefinition MinWidth="0" MaxWidth="12"/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <muxc:ProgressRing HorizontalAlignment="Left"
-                                   Width="24"
-                                   Height="24"
+                <muxc:ProgressRing Width="16"
+                                   Height="16"
+                                   MinWidth="16"
+                                   MinHeight="16"
                                    IsActive="True"
-                                   Margin="-4,0,0,0"/>
-                <TextBlock Grid.Column="1"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                           Text="Signing in..." />
+                                   HorizontalAlignment="Left"
+                                   Margin="-32,0,0,0" />
+                <TextBlock
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    Text="Signing in..." />
             </Grid>
         </muxc:NavigationViewItem>
 
