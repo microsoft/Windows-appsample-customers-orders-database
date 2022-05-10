@@ -5,6 +5,7 @@ languages:
 products:
 - windows
 - windows-uwp
+- winui3
 statusNotificationTargets:
 - codefirst@microsoft.com
 ---
@@ -15,9 +16,9 @@ statusNotificationTargets:
 
 # Customers Orders Database sample
 
-A Universal Windows Platform (UWP) sample app that showcases UI controls (including a data grid) and the latest design guidance for apps on Windows 11. It also demonstrates features useful to enterprise developers, like Azure Active Directory (AAD) authentication, Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso.
+A WinUI 3 sample app that showcases UI controls (including a data grid) and the latest design guidance for apps on Windows 11. It also demonstrates features useful to enterprise developers, like Azure Active Directory (AAD) authentication, Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso.
 
-> Note - This sample is targeted and tested for Windows 11 Insider Preview using the Insider Preview SDK Build 22000, and Visual Studio 2019. If you are developing on Windows 10, retarget the Contoso.App project to Windows 10, version 2004 (10.0; Build 19041).
+> Note - This sample is targeted and tested for Windows 11 Insider Preview using the Insider Preview SDK Build 22000, and Visual Studio 2022 version 17.1 or later. If you are developing on Windows 10, retarget the Contoso.App project to Windows 10, version 2004 (10.0; Build 19041).
 
 ![ContosoApp screenshot 1](images/customer-list.png)
 
@@ -40,9 +41,13 @@ This update includes:
 * Data migration
   * [SQLite] migrate existing Contoso db [Guid values from BINARY BLOB to TEXT BLOB](https://docs.microsoft.com/ef/core/what-is-new/ef-core-3.x/breaking-changes#guid-values-are-now-stored-as-text-on-sqlite)
 
-* Improvements: 
-  * Remove the native Universal Windows Platform (UWP) [AccountsSettingsPane](https://docs.micrsosoft.com/windows/uwp/security/web-account-manager) in favor of start using Microsoft Identity Client directly.
+* Improvements:
+  * Remove the native Universal Windows Platform (UWP) [AccountsSettingsPane](https://docs.microsoft.com/en-us/windows/uwp/security/web-account-manager) in favor of start using Microsoft Identity Client directly avoiding the usage of [interop](https://docs.microsoft.com/en-us/windows/win32/api/accountssettingspaneinterop/nn-accountssettingspaneinterop-iaccountssettingspaneinterop). More information about the current support of [Web Account Manager in WinUI 3](https://github.com/microsoft/WindowsAppSDK/issues/398#issuecomment-777762616) and [WebAuthenticationBroker for Reunion](https://github.com/microsoft/WindowsAppSDK/issues/441).
   * Implements Signout flow.
+
+* Known Issues:
+  * Signout popup confirmation is gone.
+  * Title bar buttons (maximize, minimize and close) are disabled.
 
 ## Previous updates
 
@@ -105,9 +110,9 @@ However, in order to debug and explore the full functionality of the app, you'll
   * Windows 11 Insider Preview (Build 22000).
   <br/>OR
   * Windows 10. Minimum: Windows 10, version 1809 (10.0; Build 17763), also known as the Windows 10 October 2018 Update.
-* [Windows 10 SDK](https://developer.microsoft.com/windows/downloads/windows-10-sdk). Minimum: Windows SDK version 10.0.17763.0 (Windows 10, version 1809).
-* [The .NET Core 2.0 SDK](https://www.microsoft.com/net/core).
-* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/). You can use the free Visual Studio Community Edition to build and run Windows Universal Platform (UWP) apps.
+* [.NET 6.0 SDK](https://www.microsoft.com/net/core).
+* [Visual Studio 2022 version 17.1 or later](https://visualstudio.microsoft.com/downloads/). You can use the free Visual Studio Community Edition to build and run WinUI 3 apps.
+* [Windows App SDK 1.0](https://docs.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment?tabs=vs-2022-17-1-a%2Cvs-2022-17-1-b#required-workloads-and-components).
 
 To get the latest updates to Windows and the development tools, and to help shape their development, join
 the [Windows Insider Program](https://insider.windows.com).
@@ -172,7 +177,7 @@ The two details screens show how to use headings, labels, and whitespace to orga
 
 ## See also
 
-* [Web account manager](https://docs.microsoft.com/windows/uwp/security/web-account-manager)
+* [Web account manager](https://docs.microsoft.com/windows/uwp/security/web-account-manager) for versions prior to May 2022 changes that are updating to WinUI 3. 
 * [Microsoft Graph](https://developer.microsoft.com/graph)
 * [Http client](https://docs.microsoft.com/windows/uwp/networking/httpclient)
 * [Screen sizes and breakpoints](https://docs.microsoft.com/windows/apps/design/layout/screen-sizes-and-breakpoints-for-responsive-design)
