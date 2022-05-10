@@ -49,6 +49,9 @@ namespace Contoso.Repository
         /// </summary>
         public const string SqlAzureConnectionString = "<TODO: Insert connection string>";
 
+        // Cache settings
+        public const string CacheFileName = "contosoapp_msal_cache.txt";
+
         // App settings
         public static readonly string[] Scopes = new[] { "https://graph.microsoft.com/User.Read" };
     }

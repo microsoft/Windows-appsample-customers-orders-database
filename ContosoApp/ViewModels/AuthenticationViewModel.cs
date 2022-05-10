@@ -32,6 +32,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage;
@@ -177,6 +178,15 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task PrepareAsync()
         {
+            // Configuring the token cache
+            var storageProperties =
+                new StorageCreationPropertiesBuilder(Repository.Constants.CacheFileName, MsalCacheHelper.UserRootDirectory)
+                .Build();
+
+            // This hooks up the cache into MSAL
+            var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+            cacheHelper.RegisterCache(_msalPublicClientApp.UserTokenCache);
+
             if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
                 (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
             {
