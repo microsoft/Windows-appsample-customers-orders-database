@@ -264,7 +264,9 @@ namespace Contoso.App.ViewModels
         /// </summary>
         private async Task SetUserInfoAsync(string token)
         {
-            var users = await Windows.System.User.FindAllAsync();
+            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            var domain = accounts?.First().Username.Split('@')[1] ?? string.Empty;
+
             var graph = new GraphServiceClient(new DelegateAuthenticationProvider(message =>
             {
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -274,12 +276,12 @@ namespace Contoso.App.ViewModels
             var me = await graph.Me.Request().GetAsync();
 
             App.Window.DispatcherQueue.TryEnqueue(
-                DispatcherQueuePriority.Normal, async () =>
+                DispatcherQueuePriority.Normal, () =>
             {
                 Name = me.DisplayName;
                 Email = me.Mail;
                 Title = me.JobTitle;
-                Domain = (string)await users[0].GetPropertyAsync(Windows.System.KnownUserProperties.DomainName);
+                Domain = domain;
             });
         }
 
