@@ -234,7 +234,7 @@ namespace Contoso.App.ViewModels
                 {
                     // Will return a cached access token if available, refreshing if necessary.
                     msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenSilent(
-                        new[] { "https://graph.microsoft.com/User.Read" },
+                        Repository.Constants.Scopes,
                         accounts.First())
                         .ExecuteAsync();
                 }
@@ -250,7 +250,7 @@ namespace Contoso.App.ViewModels
                 // this will launch the user's default browser and send them through a login flow.
                 // After the flow is complete, the rest of this method will continue to execute.
                 msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenInteractive(
-                    new[] { "https://graph.microsoft.com/User.Read" })
+                    Repository.Constants.Scopes)
                     .ExecuteAsync();
 
                 // TODO: [feat] when user cancel the authN flow, the UX will be as if the login had failed. This can be improved with a more friendly UI experience on top of this. 

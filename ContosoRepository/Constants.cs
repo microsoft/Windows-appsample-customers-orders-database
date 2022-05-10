@@ -48,5 +48,8 @@ namespace Contoso.Repository
         /// Connection string for a server-side SQL database.
         /// </summary>
         public const string SqlAzureConnectionString = "<TODO: Insert connection string>";
+
+        // App settings
+        public static readonly string[] Scopes = new[] { "https://graph.microsoft.com/User.Read" };
     }
 }
