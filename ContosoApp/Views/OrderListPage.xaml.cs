@@ -89,6 +89,7 @@ namespace Contoso.App.Views
                         $"invoice #{ViewModel.SelectedOrder.InvoiceNumber}:\n{ex.Message}",
                     PrimaryButtonText = "OK"
                 };
+                dialog.XamlRoot = App.Window.Content.XamlRoot;
                 await dialog.ShowAsync();
             }
         }

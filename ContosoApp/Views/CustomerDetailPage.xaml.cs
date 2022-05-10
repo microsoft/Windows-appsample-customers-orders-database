@@ -104,6 +104,7 @@ namespace Contoso.App.Views
                 }
 
                 var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+                saveDialog.XamlRoot = this.Content.XamlRoot;
                 await saveDialog.ShowAsync();
                 SaveChangesDialogResult result = saveDialog.Result;
 
