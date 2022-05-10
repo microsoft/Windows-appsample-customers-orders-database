@@ -35,7 +35,6 @@ using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.Storage;
 
 namespace Contoso.App.ViewModels
 {
@@ -187,10 +186,9 @@ namespace Contoso.App.ViewModels
             var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
             cacheHelper.RegisterCache(_msalPublicClientApp.UserTokenCache);
 
-            if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
-                (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
+            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            if (accounts.Any())
             {
-                SetVisible(vm => vm.ShowLoading);
                 await LoginAsync();
             }
             else
@@ -211,7 +209,6 @@ namespace Contoso.App.ViewModels
                 string token = await GetTokenAsync();
                 if (token != null)
                 {
-                    ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = true;
                     await SetUserInfoAsync(token);
                     await SetUserPhoto(token);
                     SetVisible(vm => vm.ShowData);
@@ -339,18 +336,13 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async void LogoutClick()
         {
-            if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
-                (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
+            // All cached tokens will be removed.
+            // The next token request will require the user to sign in.
+            foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
             {
-                // All cached tokens will be removed.
-                // The next token request will require the user to sign in.
-                foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
-                {
-                    await _msalPublicClientApp.RemoveAsync(account);
-                }
-                ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = false;
-                SetVisible(vm => vm.ShowWelcome);
+                await _msalPublicClientApp.RemoveAsync(account);
             }
+            SetVisible(vm => vm.ShowWelcome);
         }
 
         /// <summary>
