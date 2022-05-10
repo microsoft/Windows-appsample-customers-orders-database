@@ -34,6 +34,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.Extensions.Msal;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Contoso.App.ViewModels
@@ -336,13 +337,27 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async void LogoutClick()
         {
-            // All cached tokens will be removed.
-            // The next token request will require the user to sign in.
-            foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
+            var signoutDialog = new ContentDialog()
             {
-                await _msalPublicClientApp.RemoveAsync(account);
-            }
-            SetVisible(vm => vm.ShowWelcome);
+                Title = "Sign out",
+                Content = "Sign out?",
+                PrimaryButtonText = "Sign out",
+                SecondaryButtonText = "Cancel"
+
+            };
+            signoutDialog.PrimaryButtonClick += async (_, _) =>
+            {
+                // All cached tokens will be removed.
+                // The next token request will require the user to sign in.
+                foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
+                {
+                    await _msalPublicClientApp.RemoveAsync(account);
+                }
+                SetVisible(vm => vm.ShowWelcome);
+            };
+            signoutDialog.XamlRoot = App.Window.Content.XamlRoot;
+
+            await signoutDialog.ShowAsync();
         }
 
         /// <summary>
