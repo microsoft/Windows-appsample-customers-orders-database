@@ -101,7 +101,6 @@ namespace Contoso.App.ViewModels
         {
             Task.Run(async () =>
             {
-                IsLoading = true;
                 foreach (var modifiedCustomer in Customers
                     .Where(customer => customer.IsModified).Select(customer => customer.Model))
                 {
@@ -109,7 +108,6 @@ namespace Contoso.App.ViewModels
                 }
 
                 await GetCustomerListAsync();
-                IsLoading = false;
             });
         }
     }
