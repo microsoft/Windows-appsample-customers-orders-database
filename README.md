@@ -106,7 +106,7 @@ However, in order to debug and explore the full functionality of the app, you'll
 * Windows
   * Windows 11 Insider Preview (Build 22000).
   <br/>OR
-  * Windows 10. Minimum: Windows 10, version 1809 (10.0; Build 17763), also known as the Windows 10 October 2018 Update.
+  * Windows 10. Minimum: Windows 10, version 2004 (10.0; Build 19041).
 * [.NET 6.0 SDK](https://www.microsoft.com/net/core).
 * [Visual Studio 2022 version 17.1 or later](https://visualstudio.microsoft.com/downloads/). You can use the free Visual Studio Community Edition to build and run WinUI 3 apps.
 * [Windows App SDK 1.0](https://docs.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment?tabs=vs-2022-17-1-a%2Cvs-2022-17-1-b#required-workloads-and-components).
