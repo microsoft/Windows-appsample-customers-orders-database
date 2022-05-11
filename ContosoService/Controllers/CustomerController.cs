@@ -22,9 +22,6 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Contoso.Models;
 
@@ -35,8 +32,9 @@ namespace Contoso.Service.Controllers
         /// <summary>
         /// Contains methods for interacting with customer data.
         /// </summary>
+        [ApiController]
         [Route("api/[controller]")]
-        public class CustomerController : Controller
+        public class CustomerController : ControllerBase
         {
             private ICustomerRepository _repository; 
 

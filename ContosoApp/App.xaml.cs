@@ -126,6 +126,6 @@ namespace Contoso.App
         /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
         /// </summary>
         public static void UseRest() =>
-            Repository = new RestContosoRepository("https://customers-orders-api-prod.azurewebsites.net/api/");
+            Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/");
     }
 }
