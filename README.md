@@ -46,9 +46,6 @@ This update includes:
   * Implements recommended [token Caching approach for Desktop apps](https://github.com/MicrosoftDocs/azure-docs/blob/354cfcef85fa080c1e07477fa009a8125479ee1d/articles/active-directory/develop/msal-net-token-cache-serialization.md#desktop-apps) and now you can close the app and next time you sign-in if token has not expired it is acquired silently. 
   * Implements Signout flow by deleting cached tokens.
 
-* Known Issues:
-  * Extended title bar buttons are not working.
-
 ## Previous updates
 
 ## August 2021 update

@@ -38,8 +38,10 @@
         <Border x:Name="AppTitleBar"
                 IsHitTestVisible="True"
                 VerticalAlignment="Top"
+                HorizontalAlignment="Left"
                 Background="Transparent"
                 Height="48"
+                Width="auto"
                 Canvas.ZIndex="1" 
                 Margin="48,0,0,0">
             <StackPanel Orientation="Horizontal">
