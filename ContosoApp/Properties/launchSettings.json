@@ -2,9 +2,6 @@
   "profiles": {
     "Contoso.App (Package)": {
       "commandName": "MsixPackage"
-    },
-    "Contoso.App (Unpackaged)": {
-      "commandName": "Project"
     }
   }
 }
