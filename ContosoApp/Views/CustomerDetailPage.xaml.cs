@@ -24,13 +24,13 @@
 
 using System;
 using System.Linq;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
 using Contoso.Models;
 using Contoso.App.ViewModels;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+using CommunityToolkit.WinUI.UI.Controls;
 
 namespace Contoso.App.Views
 {
@@ -104,6 +104,7 @@ namespace Contoso.App.Views
                 }
 
                 var saveDialog = new SaveChangesDialog() { Title = $"Save changes?" };
+                saveDialog.XamlRoot = this.Content.XamlRoot;
                 await saveDialog.ShowAsync();
                 SaveChangesDialogResult result = saveDialog.Result;
 

@@ -5,6 +5,7 @@ languages:
 products:
 - windows
 - windows-uwp
+- winui3
 statusNotificationTargets:
 - codefirst@microsoft.com
 ---
@@ -15,11 +16,37 @@ statusNotificationTargets:
 
 # Customers Orders Database sample
 
-A Universal Windows Platform (UWP) sample app that showcases UI controls (including a data grid) and the latest design guidance for apps on Windows 11. It also demonstrates features useful to enterprise developers, like Azure Active Directory (AAD) authentication, Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso.
+A WinUI 3 sample app that showcases UI controls (including a data grid) and the latest design guidance for apps on Windows 11. It also demonstrates features useful to enterprise developers, like Azure Active Directory (AAD) authentication, Sqlite and SQL Azure database integration, Entity Framework, and cloud API services. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso.
 
-> Note - This sample is targeted and tested for Windows 11 Insider Preview using the Insider Preview SDK Build 22000, and Visual Studio 2019. If you are developing on Windows 10, retarget the Contoso.App project to Windows 10, version 2004 (10.0; Build 19041).
+> Note - This sample is targeted and tested for Windows 11 Insider Preview using the Insider Preview SDK Build 22000, and Visual Studio 2022 version 17.1 or later. If you are developing on Windows 10, retarget the Contoso.App project to Windows 10, version 2004 (10.0; Build 19041).
 
 ![ContosoApp screenshot 1](images/customer-list.png)
+
+## May 2022 update
+
+This update includes:
+
+* Updated Plaform
+  * [WinUI](https://docs.microsoft.com/windows/apps/winui) 2.6.1 to 3.
+
+* Updated Target framework
+  * .NET 6
+
+* Added new NuGet packages and/or libraries
+  * Entity Framework Core Sqlite 6.0.4
+
+* Updated NuGet packages
+  * [Windows Community Toolkit](https://devblogs.microsoft.com/ifdef-windows/windows-community-toolkit-for-project-reunion-0-5/) 7.0.2 to 7.1.2 that supports the 1.0 version of the Windows App SDK which is required for WinUI 3.
+
+* Data migration
+  * [SQLite] migrate existing Contoso db [Guid values from BINARY BLOB to TEXT BLOB](https://docs.microsoft.com/ef/core/what-is-new/ef-core-3.x/breaking-changes#guid-values-are-now-stored-as-text-on-sqlite)
+
+* Improvements:
+  * Remove the native Universal Windows Platform (UWP) [AccountsSettingsPane](https://docs.microsoft.com/en-us/windows/uwp/security/web-account-manager) in favor of start using Microsoft Identity Client directly avoiding the usage of [interop](https://docs.microsoft.com/en-us/windows/win32/api/accountssettingspaneinterop/nn-accountssettingspaneinterop-iaccountssettingspaneinterop). More information about the current support of [Web Account Manager in WinUI 3](https://github.com/microsoft/WindowsAppSDK/issues/398#issuecomment-777762616) and [WebAuthenticationBroker for Reunion](https://github.com/microsoft/WindowsAppSDK/issues/441).
+  * Implements recommended [token Caching approach for Desktop apps](https://github.com/MicrosoftDocs/azure-docs/blob/354cfcef85fa080c1e07477fa009a8125479ee1d/articles/active-directory/develop/msal-net-token-cache-serialization.md#desktop-apps) and now you can close the app and next time you sign-in if token has not expired it is acquired silently. 
+  * Implements Signout flow by deleting cached tokens.
+
+## Previous updates
 
 ## August 2021 update
 
@@ -33,8 +60,6 @@ This update includes:
 * Bug fixes and enhancements
 
 To see how we updated the UI to look at home on Windows 11, see [Updating the Customers Orders Database sample UI to Windows 11](windows-11-update.md).
-
-## Previous updates
 
 ### June 2020 update
 
@@ -64,7 +89,7 @@ This sample highlights:
 * Form layouts
 * Authenticating and obtaining user info using Azure Active Directory (AAD)
 * Using the repository pattern to connect to Sqlite or SQL Azure databases
-* Connecting to an external web API built with ASP.NET Core 2.0
+* Connecting to an external web API built with ASP.NET Core 6.0.
 
 This sample is designed to cover the core scenarios with minimal architectural complexity. For a more complex, full-featured sample that covers many of the same scenarios using a more sophisticated architecture, see the [VanArsdel Inventory sample](https://github.com/Microsoft/InventorySample).
 
@@ -81,10 +106,10 @@ However, in order to debug and explore the full functionality of the app, you'll
 * Windows
   * Windows 11 Insider Preview (Build 22000).
   <br/>OR
-  * Windows 10. Minimum: Windows 10, version 1809 (10.0; Build 17763), also known as the Windows 10 October 2018 Update.
-* [Windows 10 SDK](https://developer.microsoft.com/windows/downloads/windows-10-sdk). Minimum: Windows SDK version 10.0.17763.0 (Windows 10, version 1809).
-* [The .NET Core 2.0 SDK](https://www.microsoft.com/net/core).
-* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/). You can use the free Visual Studio Community Edition to build and run Windows Universal Platform (UWP) apps.
+  * Windows 10. Minimum: Windows 10, version 2004 (10.0; Build 19041).
+* [.NET 6.0 SDK](https://www.microsoft.com/net/core).
+* [Visual Studio 2022 version 17.1 or later](https://visualstudio.microsoft.com/downloads/). You can use the free Visual Studio Community Edition to build and run WinUI 3 apps.
+* [Windows App SDK 1.0](https://docs.microsoft.com/windows/apps/windows-app-sdk/set-up-your-development-environment?tabs=vs-2022-17-1-a%2Cvs-2022-17-1-b#required-workloads-and-components).
 
 To get the latest updates to Windows and the development tools, and to help shape their development, join
 the [Windows Insider Program](https://insider.windows.com).
@@ -149,7 +174,7 @@ The two details screens show how to use headings, labels, and whitespace to orga
 
 ## See also
 
-* [Web account manager](https://docs.microsoft.com/windows/uwp/security/web-account-manager)
+* [Web account manager](https://docs.microsoft.com/windows/uwp/security/web-account-manager) for versions prior to May 2022 changes that are updating to WinUI 3. 
 * [Microsoft Graph](https://developer.microsoft.com/graph)
 * [Http client](https://docs.microsoft.com/windows/uwp/networking/httpclient)
 * [Screen sizes and breakpoints](https://docs.microsoft.com/windows/apps/design/layout/screen-sizes-and-breakpoints-for-responsive-design)

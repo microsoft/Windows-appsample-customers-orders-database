@@ -29,7 +29,7 @@ namespace Contoso.Repository.Sql
 {
     /// <summary>
     /// Contains methods for interacting with the app backend using 
-    /// SQL via Entity Framework Core 2.0. 
+    /// SQL via Entity Framework Core 6.0. 
     /// </summary>
     public class SqlContosoRepository : IContosoRepository
     {

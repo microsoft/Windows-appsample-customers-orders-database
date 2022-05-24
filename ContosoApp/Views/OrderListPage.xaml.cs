@@ -23,15 +23,15 @@
 //  ---------------------------------------------------------------------------------
 
 using System;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Email;
+using CommunityToolkit.WinUI.UI.Controls;
 using Contoso.Models;
 using Contoso.App.ViewModels;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Windows.ApplicationModel.Email;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 
 namespace Contoso.App.Views
 {
@@ -89,6 +89,7 @@ namespace Contoso.App.Views
                         $"invoice #{ViewModel.SelectedOrder.InvoiceNumber}:\n{ex.Message}",
                     PrimaryButtonText = "OK"
                 };
+                dialog.XamlRoot = App.Window.Content.XamlRoot;
                 await dialog.ShowAsync();
             }
         }

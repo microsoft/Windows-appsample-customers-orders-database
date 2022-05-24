@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     Copyright (c) Microsoft Corporation.  All rights reserved.
     The MIT License (MIT)
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,46 +24,53 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls">
     <Application.Resources>
-        <controls:XamlControlsResources>
-            <controls:XamlControlsResources.MergedDictionaries>
-                <!-- Other app resources here -->
-                <ResourceDictionary>
-                    <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <controls:XamlControlsResources>
+                <controls:XamlControlsResources.MergedDictionaries>
+                    <!-- Other app resources here -->
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Light">
+                                <SolidColorBrush
                                 x:Key="AccentBackgroundColor"
                                 Color="LightSteelBlue" />
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="Dark">
-                            <SolidColorBrush
+                            </ResourceDictionary>
+                            <ResourceDictionary x:Key="Dark">
+                                <SolidColorBrush
                                 x:Key="AccentBackgroundColor"
                                 Color="SteelBlue" />
-                        </ResourceDictionary>
-                    </ResourceDictionary.ThemeDictionaries>
-                </ResourceDictionary>
-                <ResourceDictionary>
-                    <x:Double x:Key="HeaderHeight">32</x:Double>
-                    <GridLength x:Key="GridHeaderHeight">32</GridLength>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                    <ResourceDictionary>
+                        <x:Double x:Key="HeaderHeight">32</x:Double>
+                        <GridLength x:Key="GridHeaderHeight">32</GridLength>
 
-                    <!--  window width adaptive snap points  -->
-                    <x:Double x:Key="MinWindowSnapPoint">0</x:Double>
-                    <x:Double x:Key="MediumWindowSnapPoint">641</x:Double>
-                    <x:Double x:Key="LargeWindowSnapPoint">1008</x:Double>
+                        <!--  window width adaptive snap points  -->
+                        <x:Double x:Key="MinWindowSnapPoint">0</x:Double>
+                        <x:Double x:Key="MediumWindowSnapPoint">641</x:Double>
+                        <x:Double x:Key="LargeWindowSnapPoint">1008</x:Double>
 
-                    <Style
+                        <Style
                         x:Key="PageTitleTextBlockStyle"
                         BasedOn="{StaticResource TitleTextBlockStyle}"
                         TargetType="TextBlock">
-                        <Setter Property="FontSize" Value="28" />
-                        <Setter Property="TextWrapping" Value="NoWrap" />
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                        <Setter Property="VerticalAlignment" Value="Top" />
-                        <Setter Property="Margin" Value="0,4,0,0" />
-                    </Style>
+                            <Setter Property="FontSize" Value="28" />
+                            <Setter Property="TextWrapping" Value="NoWrap" />
+                            <Setter Property="HorizontalAlignment" Value="Left" />
+                            <Setter Property="VerticalAlignment" Value="Top" />
+                            <Setter Property="Margin" Value="0,4,0,0" />
+                        </Style>
 
-                </ResourceDictionary>
-            </controls:XamlControlsResources.MergedDictionaries>
-        </controls:XamlControlsResources>
+                    </ResourceDictionary>
+                </controls:XamlControlsResources.MergedDictionaries>
+            </controls:XamlControlsResources>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Other app resources here -->
+            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionForeground">Black</SolidColorBrush>
+        </ResourceDictionary>
     </Application.Resources>
-
 </Application>

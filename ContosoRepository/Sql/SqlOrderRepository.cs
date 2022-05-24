@@ -104,7 +104,7 @@ namespace Contoso.Repository.Sql
 
         public async Task DeleteAsync(Guid orderId)
         {
-            var match = await _db.Orders.FindAsync(orderId);
+            var match = await _db.Orders.FirstOrDefaultAsync(_order => _order.Id == orderId);
             if (match != null)
             {
                 _db.Orders.Remove(match);

@@ -37,7 +37,7 @@ namespace Contoso.Repository
         /// however, you cannot modify any data on the server or deploy your own updates. 
         /// To see the full functionality, deploy Contoso.Service using your own Azure account.
         /// </summary>
-        public const string ApiUrl = @"http://customers-orders-api-prod.azurewebsites.net/api/";
+        public const string ApiUrl = @"http://customers-orders-api-prod.azurewebsites.net";
 
         /// <summary>
         /// The Azure Active Directory (AAD) client id.
@@ -48,5 +48,11 @@ namespace Contoso.Repository
         /// Connection string for a server-side SQL database.
         /// </summary>
         public const string SqlAzureConnectionString = "<TODO: Insert connection string>";
+
+        // Cache settings
+        public const string CacheFileName = "contosoapp_msal_cache.txt";
+
+        // App settings
+        public static readonly string[] Scopes = new[] { "https://graph.microsoft.com/User.Read" };
     }
 }

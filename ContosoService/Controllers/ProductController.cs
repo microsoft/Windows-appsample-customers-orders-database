@@ -24,17 +24,15 @@
 
 using Contoso.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Contoso.Service.Controllers
 {
     /// <summary>
     /// Contains methods for interacting with product data.
     /// </summary>
+    [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : Controller
+    public class ProductController : ControllerBase
     {
         private readonly IProductRepository _repository;
 

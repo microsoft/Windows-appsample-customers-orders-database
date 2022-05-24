@@ -22,7 +22,7 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Windows.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls;
 
 namespace Contoso.App.UserControls
 {

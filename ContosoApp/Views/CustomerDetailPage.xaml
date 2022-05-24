@@ -27,7 +27,7 @@
     xmlns:models="using:Contoso.Models"
     xmlns:vm="using:Contoso.App.ViewModels"
     xmlns:sys="using:System"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:uc="using:Contoso.App.UserControls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     NavigationCacheMode="Disabled"

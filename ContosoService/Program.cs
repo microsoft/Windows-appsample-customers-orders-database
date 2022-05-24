@@ -22,21 +22,32 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Contoso.Models;
+using Contoso.Repository;
+using Contoso.Repository.Sql;
+using System.Text.Json.Serialization;
 
-namespace Contoso.Service
+var builder = WebApplication.CreateBuilder(args);
+
+var db = new ContosoContext(new DbContextOptionsBuilder<ContosoContext>()
+    .UseSqlServer(
+        Constants.SqlAzureConnectionString,
+        o => o.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)).Options);
+builder.Services.AddScoped<ICustomerRepository, SqlCustomerRepository>(_ => new SqlCustomerRepository(db));
+builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>(_ => new SqlOrderRepository(db));
+builder.Services.AddScoped<IProductRepository, SqlProductRepository>(_ => new SqlProductRepository(db));
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
-        }
-
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
-    }
+    app.UseDeveloperExceptionPage();
 }
+
+app.MapControllers();
+
+app.Run(Constants.ApiUrl);

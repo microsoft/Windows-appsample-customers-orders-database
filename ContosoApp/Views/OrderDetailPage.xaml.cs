@@ -22,16 +22,16 @@
 //  THE SOFTWARE.
 //  ---------------------------------------------------------------------------------
 
-using Contoso.Models;
-using Contoso.App.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Email;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using Contoso.Models;
+using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
 {
@@ -103,7 +103,7 @@ namespace Contoso.App.Views
                     Content = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
                         "has unsaved changes that will be lost. Do you want to save your changes?"
                 };
-
+                saveDialog.XamlRoot = this.Content.XamlRoot;
                 await saveDialog.ShowAsync();
                 SaveChangesDialogResult result = saveDialog.Result;
 
@@ -172,6 +172,7 @@ namespace Contoso.App.Views
                 Content = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
                     "has unsaved changes that will be lost. Do you want to save your changes?"
             };
+            saveDialog.XamlRoot = this.Content.XamlRoot;
             await saveDialog.ShowAsync();
             SaveChangesDialogResult result = saveDialog.Result;
 
@@ -207,7 +208,7 @@ namespace Contoso.App.Views
                     Content = $"There was an error saving your order:\n{ex.Message}", 
                     PrimaryButtonText = "OK"                 
                 };
-
+                dialog.XamlRoot = App.Window.Content.XamlRoot;
                 await dialog.ShowAsync();
             }
         }

@@ -29,9 +29,9 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.UI.Dispatching;
+using CommunityToolkit.WinUI;
 using Contoso.Models;
-using Microsoft.Toolkit.Uwp;
-using Windows.System;
 
 namespace Contoso.App.ViewModels
 {

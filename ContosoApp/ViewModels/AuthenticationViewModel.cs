@@ -24,21 +24,18 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Graph;
-using Windows.ApplicationModel.Core;
-using Windows.Security.Authentication.Web.Core;
-using Windows.Security.Credentials;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.ApplicationSettings;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace Contoso.App.ViewModels
 {
@@ -47,13 +44,23 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class AuthenticationViewModel : BindableBase
     {
+        // Generally, your MSAL client will have a lifecycle that matches the lifecycle
+        // of the user's session in the application. In this sample, the lifecycle of the
+        // MSAL client to the lifecycle of this form.
+        private readonly IPublicClientApplication _msalPublicClientApp;
+
         /// <summary>
         /// Creates a new AuthenticationViewModel for logging users in and getting their info.
         /// </summary>
         public AuthenticationViewModel()
         {
+            _msalPublicClientApp = PublicClientApplicationBuilder
+                .Create(Repository.Constants.AccountClientId)
+                .WithAuthority(AadAuthorityAudience.AzureAdMultipleOrgs)
+                .WithDefaultRedirectUri()
+                .Build();
+
             Task.Run(PrepareAsync);
-            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildAccountsPaneAsync;
         }
 
         private string _name;
@@ -86,7 +93,7 @@ namespace Contoso.App.ViewModels
         public string Title
         {
             get => _title;
-            set => Set(ref _title, value); 
+            set => Set(ref _title, value);
         }
 
         private string _domain;
@@ -133,7 +140,7 @@ namespace Contoso.App.ViewModels
             set => Set(ref _showWelcome, value);
         }
 
-        private bool _showLoading; 
+        private bool _showLoading;
 
         /// <summary>
         /// Gets or sets whether to show the logging in progress UI.
@@ -152,10 +159,10 @@ namespace Contoso.App.ViewModels
         public bool ShowData
         {
             get => _showData;
-            set => Set(ref _showData, value); 
+            set => Set(ref _showData, value);
         }
 
-        private bool _showError; 
+        private bool _showError;
 
         /// <summary>
         /// Gets or sets whether to show the error UI.
@@ -171,15 +178,23 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task PrepareAsync()
         {
-            if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
-                (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
+            // Configuring the token cache
+            var storageProperties =
+                new StorageCreationPropertiesBuilder(Repository.Constants.CacheFileName, MsalCacheHelper.UserRootDirectory)
+                .Build();
+
+            // This hooks up the cache into MSAL
+            var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
+            cacheHelper.RegisterCache(_msalPublicClientApp.UserTokenCache);
+
+            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            if (accounts.Any())
             {
-                await SetVisibleAsync(vm => vm.ShowLoading);
                 await LoginAsync();
             }
             else
             {
-                await SetVisibleAsync(vm => vm.ShowWelcome);
+                SetVisible(vm => vm.ShowWelcome);
             }
         }
 
@@ -191,24 +206,23 @@ namespace Contoso.App.ViewModels
         {
             try
             {
-                await SetVisibleAsync(vm => vm.ShowLoading);
+                SetVisible(vm => vm.ShowLoading);
                 string token = await GetTokenAsync();
                 if (token != null)
                 {
-                    ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"] = true;
                     await SetUserInfoAsync(token);
                     await SetUserPhoto(token);
-                    await SetVisibleAsync(vm => vm.ShowData);
+                    SetVisible(vm => vm.ShowData);
                 }
                 else
                 {
-                    await SetVisibleAsync(vm => vm.ShowError);
+                    SetVisible(vm => vm.ShowError);
                 }
             }
             catch (Exception ex)
             {
                 ErrorText = ex.Message;
-                await SetVisibleAsync(vm => vm.ShowError);
+                SetVisible(vm => vm.ShowError);
             }
         }
 
@@ -217,17 +231,40 @@ namespace Contoso.App.ViewModels
         /// </summary>
         private async Task<string> GetTokenAsync()
         {
-            var provider = await GetAadProviderAsync();
-            var request = new WebTokenRequest(provider, "User.Read", 
-                Repository.Constants.AccountClientId);
-            request.Properties.Add("resource", "https://graph.microsoft.com");
-            var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
-            if (result.ResponseStatus != WebTokenRequestStatus.Success)
+            AuthenticationResult? msalAuthenticationResult = null;
+
+            // Acquire a cached access token for Microsoft Graph if one is available from a prior
+            // execution of this process.
+            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            if (accounts.Any())
             {
-                result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
+                try
+                {
+                    // Will return a cached access token if available, refreshing if necessary.
+                    msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenSilent(
+                        Repository.Constants.Scopes,
+                        accounts.First())
+                        .ExecuteAsync();
+                }
+                catch (MsalUiRequiredException)
+                {
+                    // Nothing in cache for this account + scope, and interactive experience required.
+                }
             }
-            return result.ResponseStatus == WebTokenRequestStatus.Success ?
-                result.ResponseData[0].Token : null;
+
+            if (msalAuthenticationResult == null)
+            {
+                // This is likely the first authentication request in the application, so calling
+                // this will launch the user's default browser and send them through a login flow.
+                // After the flow is complete, the rest of this method will continue to execute.
+                msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenInteractive(
+                    Repository.Constants.Scopes)
+                    .ExecuteAsync();
+
+                // TODO: [feat] when user cancel the authN flow, the UX will be as if the login had failed. This can be improved with a more friendly UI experience on top of this. 
+            }
+
+            return msalAuthenticationResult.AccessToken;
         }
 
         /// <summary>
@@ -235,7 +272,9 @@ namespace Contoso.App.ViewModels
         /// </summary>
         private async Task SetUserInfoAsync(string token)
         {
-            var users = await Windows.System.User.FindAllAsync();
+            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            var domain = accounts?.First().Username.Split('@')[1] ?? string.Empty;
+
             var graph = new GraphServiceClient(new DelegateAuthenticationProvider(message =>
             {
                 message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -244,13 +283,13 @@ namespace Contoso.App.ViewModels
 
             var me = await graph.Me.Request().GetAsync();
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                CoreDispatcherPriority.Normal, async () =>
+            App.Window.DispatcherQueue.TryEnqueue(
+                DispatcherQueuePriority.Normal, () =>
             {
                 Name = me.DisplayName;
                 Email = me.Mail;
                 Title = me.JobTitle;
-                Domain = (string)await users[0].GetPropertyAsync(KnownUserProperties.DomainName);
+                Domain = domain;
             });
         }
 
@@ -274,8 +313,8 @@ namespace Contoso.App.ViewModels
                     {
                         await stream.CopyToAsync(memoryStream);
                         memoryStream.Position = 0;
-                        await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                            CoreDispatcherPriority.Normal, async () =>
+                        App.Window.DispatcherQueue.TryEnqueue(
+                            DispatcherQueuePriority.Normal, async () =>
                         {
                             Photo = new BitmapImage();
                             await Photo.SetSourceAsync(memoryStream.AsRandomAccessStream());
@@ -286,40 +325,11 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Initializes the AccountsSettingsPane with AAD login.
-        /// </summary>
-        private async void BuildAccountsPaneAsync(AccountsSettingsPane sender,
-            AccountsSettingsPaneCommandsRequestedEventArgs args)
-        {
-            var deferral = args.GetDeferral();
-            var command = new WebAccountProviderCommand(await GetAadProviderAsync(), async (x) =>
-                await LoginAsync());
-            args.WebAccountProviderCommands.Add(command);
-            deferral.Complete();
-        }
-
-        /// <summary>
-        /// Gets the Microsoft ADD login provider.
-        /// </summary>
-        public async Task<WebAccountProvider> GetAadProviderAsync() =>
-            await WebAuthenticationCoreManager.FindAccountProviderAsync(
-                "https://login.microsoft.com", "organizations");
-
-
-        /// <summary>
         /// Logs the user in.
         /// </summary>
         public async void LoginClick()
         {
-            if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
-                (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
-            {
-                await LoginAsync();
-            }
-            else
-            {
-                AccountsSettingsPane.Show();
-            }
+            await LoginAsync();
         }
 
         /// <summary>
@@ -327,28 +337,38 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async void LogoutClick()
         {
-            if (ApplicationData.Current.RoamingSettings.Values.ContainsKey("IsLoggedIn") &&
-                (bool)ApplicationData.Current.RoamingSettings.Values["IsLoggedIn"])
+            var signoutDialog = new ContentDialog()
             {
-                ContentDialog SignoutDialog = new ContentDialog()
-                {
-                    Title = "Sign out",
-                    Content = "Sign out?",
-                    PrimaryButtonText = "Sign out",
-                    SecondaryButtonText = "Cancel"
+                Title = "Sign out",
+                Content = "Sign out?",
+                PrimaryButtonText = "Sign out",
+                SecondaryButtonText = "Cancel"
 
-                };
-                await SignoutDialog.ShowAsync();
-            }
+            };
+            signoutDialog.PrimaryButtonClick += async (_, _) =>
+            {
+                // All cached tokens will be removed.
+                // The next token request will require the user to sign in.
+                foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
+                {
+                    await _msalPublicClientApp.RemoveAsync(account);
+                }
+                SetVisible(vm => vm.ShowWelcome);
+            };
+            signoutDialog.XamlRoot = App.Window.Content.XamlRoot;
+
+            await signoutDialog.ShowAsync();
         }
 
         /// <summary>
         /// Shows one part of the login UI sequence and hides all the others.
         /// </summary>
-        private async Task SetVisibleAsync(Expression<Func<AuthenticationViewModel, bool>> selector)
+        private void SetVisible(Expression<Func<AuthenticationViewModel, bool>> selector)
         {
             var prop = (PropertyInfo)((MemberExpression)selector.Body).Member;
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+
+            App.Window.DispatcherQueue.TryEnqueue(
+                DispatcherQueuePriority.High, () =>
             {
                 ShowWelcome = false;
                 ShowLoading = false;

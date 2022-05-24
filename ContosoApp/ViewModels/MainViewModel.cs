@@ -25,8 +25,8 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp;
-using Windows.System;
+using Microsoft.UI.Dispatching;
+using CommunityToolkit.WinUI;
 
 namespace Contoso.App.ViewModels
 {
@@ -101,7 +101,6 @@ namespace Contoso.App.ViewModels
         {
             Task.Run(async () =>
             {
-                IsLoading = true;
                 foreach (var modifiedCustomer in Customers
                     .Where(customer => customer.IsModified).Select(customer => customer.Model))
                 {
@@ -109,7 +108,6 @@ namespace Contoso.App.ViewModels
                 }
 
                 await GetCustomerListAsync();
-                IsLoading = false;
             });
         }
     }
