@@ -5,7 +5,7 @@ languages:
 products:
 - windows
 - windows-uwp
-- winui3
+- windows-app-sdk
 statusNotificationTargets:
 - codefirst@microsoft.com
 ---
