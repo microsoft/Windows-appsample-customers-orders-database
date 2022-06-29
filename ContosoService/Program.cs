@@ -30,13 +30,12 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var db = new ContosoContext(new DbContextOptionsBuilder<ContosoContext>()
-    .UseSqlServer(
+builder.Services.AddDbContext<ContosoContext>(o => o.UseSqlServer(
         Constants.SqlAzureConnectionString,
-        o => o.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)).Options);
-builder.Services.AddScoped<ICustomerRepository, SqlCustomerRepository>(_ => new SqlCustomerRepository(db));
-builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>(_ => new SqlOrderRepository(db));
-builder.Services.AddScoped<IProductRepository, SqlProductRepository>(_ => new SqlProductRepository(db));
+        o => o.CommandTimeout((int)TimeSpan.FromMinutes(10).TotalSeconds)));
+builder.Services.AddScoped<ICustomerRepository, SqlCustomerRepository>();
+builder.Services.AddScoped<IOrderRepository, SqlOrderRepository>();
+builder.Services.AddScoped<IProductRepository, SqlProductRepository>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
