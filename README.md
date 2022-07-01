@@ -129,10 +129,85 @@ are in [Constants.cs](ContosoRepository/Constants.cs).
 * **Associate this sample with the Store**: Authentication requires store association. To associate the app with the Store,
 right click the project in Visual Studio and select **Store** -> *Associate App with the Store*. Then follow the instructions in the wizard.
 
+## Run
+
 You can then either start the service running locally, or deploy it to Azure.
 
-* To run locally, right-click the solution, choose *Properties*, and choose to start both **Contoso.App** and **Contoso.Service** at the same time.
-* To deploy to Azure, right-click Contoso.Service, choose *Publish*, and then follow the steps in the wizard.
+### Register the Azure Active Directory app
+
+First, complete the steps in [Register an application with the Microsoft identity platform](https://docs.microsoft.com/azure/active-directory/develop/quickstart-register-app) to register the application.
+
+Use these settings in your app registration.
+
+| App registration <br/> setting  | Value for this sample app                                                            | Notes                                                                           |
+|--------------------------------:|:-------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------|
+| **Name**                        | `active-directory-contoso-customer-oders-winui3`                                     | Suggested value for this sample. <br/> You can change the app name at any time. |
+| **Supported account types**     | **Accounts in any organizational directory (Any Azure AD directory - Multitenant)**  | Suggested value for this sample.                                                |
+| **Platform type**               | **Mobile and desktop applications**                                                  | Required value for this sample                                                  |
+| **Redirect URIs**               | `https://login.microsoftonline.com/common/oauth2/nativeclient`                       | Required value for this sample                                      
+
+### Run locally (SQLite)
+
+1. Navigate to [Constants.cs](ContosoRepository/Constants.cs) and complete the following values:
+
+   ```csharp
+   ...
+   public const string AccountClientId = "Application_Client_ID_From_Azure_Portal";
+   ...
+   ```
+
+1. Right-click the **Contoso.App** project, choose *Set as Startup Project*.
+1. Press **F5**
+1. Navigate to **Settings** and ensure it is selected the **SQLite** option.
+
+### Run locally (REST)
+
+1. Install **SQL LocalDB**. You could easily install **SQL LocalDB** using the **Visual Studio Installer** from **Individual Components** by searching for the term **Local DB** or you can find other ways to install this from [SQL Server Express LocalDB Installation Media](https://docs.microsoft.com/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15#installation-media).
+   
+   > Note: The intructions in here are using SQL Express LocalDB, but you can use any SQL Server instance at your disposal.
+
+1. Open a **Windows Terminal** and create a new **LocalDB** instance
+   
+   ```
+   SqlLocalDB.exe create "ContosoDb"
+   ```
+
+1. Start the new **LocalDB**
+
+   ```
+   SqlLocalDB.exe start "ContosoDb"
+   ```
+
+1. Copy your **LocalDB** instance pipe number from the output of executing the following command
+
+   ```
+   SqlLocalDB.exe info "ContosoDb"
+   ```
+
+1. Create the new Database. Please note that below we used [mssql-cli](https://docs.microsoft.com/en-us/sql/tools/mssql-cli?view=sql-server-ver15#install-mssql-cli), but you could opt to use any tool for querying SQL Server of your preference.
+
+   ```
+   mssql-cli -S np:\\.\pipe\LOCALDB#<instance-pipe-number>\tsql\query -E -i .\ContosoApp\Assets\ContosoDb.sql
+   ```
+
+1. Right-click the solution, choose *Properties*, and choose to start both **Contoso.App** and **Contoso.Service** at the same time.
+1. Navigate to [Constants.cs](ContosoRepository/Constants.cs) and complete the following values:
+
+   ```csharp
+   public const string ApiUrl = @"http://localhost:65027";
+   ...
+   public const string AccountClientId = "Application_Client_ID_From_Azure_Portal";
+   ...
+   public const string SqlAzureConnectionString = "Data Source=(LocalDB)\\ContosoDb;Initial Catalog=CONTOSODB;Integrated Security=True";
+   ...
+   ```
+
+1. Press **F5**
+1. Navigate to **Settings** and select the **REST** option, so the Database Customer Orders sample app starts using the service endpoints.
+
+### Deploy to Azure
+
+1. right-click Contoso.Service, choose *Publish*, and then follow the steps in the wizard.
 
 ## Code at a glance
 
