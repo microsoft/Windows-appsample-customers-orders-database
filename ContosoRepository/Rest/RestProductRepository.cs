@@ -35,19 +35,21 @@ namespace Contoso.Repository.Rest
     public class RestProductRepository : IProductRepository
     {
         private readonly HttpHelper _http;
+        private readonly string _accessToken;
 
-        public RestProductRepository(string baseUrl)
+        public RestProductRepository(string baseUrl, string accessToken)
         {
             _http = new HttpHelper(baseUrl);
+            _accessToken = accessToken;
         }
 
         public async Task<IEnumerable<Product>> GetAsync() =>
-            await _http.GetAsync<IEnumerable<Product>>("product"); 
+            await _http.GetAsync<IEnumerable<Product>>("product", _accessToken); 
 
         public async Task<Product> GetAsync(Guid id) => 
-            await _http.GetAsync<Product>($"product/{id}");
+            await _http.GetAsync<Product>($"product/{id}", _accessToken);
 
         public async Task<IEnumerable<Product>> GetAsync(string search) =>
-            await _http.GetAsync<IEnumerable<Product>>($"product/search?value={search}");
+            await _http.GetAsync<IEnumerable<Product>>($"product/search?value={search}", _accessToken);
     }
 }

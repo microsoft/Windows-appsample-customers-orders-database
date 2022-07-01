@@ -123,7 +123,7 @@ Set your startup project as **Contoso.App**, the architecture to x86 or x64, and
 To fully explore the sample, you'll need to connect to your own Azure Active Directory and data source. Values you need to fill
 are in [Constants.cs](ContosoRepository/Constants.cs).
 
-* **Client Id**: Set the *AccountClientId* field to your Azure account client Id.
+* **Deskptop app Client Id**: Set the *AccountClientId* field to your Azure account client Id.
 * **API endpoint**: Set the value of the *BaseUrl* constant to match the url the backing service is running on.
 * **Set a database connection string**: Set the connection string to one of your own local or remote databases.
 * **Associate this sample with the Store**: Authentication requires store association. To associate the app with the Store,
@@ -133,22 +133,31 @@ right click the project in Visual Studio and select **Store** -> *Associate App 
 
 You can then either start the service running locally, or deploy it to Azure.
 
-### Register the Azure Active Directory app
+### Register the Azure Active Directory app (Web api)
 
-First, complete the steps in [Register an application with the Microsoft identity platform](https://docs.microsoft.com/azure/active-directory/develop/quickstart-register-app) to register the application.
+First, complete the steps in [Register an application with the Microsoft identity platform](https://docs.microsoft.com/azure/active-directory/develop/quickstart-register-app) to register the web application.
 
-Use these settings in your app registration.
+| App registration <br/> setting | Value for this sample app                                           | Notes                                                                                                       |
+|-------------------------------:|:--------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------|
+| **Name**                       | `active-directory-contoso-customer-oders-protected-api`             | Suggested value for this sample. <br/> You can change the app name at any time.                             |
+| **Supported account types**    | **Accounts in this organizational directory only (Any Azure AD directory - Multitenant)**  | Required for this sample. <br/> Support for the Single tenant.                       |
+| **Expose an API**              | **Scope name**: `Contoso.ReadWrite`<br/>**Who can consent?**: **Admins and users**<br/>**Admin consent display name**: `Act on behalf of the user`<br/>**Admin consent description**: `Allows the API to act on behalf of the user.`<br/>**User consent display name**: `Act on your behalf`<br/>**User consent description**: `Allows the API to act on your behalf.`<br/>**State**: **Enabled**  | Add a new scope that reads as follows `api://{clientId}/Contoso.ReadWrite`. Required value for this sample. |
 
-| App registration <br/> setting  | Value for this sample app                                                            | Notes                                                                           |
-|--------------------------------:|:-------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------|
-| **Name**                        | `active-directory-contoso-customer-oders-winui3`                                     | Suggested value for this sample. <br/> You can change the app name at any time. |
-| **Supported account types**     | **Accounts in any organizational directory (Any Azure AD directory - Multitenant)**  | Suggested value for this sample.                                                |
-| **Platform type**               | **Mobile and desktop applications**                                                  | Required value for this sample                                                  |
-| **Redirect URIs**               | `https://login.microsoftonline.com/common/oauth2/nativeclient`                       | Required value for this sample                                      
+### Register the Azure Active Directory app (Client desktop app)
+
+Then, complete the steps in [Register an application with the Microsoft identity platform](https://docs.microsoft.com/azure/active-directory/develop/quickstart-register-app) to register the deskptop application.
+
+| App registration <br/> setting  | Value for this sample app                                                            | Notes                                                                                           |
+|--------------------------------:|:-------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------|
+| **Name**                        | `active-directory-contoso-customer-oders-winui3`                                     | Suggested value for this sample. <br/> You can change the app name at any time.                 |
+| **Supported account types**     | **Accounts in any organizational directory (Any Azure AD directory - Multitenant)**  | Suggested value for this sample.                                                                |
+| **Platform type**               | **Mobile and desktop applications**                                                  | Required value for this sample                                                                  |
+| **Redirect URIs**               | `https://login.microsoftonline.com/common/oauth2/nativeclient`                       | Required value for this sample                                                                  |
+| **API Permissions**             | `active-directory-contoso-customer-oders-protected-api` <br/> `  Contoso.ReadWrite`  | Add a new delegated permission for `api://<application-id>/Contoso.ReadWrite`. Required value for this sample. | 
 
 ### Run locally (SQLite)
 
-1. Navigate to [Constants.cs](ContosoRepository/Constants.cs) and complete the following values:
+1. Navigate to [Constants.cs](ContosoRepository/Constants.cs) and complete the following value using the `active-directory-contoso-customer-oders-winui3` Application (client) ID from Azure Portal:
 
    ```csharp
    ...
@@ -191,12 +200,21 @@ Use these settings in your app registration.
    ```
 
 1. Right-click the solution, choose *Properties*, and choose to start both **Contoso.App** and **Contoso.Service** at the same time.
+1. Open the [appsettings.json](ContosoService/appsettings.json) file and modify the following field using the `active-directory-contoso-customer-oders-protected-api` Application (client) ID from Azure Portal:
+
+   ```json
+   ...
+   "ClientId": "Enter_the_Application_Id_here"
+   ...
+   ```
+
 1. Navigate to [Constants.cs](ContosoRepository/Constants.cs) and complete the following values:
 
    ```csharp
    public const string ApiUrl = @"http://localhost:65027";
    ...
    public const string AccountClientId = "Application_Client_ID_From_Azure_Portal";
+   public const string WebApiClientId = "Application_Client_ID_From_Azure_Portal";
    ...
    public const string SqlAzureConnectionString = "Data Source=(LocalDB)\\ContosoDb;Initial Catalog=CONTOSODB;Integrated Security=True";
    ...

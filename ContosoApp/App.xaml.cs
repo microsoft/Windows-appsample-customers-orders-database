@@ -23,6 +23,7 @@
 //  ---------------------------------------------------------------------------------
 
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
@@ -34,7 +35,6 @@ using Contoso.App.Views;
 using Contoso.Repository;
 using Contoso.Repository.Rest;
 using Contoso.Repository.Sql;
-using System;
 
 namespace Contoso.App
 {
@@ -125,7 +125,11 @@ namespace Contoso.App
         /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
         /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
         /// </summary>
-        public static void UseRest() =>
-            Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/");
+        public static void UseRest() 
+        {
+            var accessToken = Task.Run(async () => await MsalHelper.GetTokenAsync(Constants.WebApiScopes)).Result;
+
+            Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/", accessToken);
+        }
     }
 }
