@@ -94,10 +94,10 @@ namespace Contoso.App.Views
                         StringSplitOptions.RemoveEmptyEntries);
                     sender.ItemsSource = ViewModel.Customers
                         .Where(customer => parameters.Any(parameter =>
-                            customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                            customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                            customer.Address.StartsWith(parameter) ||
+                            customer.FirstName.StartsWith(parameter) ||
+                            customer.LastName.StartsWith(parameter) ||
+                            customer.Company.StartsWith(parameter)))
                         .OrderByDescending(customer => parameters.Count(parameter =>
                             customer.Address.StartsWith(parameter) ||
                             customer.FirstName.StartsWith(parameter) ||
@@ -142,10 +142,10 @@ namespace Contoso.App.Views
 
             var matches = ViewModel.Customers.Where(customer => parameters
                 .Any(parameter =>
-                    customer.Address.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                    customer.FirstName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                    customer.LastName.StartsWith(parameter, StringComparison.OrdinalIgnoreCase) ||
-                    customer.Company.StartsWith(parameter, StringComparison.OrdinalIgnoreCase)))
+                    customer.Address.StartsWith(parameter) ||
+                    customer.FirstName.StartsWith(parameter) ||
+                    customer.LastName.StartsWith(parameter) ||
+                    customer.Company.StartsWith(parameter)))
                 .OrderByDescending(customer => parameters.Count(parameter =>
                     customer.Address.StartsWith(parameter) ||
                     customer.FirstName.StartsWith(parameter) ||
