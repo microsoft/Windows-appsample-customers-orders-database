@@ -31,8 +31,6 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
-using Microsoft.Identity.Client.Extensions.Msal;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -44,22 +42,11 @@ namespace Contoso.App.ViewModels
     /// </summary>
     public class AuthenticationViewModel : BindableBase
     {
-        // Generally, your MSAL client will have a lifecycle that matches the lifecycle
-        // of the user's session in the application. In this sample, the lifecycle of the
-        // MSAL client to the lifecycle of this form.
-        private readonly IPublicClientApplication _msalPublicClientApp;
-
         /// <summary>
         /// Creates a new AuthenticationViewModel for logging users in and getting their info.
         /// </summary>
         public AuthenticationViewModel()
         {
-            _msalPublicClientApp = PublicClientApplicationBuilder
-                .Create(Repository.Constants.AccountClientId)
-                .WithAuthority(AadAuthorityAudience.AzureAdMultipleOrgs)
-                .WithDefaultRedirectUri()
-                .Build();
-
             Task.Run(PrepareAsync);
         }
 
@@ -178,16 +165,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task PrepareAsync()
         {
-            // Configuring the token cache
-            var storageProperties =
-                new StorageCreationPropertiesBuilder(Repository.Constants.CacheFileName, MsalCacheHelper.UserRootDirectory)
-                .Build();
-
-            // This hooks up the cache into MSAL
-            var cacheHelper = await MsalCacheHelper.CreateAsync(storageProperties);
-            cacheHelper.RegisterCache(_msalPublicClientApp.UserTokenCache);
-
-            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            var accounts = await MsalHelper.GetAccountsAsync();
             if (accounts.Any())
             {
                 await LoginAsync();
@@ -207,7 +185,7 @@ namespace Contoso.App.ViewModels
             try
             {
                 SetVisible(vm => vm.ShowLoading);
-                string token = await GetTokenAsync();
+                string token = await MsalHelper.GetTokenAsync(Repository.Constants.GraphpApiScopes);
                 if (token != null)
                 {
                     await SetUserInfoAsync(token);
@@ -227,52 +205,11 @@ namespace Contoso.App.ViewModels
         }
 
         /// <summary>
-        /// Gets an auth token for the user, which can be used to call the Microsoft Graph API.
-        /// </summary>
-        private async Task<string> GetTokenAsync()
-        {
-            AuthenticationResult? msalAuthenticationResult = null;
-
-            // Acquire a cached access token for Microsoft Graph if one is available from a prior
-            // execution of this process.
-            var accounts = await _msalPublicClientApp.GetAccountsAsync();
-            if (accounts.Any())
-            {
-                try
-                {
-                    // Will return a cached access token if available, refreshing if necessary.
-                    msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenSilent(
-                        Repository.Constants.Scopes,
-                        accounts.First())
-                        .ExecuteAsync();
-                }
-                catch (MsalUiRequiredException)
-                {
-                    // Nothing in cache for this account + scope, and interactive experience required.
-                }
-            }
-
-            if (msalAuthenticationResult == null)
-            {
-                // This is likely the first authentication request in the application, so calling
-                // this will launch the user's default browser and send them through a login flow.
-                // After the flow is complete, the rest of this method will continue to execute.
-                msalAuthenticationResult = await _msalPublicClientApp.AcquireTokenInteractive(
-                    Repository.Constants.Scopes)
-                    .ExecuteAsync();
-
-                // TODO: [feat] when user cancel the authN flow, the UX will be as if the login had failed. This can be improved with a more friendly UI experience on top of this. 
-            }
-
-            return msalAuthenticationResult.AccessToken;
-        }
-
-        /// <summary>
         /// Gets and processes the user's info from the Microsoft Graph API.
         /// </summary>
         private async Task SetUserInfoAsync(string token)
         {
-            var accounts = await _msalPublicClientApp.GetAccountsAsync();
+            var accounts = await MsalHelper.GetAccountsAsync();
             var domain = accounts?.First().Username.Split('@')[1] ?? string.Empty;
 
             var graph = new GraphServiceClient(new DelegateAuthenticationProvider(message =>
@@ -347,12 +284,7 @@ namespace Contoso.App.ViewModels
             };
             signoutDialog.PrimaryButtonClick += async (_, _) =>
             {
-                // All cached tokens will be removed.
-                // The next token request will require the user to sign in.
-                foreach (var account in (await _msalPublicClientApp.GetAccountsAsync()).ToList())
-                {
-                    await _msalPublicClientApp.RemoveAsync(account);
-                }
+                await MsalHelper.RemoveCachedTokens();
                 SetVisible(vm => vm.ShowWelcome);
             };
             signoutDialog.XamlRoot = App.Window.Content.XamlRoot;

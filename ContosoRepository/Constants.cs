@@ -45,6 +45,11 @@ namespace Contoso.Repository
         public const string AccountClientId = "<TODO: Insert Azure client Id>";
 
         /// <summary>
+        /// The Azure Active Directory (AAD) rest api client id.
+        /// </summary>
+        public const string WebApiClientId = "< TODO: Insert Azure client Id>";
+
+        /// <summary>
         /// Connection string for a server-side SQL database.
         /// </summary>
         public const string SqlAzureConnectionString = "<TODO: Insert connection string>";
@@ -52,7 +57,11 @@ namespace Contoso.Repository
         // Cache settings
         public const string CacheFileName = "contosoapp_msal_cache.txt";
 
-        // App settings
-        public static readonly string[] Scopes = new[] { "https://graph.microsoft.com/User.Read" };
+        // Graph Api Scopes
+        public static readonly string[] GraphpApiScopes = new[] { "https://graph.microsoft.com/User.Read" };
+
+        // Downstream Api Scopes
+        public static readonly string[] WebApiScopes = new[] { $"api://{WebApiClientId}/Contoso.ReadWrite" };
+        
     }
 }

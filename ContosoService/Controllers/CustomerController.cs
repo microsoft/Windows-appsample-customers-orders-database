@@ -24,6 +24,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Contoso.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Contoso.Service.Controllers
 {
@@ -33,6 +34,7 @@ namespace Contoso.Service.Controllers
         /// Contains methods for interacting with customer data.
         /// </summary>
         [ApiController]
+        [Authorize(Policy = "AuthZPolicy")]
         [Route("api/[controller]")]
         public class CustomerController : ControllerBase
         {

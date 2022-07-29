@@ -25,6 +25,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,10 +49,16 @@ namespace Contoso.Repository.Rest
         /// <summary>
         /// Makes an HTTP GET request to the given controller and returns the deserialized response content.
         /// </summary>
-        public async Task<TResult> GetAsync<TResult>(string controller)
+        public async Task<TResult> GetAsync<TResult>(string controller, string accessToken)
         {
+            if (accessToken is null)
+            {
+                throw new ArgumentNullException(nameof(accessToken));
+            }
+
             using (var client = BaseClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await client.GetAsync(controller);
                 string json = await response.Content.ReadAsStringAsync();
                 TResult obj = JsonConvert.DeserializeObject<TResult>(json);
@@ -63,10 +70,16 @@ namespace Contoso.Repository.Rest
         /// Makes an HTTP POST request to the given controller with the given object as the body.
         /// Returns the deserialized response content.
         /// </summary>
-        public async Task<TResult> PostAsync<TRequest, TResult>(string controller, TRequest body)
+        public async Task<TResult> PostAsync<TRequest, TResult>(string controller, TRequest body, string accessToken)
         {
+            if (accessToken is null)
+            {
+                throw new ArgumentNullException(nameof(accessToken));
+            }
+
             using (var client = BaseClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var response = await client.PostAsync(controller, new JsonStringContent(body));
                 string json = await response.Content.ReadAsStringAsync();
                 TResult obj = JsonConvert.DeserializeObject<TResult>(json);
@@ -78,10 +91,16 @@ namespace Contoso.Repository.Rest
         /// Makes an HTTP DELETE request to the given controller and includes all the given
         /// object's properties as URL parameters. Returns the deserialized response content.
         /// </summary>
-        public async Task DeleteAsync(string controller, Guid objectId)
+        public async Task DeleteAsync(string controller, Guid objectId, string accessToken)
         {
+            if (accessToken is null)
+            {
+                throw new ArgumentNullException(nameof(accessToken));
+            }
+
             using (var client = BaseClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 await client.DeleteAsync($"{controller}/{objectId}");
             }
         }
