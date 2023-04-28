@@ -79,7 +79,7 @@ namespace Contoso.App
             {
                 switch (dataSource.ToString())
                 {
-                    case "Rest": UseRest(); break;
+                    case "Rest": if (!UseRest()) UseSqlite(); break;
                     default: UseSqlite(); break;
                 }
             }
@@ -125,11 +125,19 @@ namespace Contoso.App
         /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
         /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
         /// </summary>
-        public static void UseRest() 
+        public static bool UseRest() 
         {
-            var accessToken = Task.Run(async () => await MsalHelper.GetTokenAsync(Constants.WebApiScopes)).Result;
+            try
+            {
+                var accessToken = Task.Run(async () => await MsalHelper.GetTokenAsync(Constants.WebApiScopes)).Result;
 
-            Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/", accessToken);
+                Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/", accessToken);
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
